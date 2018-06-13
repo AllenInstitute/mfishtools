@@ -1,0 +1,18 @@
+Package: mfishtools
+Type: Package
+Title: Building Gene Sets and Mapping mFISH Data
+Version: 0.0.1
+Author: Jeremy Miller <jeremym@alleninstitute.org>
+Maintainer: Jeremy Miller <jeremym@alleninstitute.org>
+Description: This repository includes code for gene selection for spatial transcriptomics methods and for mapping of spatial transcriptomics (or RNA-Seq data) onto a RNA-Seq reference. Specific topics include:
+    1) Correlation-based mapping of cells to reference cell types
+    2) Iterative building of gene panels a greedy algorithm with pre-defined constraints
+    3) Visualizations related to gene mapping a gene panel selection
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports:
+    dendextend (version ????)
+    feather (version ????)
+    gplots (version ????)
+RoxygenNote: 6.0.1
