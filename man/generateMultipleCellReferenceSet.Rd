@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{generateMultipleCellReferenceSet}
 \alias{generateMultipleCellReferenceSet}
-\title{Creates a new reference set as input for cellToClusterMapping_byRank, where each "cell" is the
+\title{Creates a new reference set as input for cellToClusterMapping_byRank, where each 'cell' is the
   combiniation of several cells and this is run several times using different subsets of cells.}
 \usage{
 generateMultipleCellReferenceSet(refDat, clustersF,
@@ -29,6 +29,6 @@ list where first element is data matrix of multi-cells by genes and
   second element is a vector of corresponding clusters
 }
 \description{
-Creates a new reference set as input for cellToClusterMapping_byRank, where each "cell" is the
+Creates a new reference set as input for cellToClusterMapping_byRank, where each 'cell' is the
   combiniation of several cells and this is run several times using different subsets of cells.
 }
