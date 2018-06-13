@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{rfTreeMapping}
 \alias{rfTreeMapping}
-\title{Returns the mapping membership of each cell to each node and leaf using a
-  tree-based method.  This is a wrapper function for map_dend.}
+\title{Tree-based mapping}
 \usage{
 rfTreeMapping(dend, refDat, clustersF, mapDat = refDat, p = 0.7,
   low.th = 0.15, seed = 1)

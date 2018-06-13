@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{plotConfusionVsConfidence}
 \alias{plotConfusionVsConfidence}
-\title{Produces line plots showing the percent of correctly mapped cells above a certain confidence value (or score).
-  This is a wrapper for plot.}
+\title{Confusion plot vs. confidence}
 \usage{
 plotConfusionVsConfidence(foundClusterAndScore, realCluster,
   RI = (31:100)/100, main = "\% mapping (blue) / correct (orange)",

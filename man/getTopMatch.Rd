@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{getTopMatch}
 \alias{getTopMatch}
-\title{Returns the top leaf match for each cell and the corresponding fraction mapping there.}
+\title{Get top leaf match}
 \usage{
 getTopMatch(memb.cl)
 }

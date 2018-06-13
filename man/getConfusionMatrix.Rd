@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{getConfusionMatrix}
 \alias{getConfusionMatrix}
-\title{Returns a confusion matrix of the found (mapped) vs. real (assigned) clusters.}
+\title{Confusion matrix}
 \usage{
 getConfusionMatrix(realCluster, foundCluster, proportions = TRUE)
 }

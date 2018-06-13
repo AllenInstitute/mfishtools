@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{getNodeHeight}
 \alias{getNodeHeight}
-\title{Returns the heights of each node, scaled from 0 (top) to 1 (leafs); this is a wrapper for dendextend functions}
+\title{Get node height}
 \usage{
 getNodeHeight(dendIn)
 }

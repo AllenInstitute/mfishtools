@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{makeLCAtable}
 \alias{makeLCAtable}
-\title{Calculates the vector for lowest common ancestor for every pair of leaves in a tree and returns a
-  vector in a specific format for faster look-up.}
+\title{Get lowest common ancestor (all cluster pairs in tree)}
 \usage{
 makeLCAtable(dend, includeInternalNodes = FALSE, verbose = FALSE)
 }

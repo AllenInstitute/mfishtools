@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{leafToNodeMedians}
 \alias{leafToNodeMedians}
-\title{Define expression at a node as the MEAN expression for each leaf as default (using the median removes all specific marker genes!)}
+\title{Return mean node expression}
 \usage{
 leafToNodeMedians(dend, medianDat, branches = getBranchList(dend),
   fnIn = mean)
@@ -16,6 +16,10 @@ leafToNodeMedians(dend, medianDat, branches = getBranchList(dend),
 
 \item{fnIn}{function to use to wrap up to the node level (default = mean)}
 }
+\value{
+a matrix of mean node expression (rows=genes, columns=nodes)
+}
 \description{
-Define expression at a node as the MEAN expression for each leaf as default (using the median removes all specific marker genes!)
+Define expression at a node as the MEAN expression for each leaf as default (using the 
+  median removes all specific marker genes!)
 }

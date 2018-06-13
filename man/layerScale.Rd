@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{layerScale}
 \alias{layerScale}
-\title{Determines the expected proportions in each layer based on input}
+\title{Fraction of cells per layer}
 \usage{
 layerScale(layerIn, layerNm = c("L1", "L2/3", "L4", "L5", "L6"),
   scale = TRUE)

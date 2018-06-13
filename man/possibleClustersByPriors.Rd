@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{possibleClustersByPriors}
 \alias{possibleClustersByPriors}
-\title{This function will return a vector of possible clusters for cells that meet a set of priors for each layer}
+\title{Filter possible cluster calls using priors}
 \usage{
 possibleClustersByPriors(cluster, layer, subsetVector = rep(TRUE,
   length/(cluster)), useClusters = sort(unique(cluster)), rareLimit = 0.005,

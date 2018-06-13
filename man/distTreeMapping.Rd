@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{distTreeMapping}
 \alias{distTreeMapping}
-\title{Returns the distance between expression of each cell and representative value for each node and
-  leaf (default is based on euclidean distance).  In our hands this is does not work very well.}
+\title{(Euclidean) distance mapping}
 \usage{
 distTreeMapping(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA,
   clusters = NA, genesToMap = rownames(mapDat), returnSimilarity = TRUE,
@@ -25,6 +24,9 @@ distTreeMapping(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA,
 \item{returnSimilarity}{FALSE to return distance, TRUE to return something like a similarity}
 
 \item{use, ...}{additional parameters for dist (for back-compatiblity; doesn't work)}
+}
+\value{
+matrix of Euclidean distances between cells (rows) and clusters (columns)
 }
 \description{
 Returns the distance between expression of each cell and representative value for each node and

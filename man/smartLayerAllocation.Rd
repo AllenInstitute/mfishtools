@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{smartLayerAllocation}
 \alias{smartLayerAllocation}
-\title{Returns a numeric vector saying how to weight a particular cell for each layer, using a smart
-  weighting strategy}
+\title{Layer weights per cell}
 \usage{
 smartLayerAllocation(layerIn, useLayer = "L1", spillFactor = 0.15,
   weightCutoff = 0.02, layerNm = c("L1", "L2/3", "L4", "L5", "L6"))

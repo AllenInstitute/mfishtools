@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{generateMultipleCellReferenceSet}
 \alias{generateMultipleCellReferenceSet}
-\title{Creates a new reference set as input for cellToClusterMapping_byRank, where each 'cell' is the
-  combiniation of several cells and this is run several times using different subsets of cells.}
+\title{Generate reference set of pseudo-cells}
 \usage{
 generateMultipleCellReferenceSet(refDat, clustersF,
   genesToUse = rownames(refDat), cellsPerMerge = 5, numberOfMerges = 10,

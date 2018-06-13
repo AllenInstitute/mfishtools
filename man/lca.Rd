@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{lca}
 \alias{lca}
-\title{Maps a cluster back up the tree to the first node where the mapped and correct clusters agree.}
+\title{Get lowest common ancestor (defined cluster pairs)}
 \usage{
 lca(dend, l1, l2, l = rep(attr(dend, "label"), length(l1)))
 }

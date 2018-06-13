@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{getBranchList}
 \alias{getBranchList}
-\title{Returns branches of a dendrogram in a specific format}
+\title{Branch list}
 \usage{
 getBranchList(dend, branches = list(), allTips = as.character(dend \%>\%
   labels))

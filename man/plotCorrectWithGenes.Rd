@@ -2,13 +2,12 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{plotCorrectWithGenes}
 \alias{plotCorrectWithGenes}
-\title{This function is a wrapper for plot designd for plotting the fraction correctly mapped for a given gene set.
-  If geneN is the Nth gene, the plotted value indicates correct mapping using genes 1:N.}
+\title{Plot fraction correct}
 \usage{
 plotCorrectWithGenes(frac, genes = names(frac),
   xlab = "Number of genes in panel", main = "All clusters gene panel",
-  ylab = "Percent of nuclei correctly mapping", ylim = c(-10, 100),
-  lwd = 5, colLine = "grey", ...)
+  ylim = c(-10, 100), lwd = 5,
+  ylab = "Percent of nuclei correctly mapping", colLine = "grey", ...)
 }
 \arguments{
 \item{frac}{a numeric vector indicating the fraction of cells correctly mapped for a given gene panel}

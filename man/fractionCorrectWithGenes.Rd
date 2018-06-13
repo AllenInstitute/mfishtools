@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{fractionCorrectWithGenes}
 \alias{fractionCorrectWithGenes}
-\title{This function takes as input an ordered set of marker genes (e.g., from at iterative
-  algorithm), and returns a vector showing the fraction of cells correctly mapped.}
+\title{Fraction of cells correctly assigned}
 \usage{
 fractionCorrectWithGenes(orderedGenes, mapDat, medianDat, clustersF,
   verbose = FALSE, plot = TRUE, return = TRUE, ...)
@@ -24,6 +23,9 @@ fractionCorrectWithGenes(orderedGenes, mapDat, medianDat, clustersF,
 \item{return}{if TRUE, the value is returned}
 
 \item{...}{parameters passed to plotCorrectWithGenes (if plot=TRUE)}
+}
+\value{
+a vector showing the fraction of cells correctly mapped to each cluster
 }
 \description{
 This function takes as input an ordered set of marker genes (e.g., from at iterative

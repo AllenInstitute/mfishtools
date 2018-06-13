@@ -2,10 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{getBetaScore}
 \alias{getBetaScore}
-\title{Returns a beta score which indicates the binaryness of a gene across clusters.  High scores
-  (near 1) indicate that a gene is either on or off in nearly all cells of every cluster.
-  Scores near 0 indicate a cells is non-binary (e.g., not expressed, ubiquitous, or
-  randomly expressed).  This value is used for gene filtering prior to defining clustering.}
+\title{Get binary (aka beta) score}
 \usage{
 getBetaScore(propExpr, returnScore = TRUE, spec.exp = 2)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{corTreeMapping}
 \alias{corTreeMapping}
-\title{Primary function for doing correlation-based mapping to cluster medians.}
+\title{Correlation-based cluster mapping}
 \usage{
 corTreeMapping(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA,
   clusters = NA, genesToMap = rownames(mapDat), use = "p", ...)

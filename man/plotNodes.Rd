@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{plotNodes}
 \alias{plotNodes}
-\title{Plots a dendrogram with set not colors, shapes, sizes and labels.  This is a wrapper for plot.}
+\title{Plot dendrogram}
 \usage{
 plotNodes(tree, value = rep(1, length(labels(tree))), cexScale = 2,
   margins = c(10, 5, 2, 2), cols = "black", pch = 19, ...)

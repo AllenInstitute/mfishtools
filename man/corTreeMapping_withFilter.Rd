@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{corTreeMapping_withFilter}
 \alias{corTreeMapping_withFilter}
-\title{Returns the correlation between expression of each cell and representative value for each node
-  and leaf.  NOTE: this function is unstable and will eventually be merged with corTreeMapping.}
+\title{Correlation between nodes and leafs (deprecated)}
 \usage{
 corTreeMapping_withFilter(dend = NA, refDat = NA, mapDat = refDat,
   medianExpr = NA, propExpr = NA, filterMatrix = NA, clusters = NA,

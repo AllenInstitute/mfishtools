@@ -2,26 +2,29 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{fractionCorrectPerNode}
 \alias{fractionCorrectPerNode}
-\title{This function returns the fraction correctly assigned to each node (as defined that the actual
-  and predicted cluster are both in the same node)}
+\title{Fraction of correct calls per node}
 \usage{
 fractionCorrectPerNode(dendIn, clActual, clPredict, minCount = 0.1,
   defaultSum = -1, out = NULL)
 }
 \arguments{
-\item{dendIn}{= dendrogram for mapping.  Ignored if minimizeHeight=FALSE}
+\item{dendIn}{dendrogram for mapping.  Ignored if minimizeHeight=FALSE}
 
-\item{clActual}{= character vector of actual cluster assignments}
+\item{clActual}{character vector of actual cluster assignments}
 
-\item{clPredict}{= character vector of predicted cluster assignments}
+\item{clPredict}{character vector of predicted cluster assignments}
 
-\item{minCount}{= set to 0 results from clusters with fewer than this number of cells (default
+\item{minCount}{set to 0 results from clusters with fewer than this number of cells (default
 is to consider all clusters)}
 
-\item{out}{= required for recursive function.  Do not set!}
-
-\item{defaultSum=}{value to return in cases where there are fewer than minCount cells in the
+\item{defaultSum}{value to return in cases where there are fewer than minCount cells in the
 actual cluster (e.g., cases that aren't considered at all)}
+
+\item{out}{required for recursive function.  Do not set!}
+}
+\value{
+matrix of two columns: (1) node name and (2) the fraction of cells in that node that 
+  are correctly assigned
 }
 \description{
 This function returns the fraction correctly assigned to each node (as defined that the actual

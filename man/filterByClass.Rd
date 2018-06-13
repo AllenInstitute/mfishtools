@@ -2,13 +2,14 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{filterByClass}
 \alias{filterByClass}
-\title{Return a filter of TRUE/FALSE values for a given piece of meta-data (e.g., broad class).}
+\title{Filter by meta-data}
 \usage{
 filterByClass(classVector, sampleInfo, classColumn = "cluster_type_label",
   clusterColumn = "cluster_label", threshold = 0.1)
 }
 \arguments{
-\item{classVector}{vector corresponding to the class information for filtering (e.g., vector of label calls)}
+\item{classVector}{vector corresponding to the class information for filtering (e.g., vector 
+of label calls)}
 
 \item{sampleInfo}{matrix of sample information with rows corresponding to cells and columns
 corresponding to meta-data}

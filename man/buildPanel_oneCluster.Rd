@@ -2,8 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{buildPanel_oneCluster}
 \alias{buildPanel_oneCluster}
-\title{This UNTESTED function finds the best small marker panel for marking a single cluster, using
-  proportion difference as the metric for determining the starting panel.}
+\title{Build panel for one cluster (beta)}
 \usage{
 buildPanel_oneCluster(mapDat, clustersF, medianDat = NA, propIn = NA,
   clust = as.character(clustersF[1]), subSamp = NA, seed = 10,

@@ -2,9 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{buildQualityTable}
 \alias{buildQualityTable}
-\title{This function takes as input an ordered set of marker genes (e.g., from at iterative algorithm,
-  and returns an table showing the fraction of cells correctly mapped to a similar cell type
-  (as defined by the heights parameter).  A height of 1 indicates correct mapping to the leaf.}
+\title{Correct mapping at different tree heights}
 \usage{
 buildQualityTable(orderedGenes, dend, mapDat, medianDat, clustersF,
   minVal = 2, heights = c((0:100)/100), verbose = FALSE)
@@ -25,6 +23,10 @@ buildQualityTable(orderedGenes, dend, mapDat, medianDat, clustersF,
 \item{heights}{height in the tree to look at}
 
 \item{verbose}{whether or not to show progress in the function}
+}
+\value{
+a matrix of fractions of cells correctly mapped for different tree heights (columns)
+  and different gene panels (rows)
 }
 \description{
 This function takes as input an ordered set of marker genes (e.g., from at iterative algorithm,

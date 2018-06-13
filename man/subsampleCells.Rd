@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{subsampleCells}
 \alias{subsampleCells}
-\title{Subsets a categorical vector to include up to a maximum number of values for each category.}
+\title{Subsample cells}
 \usage{
 subsampleCells(clusters, subSamp = 25, seed = 5)
 }

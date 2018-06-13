@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \name{outputTopConfused}
 \alias{outputTopConfused}
-\title{This function returns a table of the top confused clusters (assigned clusters incorrectly mapped)}
+\title{Table of confused clusters}
 \usage{
 outputTopConfused(confusionProp, count = 10)
 }
