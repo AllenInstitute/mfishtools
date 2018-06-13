@@ -1,8 +1,3 @@
-# Library calls!
-library(dendextend)
-library(feather)
-library(gplots)
-
 #' This function returns a table of the top confused clusters (assigned clusters incorrectly mapped)
 #'
 #' @param confusionProp confusion matrix (e.g., output from getConfusionMatrix).

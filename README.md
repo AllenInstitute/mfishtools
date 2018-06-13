@@ -7,5 +7,5 @@ project, and mostly relies on correlation-based analysis with filtering.
 
 Install using:
 ```
-devtools::install_github("AllenInstitute/mfishtools")
+devtools::install_github("AllenInstitute/mfishtools",auth_token="802976690281f1483c40de46d0a07e9d01a3de08")
 ```

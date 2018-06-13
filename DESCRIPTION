@@ -12,7 +12,7 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports:
-    dendextend (version ????)
-    feather (version ????)
-    gplots (version ????)
+    dendextend (>= 1.7.0),
+    feather (>= 0.3.1),
+    gplots (>= 3.0.1)
 RoxygenNote: 6.0.1
