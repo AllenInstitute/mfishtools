@@ -162,6 +162,8 @@ summarizeMatrix <- function(mat, group, binarize = FALSE, binMin = 0.5, summaryF
   summaryFunction <- match.fun(summaryFunction)
   summarizedMat <- do.call("cbind", tapply(names(group), group, function(x) apply(mat[, 
     x], 1, summaryFunction, ...)))
+  if(is.factor(group)) summaryFunction = summaryFunction[,levels(group)]
+  rownames(summaryFunction) = rownames(mat)
   
   # Binarize the data if desired
   if (binarize) {
