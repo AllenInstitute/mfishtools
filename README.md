@@ -32,6 +32,9 @@ devtools::install_github("AllenInstitute/mfishtools",auth_token="802976690281f14
 == building an R package: https://www.r-bloggers.com/building-a-package-in-rstudio-is-actually-very-easy/ (quick)  <br/>
 == building an R package: http://r-pkgs.had.co.nz/ (complete)  <br/>
 
+4) Download and install git on your computer <br/>
+== Note: on Windows, you cannot install git from the desktop, it must be in a subfolder. <br/>
+
 3) Start an R Studio project with version control (see top link in #2)  <br/>
 == Link this package to the blank repo from #1  <br/>
 == Note that if you want to use a network drive on windows, you need to map it  <br/>
@@ -57,4 +60,10 @@ confusion <- function()
 }
 ```
 
-6) Build the package  
+6) Build the package  <br/>
+
+7) Make changes and update.  Here is some useful code:  <br/>
+```
+roxygen2::roxygenise()  # Add the comments
+formatR::tidy_dir("R",indent = getOption("formatR.indent", 2))  # Make the spacing and tabs and things consistent
+```
