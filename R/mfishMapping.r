@@ -208,7 +208,7 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binar
 #' @param scaleFunction which function to use for scaling mapDat to refSummaryDat (default is setting
 #'   90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)
 #' @param scaleXY should x and y coordinates be scaled from 0-1 within experiments (default = TRUE)
-#' @param metadata a data frame of possible metadata:
+#' @param metadata a data frame of possible metadata (additional columns are okay and ignored):
 #' \describe{
 #'   \item{area}{a vector of cell areas for normalization}
 #'   \item{experiment}{a vector indicating if multiple experiments should be scaled separately}
@@ -223,7 +223,7 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binar
 #'   \item{scaledX/Y}{scaled x and y coordinates (or unscaled if scaling was not performed)}
 #' }
 #'
-fishScaleAndMap <- function(refSummaryDat, mapDat, genesToMap = NULL, mappingFunction = cellToClusterMapping_byCor, 
+fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFunction = cellToClusterMapping_byCor, 
   transform = function(x) x, noisefloor = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
   metadata = data.frame(), ...) {
   

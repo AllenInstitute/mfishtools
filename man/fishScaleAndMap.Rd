@@ -4,15 +4,15 @@
 \alias{fishScaleAndMap}
 \title{Scale mFISH data and map to RNA-seq reference}
 \usage{
-fishScaleAndMap(refSummaryDat, mapDat, genesToMap = NULL,
+fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
   mappingFunction = cellToClusterMapping_byCor, transform = function(x) x,
   noisefloor = 0, scaleFunction = quantileTruncate, scaleXY = TRUE,
   metadata = data.frame(), ...)
 }
 \arguments{
-\item{refSummaryDat}{normalized summary data of the REFERENCE data set (e.g., what to map against)}
-
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
+
+\item{refSummaryDat}{normalized summary data of the REFERENCE data set (e.g., what to map against)}
 
 \item{genesToMap}{which genes to include in the mapping (calculated in not entered)}
 
@@ -28,7 +28,7 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 
 \item{scaleXY}{should x and y coordinates be scaled from 0-1 within experiments (default = TRUE)}
 
-\item{metadata}{a data frame of possible metadata:
+\item{metadata}{a data frame of possible metadata (additional columns are okay and ignored):
 \describe{
   \item{area}{a vector of cell areas for normalization}
   \item{experiment}{a vector indicating if multiple experiments should be scaled separately}
