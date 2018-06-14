@@ -6,7 +6,8 @@
 \usage{
 buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
   medianDat = NA, clusters = NA, genesToMap = rownames(mapDat),
-  plotdendro = TRUE, mar = c(12, 5, 5, 5), use = "p", ...)
+  plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5),
+  use = "p", ...)
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}
@@ -26,6 +27,8 @@ buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
 \item{mar}{margins (for use with par)}
 
 \item{use, ...}{additional parameters for cor}
+
+\item{returnDendro}{should the dendrogram be returned (default = TRUE)}
 }
 \value{
 matrix with the correlation between expression of each cell and representative value for each node and leaf

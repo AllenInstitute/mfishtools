@@ -18,56 +18,76 @@
 #'
 #' @return matrix with the correlation between expression of each cell and representative value for each node and leaf
 #'
-buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA,  clusters = NA, 
-                                   genesToMap = rownames(mapDat), plotdendro = TRUE, returndendro = TRUE,
-                                   mar = c(12,5,5,5), use = "p", ...) {
+buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA, 
+  clusters = NA, genesToMap = rownames(mapDat), plotdendro = TRUE, returndendro = TRUE, 
+  mar = c(12, 5, 5, 5), use = "p", ...) {
   library(dendextend)
   if (is.na(medianDat[1])) {
     names(clusters) = colnames(refDat)
-    medianDat = do.call("cbind", tapply(names(clusters), clusters, function(x) rowMedians(refDat[, x])))
+    medianDat = do.call("cbind", tapply(names(clusters), clusters, function(x) rowMedians(refDat[, 
+      x])))
     medianDat = leafToNodeMedians(dend, medianDat)
   }
   gns = intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
-
-  facsCor <- corTreeMapping(medianDat[gns,],mapDat[gns,], use=use, ...)
-  facsCor <- facsCor[,colSums(is.na(facsCor))==0]
-  facsCl  <- rownames(facsCor)[apply(facsCor,2,which.max)]
-  kpSamp2 <- is.element(colnames(mapDat),colnames(facsCor))
   
-  ## Build a new tree based on mapping 
-  sCore <- function(x,use,...) return(as.dist(1-cor(x,use=use,...)))
-  dend  <- getDend(medianDat[gns,],sCore)
+  facsCor <- corTreeMapping(medianDat[gns, ], mapDat[gns, ], use = use, ...)
+  facsCor <- facsCor[, colSums(is.na(facsCor)) == 0]
+  facsCl <- rownames(facsCor)[apply(facsCor, 2, which.max)]
+  kpSamp2 <- is.element(colnames(mapDat), colnames(facsCor))
+  
+  ## Build a new tree based on mapping
+  sCore <- function(x, use, ...) return(as.dist(1 - cor(x, use = use, ...)))
+  dend <- getDend(medianDat[gns, ], sCore)
   
   # Which leaves have which nodes?
   has_any_labels <- function(sub_dend, the_labels) any(labels(sub_dend) %in% the_labels)
   node_labels <- NULL
-  for (lab in labels(dend))
-    node_labels <- cbind(node_labels,noded_with_condition(dend, has_any_labels,the_labels=lab))
-  rownames(node_labels) <- get_nodes_attr(dend,"label")
+  for (lab in labels(dend)) node_labels <- cbind(node_labels, noded_with_condition(dend, 
+    has_any_labels, the_labels = lab))
+  rownames(node_labels) <- get_nodes_attr(dend, "label")
   colnames(node_labels) <- labels(dend)
   
   # Which clusters agree at the node level?
   clTmp = as.character(clusters[kpSamp2])
-  agreeNodes = apply(cbind(facsCl,clTmp),1, function(lab,node_labels){
-    rowSums(node_labels[,lab])==2
-  },node_labels)
+  agreeNodes = apply(cbind(facsCl, clTmp), 1, function(lab, node_labels) {
+    rowSums(node_labels[, lab]) == 2
+  }, node_labels)
   colnames(agreeNodes) = clTmp
   
   # Which clusters are in each nodes?
-  isInNodes = t(apply(node_labels,1, function(node,cl,dend){
-    is.element(cl,labels(dend)[node])
-  },clTmp,dend))
+  isInNodes = t(apply(node_labels, 1, function(node, cl, dend) {
+    is.element(cl, labels(dend)[node])
+  }, clTmp, dend))
   colnames(isInNodes) = clTmp
   
   # For each node, what fraction of cells match?
-  fracAgree = rowSums(agreeNodes) / rowSums(isInNodes)
-  if (plotdendro){
-    par(mar=mar)
-    dend %>% set("nodes_cex",0) %>% set("branches_col", "grey") %>% plot
-    text(get_nodes_xy(dend)[,1],get_nodes_xy(dend)[,2],round(fracAgree*100))
+  fracAgree = rowSums(agreeNodes)/rowSums(isInNodes)
+  if (plotdendro) {
+    par(mar = mar)
+    dend %>% set("nodes_cex", 0) %>% set("branches_col", "grey") %>% plot
+    text(get_nodes_xy(dend)[, 1], get_nodes_xy(dend)[, 2], round(fracAgree * 100))
   }
   
-  if (returndendro) return(dend)
+  if (returndendro) 
+    return(dend)
   
+}
+
+
+#' Build a dendrogram from gene panel
+#' 
+#' Build a dendrogram from an inputted data matrix.
+#'
+#' @param dat matrix of values (e.g., genes x clusters) for calculating the dendrogram
+#' @param distFun function for calculating distance matrix (default is correlation-based)
+#'
+#' @return dendrogram 
+#'
+getDend <- function(dat, distFun = function(x) return(as.dist(1 - cor(x)))) {
+  distCor = distFun(dat)
+  avgClust = hclust(distCor, method = "average")
+  dend = as.dendrogram(avgClust)
+  dend = labelDend(dend)[[1]]
+  return(dend)
 }
 
