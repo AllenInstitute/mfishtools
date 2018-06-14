@@ -87,6 +87,8 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
 #'
 getDend <- function(dat, distFun = function(x) return(as.dist(1 - cor(x))), ...) {
   distCor = distFun(dat, ...)
+  distCor[is.na(distCor)] = max(distCor,na.rm=TRUE)*1.2  
+    # Avoid crashing by setting NA values to hang off the side of the tree.
   avgClust = hclust(distCor, method = "average")
   dend = as.dendrogram(avgClust)
   dend = labelDend(dend)[[1]]
