@@ -107,6 +107,7 @@ getDend <- function(dat, distFun = function(x) return(as.dist(1 - cor(x))), ...)
   return(dend)
 }
 
+
 #' Label dendrogram nodes
 #' 
 #' Add numeric node labels to a dendrogram.
@@ -131,3 +132,45 @@ labelDend <- function(dend, n = 1) {
   }
   return(list(dend, n))
 }
+
+
+#' Summarize matrix
+#' 
+#' Groups columns in a matrix by a specified group vector and summarizes using a specificed function.
+#'   Optionally binarizes the matrix using a specified cutoff parameter.  This is a wrapper for tapply.
+#'
+#' @param mat matrix where the columns (e.g., samples) are going to be grouped
+#' @param group vector of length dim(mat)[2] corresponding to the groups
+#' @param binarize should the data be binarized? (default=FALSE)
+#' @param binMin minimum ON value for the binarized matrix (ignored if binarize=FALSE)
+#' @param summaryFunction function (or function name) to be used for summarization
+#' @param ... additional parameters for summaryFunction
+#'
+#' @return matrix of summarized values
+#'
+summarizeMatrix <- function(mat, group, binarize = FALSE, binMin = 0.5, summaryFunction = median, 
+  ...) {
+  
+  # Make sure the names match up
+  if (is.null(colnames(mat))) 
+    colnames(mat) = names(group)
+  if (is.null(colnames(mat))) 
+    colnames(mat) = 1:length(group)
+  names(group) <- colnames(mat)
+  
+  # Calculate the summary
+  summaryFunction <- match.fun(summaryFunction)
+  summarizedMat <- do.call("cbind", tapply(names(group), group, function(x) apply(mat[, 
+    x], 1, summaryFunction, ...)))
+  
+  # Binarize the data if desired
+  if (binarize) {
+    summarizedMat = summarizedMat > binMin
+    summarizedMat = summarizedMat + 1 - 1
+  }
+  
+  return(summarizedMat)
+}
+
+
+
