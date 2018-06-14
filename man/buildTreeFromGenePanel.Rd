@@ -5,9 +5,9 @@
 \title{Build and plot dendrogram from gene panel}
 \usage{
 buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
-  medianDat = NA, clusters = NA, genesToMap = rownames(mapDat),
-  plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5),
-  use = "p", ...)
+  medianDat = NA, requiredGenes = 2, clusters = NA,
+  genesToMap = rownames(mapDat), plotdendro = TRUE, returndendro = TRUE,
+  mar = c(12, 5, 5, 5), use = "p", ...)
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}
@@ -17,6 +17,9 @@ buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
 
 \item{medianDat}{representative value for each leaf and node.  If not entered, it is calculated}
+
+\item{requiredGenes}{minimum number of genes required to be expressed in a cluster (column
+of medianDat) for the cluster to be included (default=2)}
 
 \item{clusters}{cluster calls for each cell}
 
@@ -31,7 +34,8 @@ buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
 \item{returnDendro}{should the dendrogram be returned (default = TRUE)}
 }
 \value{
-matrix with the correlation between expression of each cell and representative value for each node and leaf
+a list where the first entry is the resulting tree and the second entry is the 
+  fraction of cells correctly mapping to each node using the inputted gene panel.
 }
 \description{
 Build and plot a dendrogram using correlation-based average linkage hierarchical clustering

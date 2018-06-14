@@ -9,6 +9,8 @@
 #' @param refDat normalized data of the REFERENCE data set.  Ignored if medianDat is passed
 #' @param mapDat normalized data of the MAPPING data set.  Default is to map the data onto itself.
 #' @param medianDat representative value for each leaf and node.  If not entered, it is calculated
+#' @param requiredGenes minimum number of genes required to be expressed in a cluster (column
+#'   of medianDat) for the cluster to be included (default=2)
 #' @param clusters  cluster calls for each cell
 #' @param genesToMap which genes to include in the correlation mapping
 #' @param plotdendro should the dendrogram be plotted (default = TRUE)
@@ -16,12 +18,16 @@
 #' @param mar margins (for use with par)
 #' @param use,... additional parameters for cor
 #'
-#' @return matrix with the correlation between expression of each cell and representative value for each node and leaf
+#' @return a list where the first entry is the resulting tree and the second entry is the 
+#'   fraction of cells correctly mapping to each node using the inputted gene panel.
 #'
 buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA, 
-  clusters = NA, genesToMap = rownames(mapDat), plotdendro = TRUE, returndendro = TRUE, 
-  mar = c(12, 5, 5, 5), use = "p", ...) {
+  requiredGenes = 2, clusters = NA, genesToMap = rownames(mapDat), plotdendro = TRUE, 
+  returndendro = TRUE, mar = c(12, 5, 5, 5), use = "p", ...) {
+  
   library(dendextend)
+  
+  # Calculate the median, if needed.
   if (is.na(medianDat[1])) {
     names(clusters) = colnames(refDat)
     medianDat = do.call("cbind", tapply(names(clusters), clusters, function(x) rowMedians(refDat[, 
@@ -30,15 +36,20 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
   }
   gns = intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
   
-  facsCor <- corTreeMapping(medianDat = medianDat[gns, ], mapDat = mapDat[gns, ], use = use, 
-    ...)
-  facsCor <- facsCor[, colSums(is.na(facsCor)) == 0]
-  facsCl <- rownames(facsCor)[apply(facsCor, 2, which.max)]
-  kpSamp2 <- is.element(colnames(mapDat), colnames(facsCor))
+  # Subset the data to relevant genes and clusters
+  medianDat <- medianDat[gns, ]
+  mapDat <- mapDat[gns, ]
+  medianDat <- medianDat[, colSums(medianDat > 0) >= requiredGenes]
+  kpDat <- (colSums(mapDat > 0) >= requiredGenes) & (is.element(clusters, colnames(medianDat)))
+  mapDat <- mapDat[, kpDat]
   
-  ## Build a new tree based on mapping
+  # Perform the correlation mapping
+  facsCor <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, use = use, ...)
+  facsCl <- colnames(facsCor)[apply(facsCor, 1, which.max)]
+  
+  # Build a new tree based on mapping
   sCore <- function(x, use, ...) return(as.dist(1 - cor(x, use = use, ...)))
-  dend <- getDend(medianDat[gns, ], sCore, use = use, ...)
+  dend <- getDend(medianDat, sCore, use = use, ...)
   
   # Which leaves have which nodes?
   has_any_labels <- function(sub_dend, the_labels) any(labels(sub_dend) %in% the_labels)
@@ -49,7 +60,7 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
   colnames(node_labels) <- labels(dend)
   
   # Which clusters agree at the node level?
-  clTmp = as.character(clusters[kpSamp2])
+  clTmp = as.character(clusters[kpDat])
   agreeNodes = apply(cbind(facsCl, clTmp), 1, function(lab, node_labels) {
     rowSums(node_labels[, lab]) == 2
   }, node_labels)
@@ -61,7 +72,7 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
   }, clTmp, dend))
   colnames(isInNodes) = clTmp
   
-  # For each node, what fraction of cells match?
+  # For each node, plot the fraction of cells that match if desired?
   fracAgree = rowSums(agreeNodes)/rowSums(isInNodes)
   if (plotdendro) {
     par(mar = mar)
@@ -69,8 +80,9 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
     text(get_nodes_xy(dend)[, 1], get_nodes_xy(dend)[, 2], round(fracAgree * 100))
   }
   
+  # Return the results (if desired)
   if (returndendro) 
-    return(dend)
+    return(list(dend, fracAgree))
   
 }
 
@@ -87,8 +99,8 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
 #'
 getDend <- function(dat, distFun = function(x) return(as.dist(1 - cor(x))), ...) {
   distCor = distFun(dat, ...)
-  distCor[is.na(distCor)] = max(distCor,na.rm=TRUE)*1.2  
-    # Avoid crashing by setting NA values to hang off the side of the tree.
+  distCor[is.na(distCor)] = max(distCor, na.rm = TRUE) * 1.2
+  # Avoid crashing by setting NA values to hang off the side of the tree.
   avgClust = hclust(distCor, method = "average")
   dend = as.dendrogram(avgClust)
   dend = labelDend(dend)[[1]]
