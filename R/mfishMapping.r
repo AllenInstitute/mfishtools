@@ -30,14 +30,15 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
   }
   gns = intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
   
-  facsCor <- corTreeMapping(medianDat=medianDat[gns, ], mapDat=mapDat[gns, ], use = use, ...)
+  facsCor <- corTreeMapping(medianDat = medianDat[gns, ], mapDat = mapDat[gns, ], use = use, 
+    ...)
   facsCor <- facsCor[, colSums(is.na(facsCor)) == 0]
   facsCl <- rownames(facsCor)[apply(facsCor, 2, which.max)]
   kpSamp2 <- is.element(colnames(mapDat), colnames(facsCor))
   
   ## Build a new tree based on mapping
   sCore <- function(x, use, ...) return(as.dist(1 - cor(x, use = use, ...)))
-  dend <- getDend(medianDat[gns, ], sCore)
+  dend <- getDend(medianDat[gns, ], sCore, use = use, ...)
   
   # Which leaves have which nodes?
   has_any_labels <- function(sub_dend, the_labels) any(labels(sub_dend) %in% the_labels)
@@ -80,14 +81,39 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
 #'
 #' @param dat matrix of values (e.g., genes x clusters) for calculating the dendrogram
 #' @param distFun function for calculating distance matrix (default is correlation-based)
+#' @param ... additional variables for distFun
 #'
 #' @return dendrogram 
 #'
-getDend <- function(dat, distFun = function(x) return(as.dist(1 - cor(x)))) {
-  distCor = distFun(dat)
+getDend <- function(dat, distFun = function(x) return(as.dist(1 - cor(x))), ...) {
+  distCor = distFun(dat, ...)
   avgClust = hclust(distCor, method = "average")
   dend = as.dendrogram(avgClust)
   dend = labelDend(dend)[[1]]
   return(dend)
 }
 
+#' Label dendrogram nodes
+#' 
+#' Add numeric node labels to a dendrogram.
+#'
+#' @param dend dendrogram object
+#' @param distFun starting numeric node value (default=1)
+#'
+#' @return a list where the first item is the new dendrogram object and the second item is the final
+#'   numeric node value 
+#'
+labelDend <- function(dend, n = 1) {
+  if (is.null(attr(dend, "label"))) {
+    attr(dend, "label") = paste0("n", n)
+    n = n + 1
+  }
+  if (length(dend) > 1) {
+    for (i in 1:length(dend)) {
+      tmp = labelDend(dend[[i]], n)
+      dend[[i]] = tmp[[1]]
+      n = tmp[[2]]
+    }
+  }
+  return(list(dend, n))
+}

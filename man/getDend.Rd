@@ -4,12 +4,14 @@
 \alias{getDend}
 \title{Build a dendrogram from gene panel}
 \usage{
-getDend(dat, distFun = function(x) return(as.dist(1 - cor(x))))
+getDend(dat, distFun = function(x) return(as.dist(1 - cor(x))), ...)
 }
 \arguments{
 \item{dat}{matrix of values (e.g., genes x clusters) for calculating the dendrogram}
 
 \item{distFun}{function for calculating distance matrix (default is correlation-based)}
+
+\item{...}{additional variables for distFun}
 }
 \value{
 dendrogram
