@@ -30,7 +30,7 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
   }
   gns = intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
   
-  facsCor <- corTreeMapping(medianDat[gns, ], mapDat[gns, ], use = use, ...)
+  facsCor <- corTreeMapping(medianDat=medianDat[gns, ], mapDat=mapDat[gns, ], use = use, ...)
   facsCor <- facsCor[, colSums(is.na(facsCor)) == 0]
   facsCl <- rownames(facsCor)[apply(facsCor, 2, which.max)]
   kpSamp2 <- is.element(colnames(mapDat), colnames(facsCor))
