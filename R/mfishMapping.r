@@ -141,6 +141,8 @@ labelDend <- function(dend, n = 1) {
 #'
 #' @param mat matrix where the columns (e.g., samples) are going to be grouped
 #' @param group vector of length dim(mat)[2] corresponding to the groups
+#' @param scale either 'none' (default),'row', or 'column'
+#' @param scaleQuantile what quantile of value should be set as 1 (default=1)
 #' @param binarize should the data be binarized? (default=FALSE)
 #' @param binMin minimum ON value for the binarized matrix (ignored if binarize=FALSE)
 #' @param summaryFunction function (or function name) to be used for summarization
@@ -148,8 +150,8 @@ labelDend <- function(dend, n = 1) {
 #'
 #' @return matrix of summarized values
 #'
-summarizeMatrix <- function(mat, group, binarize = FALSE, binMin = 0.5, summaryFunction = median, 
-  ...) {
+summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binarize = FALSE, 
+  binMin = 0.5, summaryFunction = median, ...) {
   
   # Make sure the names match up
   if (is.null(colnames(mat))) 
@@ -160,16 +162,23 @@ summarizeMatrix <- function(mat, group, binarize = FALSE, binMin = 0.5, summaryF
   
   # Calculate the summary
   summaryFunction <- match.fun(summaryFunction)
-  
-  runFunction <- function(x,...) {
-    if(length(x)>1) return(apply(mat[, x], 1, summaryFunction, ...))
+  runFunction <- function(x, ...) {
+    if (length(x) > 1) 
+      return(apply(mat[, x], 1, summaryFunction, ...))
     return(mat[, x])
   }
-  
-  summarizedMat <- do.call("cbind", tapply(names(group), group, runFunction,...))
-                                           
-  if(is.factor(group)) summarizedMat = summarizedMat[,levels(group)]
+  summarizedMat <- do.call("cbind", tapply(names(group), group, runFunction, ...))
+  if (is.factor(group)) 
+    summarizedMat = summarizedMat[, levels(group)]
   rownames(summarizedMat) = rownames(mat)
+  
+  # Scale the data if desired
+  if (substr(scale, 1, 1) == "r") 
+    for (i in 1:dim(summarizedMat)[1]) summarizedMat[i, ] = summarizedMat[i, ]/max(1e-06, 
+      quantile(summarizedMat[i, ], probs = scaleQuantile))
+  if (substr(scale, 1, 1) == "c") 
+    for (i in 1:dim(summarizedMat)[2]) summarizedMat[, i] = summarizedMat[, i]/max(1e-06, 
+      quantile(summarizedMat[, i], probs = scaleQuantile))
   
   # Binarize the data if desired
   if (binarize) {
