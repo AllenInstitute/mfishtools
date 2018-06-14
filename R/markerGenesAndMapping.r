@@ -745,28 +745,31 @@ cellToClusterMapping_byRank <- function(mapDat, refDat, clustersF, genesToMap = 
 
 #' Correlation-based cluster mapping
 #' 
-#' Primary function for doing correlation-based mapping to cluster medians.
+#' Primary function for doing correlation-based mapping to cluster medians.  This is wrapper for cor
+#'   and returns a correlation matrix.
 #'
-#' @param dend dendrogram for mapping.  Ignored if medianDat is passed
-#' @param refDat normalized data of the REFERENCE data set.  Ignored if medianDat is passed
 #' @param mapDat normalized data of the MAPPING data set.  Default is to map the data onto itself.
 #' @param medianDat representative value for each leaf and node.  If not entered, it is calculated
+#' @param dend dendrogram for mapping.  If provided, correlations to nodes are also returned
+#' @param refDat normalized data of the REFERENCE data set.  Ignored if medianDat is passed
 #' @param clusters  cluster calls for each cell.  Ignored if medianDat is passed
 #' @param genesToMap which genes to include in the correlation mapping
 #' @param use,... additional parameters for cor
 #'
-#' @return matrix with the correlation between expression of each cell and representative value for each node and leaf
+#' @return matrix with the correlation between expression of each cell and representative value for 
+#'   each leaf and node
 #'
-corTreeMapping <- function(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA, clusters = NA, 
+corTreeMapping <- function(mapDat, medianDat, dend = NULL, refDat = NA, clusters = NA, 
   genesToMap = rownames(mapDat), use = "p", ...) {
   if (is.na(medianDat[1])) {
     names(clusters) = colnames(refDat)
     medianDat = do.call("cbind", tapply(names(clusters), clusters, function(x) rowMedians(refDat[, 
       x])))
-    medianDat = leafToNodeMedians(dend, medianDat)
   }
-  kpVar = intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
-  corrVar = cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, ...)
+  if (!is.NULL(dend)) 
+    medianDat <- leafToNodeMedians(dend, medianDat)
+  kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
+  corrVar <- cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, ...)
   return(corrVar)
 }
 

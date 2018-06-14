@@ -190,4 +190,210 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binar
 }
 
 
+#' Scale mFISH data and map to RNA-seq reference
+#' 
+#' This function is a wrapper for several other functions which aim to scale mFISH data to 
+#'   more closely match RNA-seq data and then map the mFISH data to the closest reference
+#'   classes.  There are several parameters allowing flexability in filtering and analysis.
+#'
+#' @param mapDat normalized data of the MAPPING data set.  Default is to map the data onto itself.
+#' @param refSummaryDat normalized summary data of the REFERENCE data set (e.g., what to map against)
+#' @param genesToMap which genes to include in the mapping (calculated in not entered)
+#' @param mappingFunction which function to use for mapping (default is cellToClusterMapping_byCor)
+#'   The function must include at least two parameters with the first one being mapped data and the 
+#'   second data the reference.  Additional parameters are okay.  Output must be a data frame where 
+#'   the first value is a mapped class.  Additional columns are okay and will be returned)
+#' @param transform function for transformation of the data (default in none)
+#' @param noiselevel scalar value below which all values are set to 0 (default is 0)
+#' @param scaleFunction which function to use for scaling mapDat to refSummaryDat (default is setting
+#'   90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)
+#' @param scaleXY should x and y coordinates be scaled from 0-1 within experiments (default = TRUE)
+#' @param metadata a data frame of possible metadata:
+#' \describe{
+#'   \item{area}{a vector of cell areas for normalization}
+#'   \item{experiment}{a vector indicating if multiple experiments should be scaled separately}
+#'   \item{x,y}{x (e.g., parallel to layer) and y (e.g., across cortical layers) coordinates in tissue}
+#' }
+#' @param ... additional parameters for passthrough into other functions
+#'
+#' @return a list with the following entrees:
+#' \describe{
+#'   \item{scaleDat}{scaled mapDat data matrix}
+#'   \item{mappingResults}{Results of the mapping and associated confidence values (if any)}
+#'   \item{scaledX/Y}{scaled x and y coordinates (or unscaled if scaling was not performed)}
+#' }
+#'
+fishScaleAndMap <- function(refSummaryDat, mapDat, genesToMap = NULL, mappingFunction = cellToClusterMapping_byCor, 
+  transform = function(x) x, noisefloor = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
+  metadata = data.frame(), ...) {
+  
+  # Setup
+  mappingFunction <- match.fun(mappingFunction)
+  scaleFunction <- match.fun(scaleFunction)
+  transform <- match.fun(transform)
+  if (is.null(genesToMap)) 
+    genesToMap <- colnames(mapDat)
+  genesToMap <- intersect(genesToMap, colnames(refSummaryDat))
+  params <- colnames(metadata)
+  if (!is.element("experiment", params)) 
+    metadata$experiment = "all"
+  refSummaryDat <- refSummaryDat[genesToMap, ]
+  mapDat <- mapDat[genesToMap, ]
+  
+  # Transform the data to be mapped
+  scaleDat <- as.matrix(mapDat[genesToMap, ])
+  scaleDat[scaleDat < noiselevel] = 0  # Set values less than noiselevel to 0
+  if (is.element("area", params)) {
+    # Account for spot area in gene expression calculation
+    scaleDat <- t(t(scaleDat)/metadata$area) * mean(metadata$area)
+  }
+  scaleDat <- transform(scaleDat)
+  
+  # Scale to the reference data
+  for (ex in unique(metadata$experiment)) {
+    isExp = metadata$experiment == ex
+    for (g in genesToMap) scaleDat[g, isExp] <- quantileTruncate(scaleDat[g, isExp], 
+      maxVal = max(refSummaryDat[g, ]), ...)
+  }
+  
+  # Map the map data to the reference data
+  mappingResults <- mappingFunction(refSummaryDat, scaleDat, ...)
+  
+  # Scale x and y coordinates to (0,1) within experiment, if desired
+  if (scaleXY) {
+    for (ex in unique(metadata$experiment)) {
+      isExp = metadata$experiment == ex
+      metadata$x[isExp] = metadata$x[isExp] - min(metadata$x[isExp])
+      metadata$x[isExp] = metadata$x[isExp]/max(metadata$x[isExp])
+      metadata$y[isExp] = metadata$y[isExp] - min(metadata$y[isExp])
+      metadata$y[isExp] = metadata$y[isExp]/max(metadata$y[isExp])
+    }
+  }
+  
+  # Return the results
+  out = list(scaleDat, mappingResults, scaledX = metadata$x, scaledY = metadata$y)
+  
+}
+
+
+
+
+#' Return top mapped correlation-based cluster and confidence
+#' 
+#' Primary function for doing correlation-based mapping to cluster medians and also reporting the
+#'   correlations and confidences.  This is wrapper for getTopMatch and corTreeMapping.
+#'
+#' @param medianDat representative value for each leaf and node.  If not entered, it is calculated
+#' @param mapDat normalized data of the MAPPING data set.  Default is to map the data onto itself.
+#' @param refDat normalized data of the REFERENCE data set.  Ignored if medianDat is passed
+#' @param clusters  cluster calls for each cell.  Ignored if medianDat is passed
+#' @param genesToMap which genes to include in the correlation mapping
+#' @param use,... additional parameters for cor
+#'
+#' @return data frame with the top match and associated correlation
+#'
+cellToClusterMapping_byCor <- function(medianDat, mapDat, refDat = NA, clusters = NA, 
+  genesToMap = rownames(mapDat), use = "p", ...) {
+  corVar <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, refDat = refDat, 
+    clusters = clusters, genesToMap = genesToMap, use = use, ...)
+  corMatch <- getTopMatch(corVar)
+  colnames(corMatch) <- c("Class", "Correlation")
+  
+  dex <- apply(corVar, 2, function(x) return(-diff(order(-x)[1:2])), colnames(medianExpr))
+  corMatch$DifferenceBetweenTopTwoCorrelations = dex
+  return(corMatch)
+}
+
+
+#' Cell-based cluster mapping
+#' 
+#' Maps cells to clusters by correlating every mapped cell with every reference cell,
+#'   ranking the cells by correlation, and the reporting the cluster with the lowest average rank.
+#'
+#' @param mapDat normalized data of the MAPPING data set.
+#' @param refDat normalized data of the REFERENCE data set
+#' @param clustersF factor indicating which cluster each cell type is actually assigned 
+#'   to in the reference data set
+#' @param genesToMap character vector of which genes to include in the correlation mapping
+#' @param mergeFunction function for combining ranks; the tested choices are rowMeans or 
+#'   rowMedians (default)
+#' @param useRank use the rank of the correlation (default) or the correlation itself to 
+#'   determine the top cluster
+#' @param use,... additional parameters for cor
+#'
+#' @return a two column data matrix where the first column is the mapped cluster and the second
+#'   column is a confidence call indicating how close to the top of the ranked list cells of the
+#'   assigned cluster were located relative to their best possible location in the ranked list.
+#'   This confidence score seems to be a bit more reliable than correlation at determining how
+#'   likely a cell in a training set is to being correctly assigned to the training cluster.
+#'
+cellToClusterMapping_byRank <- function(mapDat, refDat, clustersF, genesToMap = rownames(mapDat), 
+  mergeFunction = rowMedians, useRank = TRUE, use = "p", ...) {
+  
+  if (is.null(names(clustersF))) 
+    names(clustersF) <- colnames(refDat)
+  kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(refDat)))
+  corrVar <- cor(mapDat[kpVar, ], refDat[kpVar, ], use = use, ...)
+  corrVar[corrVar > 0.999999] <- NA  # assume any perfect correlation is either an self-to-self mapping, or a mapping using exactly 1 non-zero gene
+  if (useRank) 
+    rankVar <- t(apply(-corrVar, 1, rank, na.last = "keep"))
+  if (!useRank) 
+    rankVar <- -corrVar
+  colnames(rankVar) <- names(clustersF) <- paste0("n", 1:length(clustersF))
+  clMean <- do.call("cbind", tapply(names(clustersF), clustersF, function(x) match.fun(mergeFunction)(rankVar[, 
+    x], na.rm = TRUE)))
+  clMin <- apply(clMean, 1, min, na.rm = TRUE)
+  clMin[is.na(clMin)] <- 0
+  clMin[clMin == Inf] <- 1e+09
+  clBest <- colnames(clMean)[apply(clMean, 1, function(x) return(which.min(x)[1]))]
+  clBest[is.na(clBest)] = colnames(clMean)[1]
+  if (useRank) 
+    clScore <- (table(clustersF)[clBest]/2)/pmax(clMin, 1e-11)
+  if (!useRank) 
+    clScore <- -clMin
+  rfv <- data.frame(TopLeaf = clBest, Score = as.numeric(as.character(clScore)))
+  rownames(rfv) = rownames(corrVar)
+  return(rfv)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#' Quantile normalize, truncate, and scale
+#' 
+#' Quantile normalize, truncate, and scale a numeric vector (e.g. mFISH data from one gene)
+#'
+#' @param x input data vector
+#' @param qprob probs value to result from quantile (default=0.9)
+#' @param maxVal max value for scaling (default=1)
+#' @param truncate should data above the qprob threshold be truncated (default=yes)
+#' @param ... not used
+#'
+#' @return scaled vector
+#' }
+#'
+quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE, ...) {
+  qs = quantile(x[x > 0], probs = qprob, na.rm = TRUE)
+  if (is.na(qs)) 
+    return(x)
+  if (truncate) 
+    x[x > qs] = qs
+  return(x * maxVal/qs)
+}
+
 

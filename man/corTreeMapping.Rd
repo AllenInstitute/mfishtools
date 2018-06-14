@@ -4,17 +4,17 @@
 \alias{corTreeMapping}
 \title{Correlation-based cluster mapping}
 \usage{
-corTreeMapping(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA,
-  clusters = NA, genesToMap = rownames(mapDat), use = "p", ...)
+corTreeMapping(mapDat, medianDat, dend = NULL, refDat = NA, clusters = NA,
+  genesToMap = rownames(mapDat), use = "p", ...)
 }
 \arguments{
-\item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}
-
-\item{refDat}{normalized data of the REFERENCE data set.  Ignored if medianDat is passed}
-
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
 
 \item{medianDat}{representative value for each leaf and node.  If not entered, it is calculated}
+
+\item{dend}{dendrogram for mapping.  If provided, correlations to nodes are also returned}
+
+\item{refDat}{normalized data of the REFERENCE data set.  Ignored if medianDat is passed}
 
 \item{clusters}{cluster calls for each cell.  Ignored if medianDat is passed}
 
@@ -23,8 +23,10 @@ corTreeMapping(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA,
 \item{use, ...}{additional parameters for cor}
 }
 \value{
-matrix with the correlation between expression of each cell and representative value for each node and leaf
+matrix with the correlation between expression of each cell and representative value for 
+  each leaf and node
 }
 \description{
-Primary function for doing correlation-based mapping to cluster medians.
+Primary function for doing correlation-based mapping to cluster medians.  This is wrapper for cor
+  and returns a correlation matrix.
 }

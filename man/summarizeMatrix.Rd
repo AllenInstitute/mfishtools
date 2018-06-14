@@ -12,7 +12,7 @@ summarizeMatrix(mat, group, scale = "none", scaleQuantile = 1,
 
 \item{group}{vector of length dim(mat)[2] corresponding to the groups}
 
-\item{scale}{either "none" (default),"row", or "column"}
+\item{scale}{either 'none' (default),'row', or 'column'}
 
 \item{scaleQuantile}{what quantile of value should be set as 1 (default=1)}
 
