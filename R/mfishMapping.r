@@ -160,8 +160,14 @@ summarizeMatrix <- function(mat, group, binarize = FALSE, binMin = 0.5, summaryF
   
   # Calculate the summary
   summaryFunction <- match.fun(summaryFunction)
-  summarizedMat <- do.call("cbind", tapply(names(group), group, function(x) apply(mat[, 
-    x], 1, summaryFunction, ...)))
+  
+  runFunction <- function(x,...) {
+    if(length(x)>1) return(apply(mat[, x], 1, summaryFunction, ...))
+    return(mat[, x])
+  }
+  
+  summarizedMat <- do.call("cbind", tapply(names(group), group, runFunction,...))
+                                           
   if(is.factor(group)) summarizedMat = summarizedMat[,levels(group)]
   rownames(summarizedMat) = rownames(mat)
   
