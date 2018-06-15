@@ -412,9 +412,10 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
   levels(group) = c(groups, setdiff(levels(group), groups))
   
   # Make the plot!
-  plotDat = plotDat[order(group, colSums(plotDat)), ]
-  colnames(plotDat) = gsub(grouplab, colnames(datTmp))
-  heatmap.2(t(plotDat), Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
+  plotDat = rbind(plotDat,as.numeric(group)*cap/length(groups))
+  plotDat = plotDat[,order(group, colSums(plotDat)) ]
+  rownames(plotDat) = gsub(grouplab, colnames(datTmp))
+  heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
     margins = margins, rowsep = rowsep, key = key, col = colormap)
 }
 
