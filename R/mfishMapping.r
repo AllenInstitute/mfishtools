@@ -276,6 +276,133 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
 }
 
 
+#' Filter cells
+#' 
+#' Remove a select set of cells from all elements of a fishScaleAndMap output
+#'
+#' @param datIn a fishScaleAndMap output list
+#' @param kpSamp a vector of samples to keep (of the same length as the number of cells in datIn)
+#'
+#' @return filtered fishScaleAndMap object
+#'
+filterCells <- function(datIn, kpSamp) {
+  datOut <- datIn
+  datOut$mapDat <- datOut$mapDat[, kpSamp]
+  datOut$scaleDat <- datOut$scaleDat[, kpSamp]
+  datOut$mappingResults <- datOut$mappingResults[kpSamp, ]
+  datOut$metadata <- datOut$metadata[kpSamp, ]
+  datOut$scaledX <- datOut$scaledX[kpSamp]
+  datOut$scaledY <- datOut$scaledY[kpSamp]
+  return(datOut)
+}
+
+
+#' Plot distributions
+#' 
+#' Plot the distributions of cells across the tissue with overlaying color information.  This is
+#'   a wrapper function for plot
+#'
+#' @param datIn  a fishScaleAndMap output list
+#' @param group a character vector (or factor) indicating how to split the data (e.g., cluster 
+#'   call) or a metadata/mappingResults column name
+#' @param groups a character vector of groups to show (default is levels of group)
+#' @param colors a character vector (or factor) indicating how to color the plots (e.g., layer 
+#'   or gene expression) or a metadata/mappingResults column name (default is all black)
+#' @param colormap function to use for the colormap for the data (default gray.colors)
+#' @param xlim,ylim for plot, but will be calculated if not entered
+#' @param pch,... other parameters for plot
+#'
+#' @return filtered fishScaleAndMap object
+#'
+plotDistributions <- function(datIn, group, groups = NULL, useScaled = FALSE, colors = rep("black", 
+  dim(datIn$mapDat)[2]), colormap = gray.colors, pch = 19, xlim = NULL, ylim = NULL, 
+  ...) {
+  
+  colormap = match.fun(colormap)
+  meta = cbind(datIn$metadata, datIn$mappingResults)
+  if (length(group) == 1) {
+    if (is.element(group, colnames(meta))) {
+      group = as.factor(meta[, group])
+      if (is.null(groups)) 
+        groups = levels(group)
+    } else {
+      return(paste(group, "is not an available column name for division."))
+    }
+  }
+  if (length(colors) == 1) {
+    if (is.element(colors, colnames(meta))) {
+      colors = as.numeric(as.factor(meta[, colors]))
+      colors = colormap(length(unique(colors)))[colors]
+    } else {
+      return(paste(colors, "is not an available column name for coloring."))
+    }
+  }
+  
+  par(mfrow = c(1, length(groups)))
+  for (gp in groups) {
+    kp = group == gp
+    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch, col = colors[kp], ...)
+  }
+}
+
+
+#' Plot heatmap
+#' 
+#' Plot the heatmap of cells ordering by a specified order.  This is a wrapper for heatmap.2
+#'
+#' @param datIn  a fishScaleAndMap output list
+#' @param group a character vector (or factor) indicating how to split the data (e.g., cluster 
+#'   call) or a metadata/mappingResults column name
+#' @param groups a character vector of groups to show (default is levels of group)
+#' @param useScaled plot the scaled (TRUE) or unscaled (FALSE; default) values
+#' @param colors a character vector (or factor) indicating how to color the plots (e.g., layer 
+#'   or gene expression) or a metadata/mappingResults column name (default is all black)
+#' @param colormap function to use for the colormap for the data (default gray.colors)
+#' @param xlim,ylim for plot, but will be calculated if not entered
+#' @param pch,... other parameters for plot
+#'
+#' @return filtered fishScaleAndMap object
+#'
+plotHeatmap <- function(datIn, group, groups = NULL, useScaled = FALSE, colors = rep("black", 
+  dim(datIn$mapDat)[2]), colormap = gray.colors, pch = 19, xlim = NULL, ylim = NULL, 
+  ...) {
+  
+  library(gplots)
+  colormap = match.fun(colormap)
+  if (useScaled) {
+    plotDat <- datIn$scaleDat
+  } else {
+    plotDat <- datIn$mapDat
+  }
+  meta = cbind(datIn$metadata, datIn$mappingResults)
+  if (length(group) == 1) {
+    if (is.element(group, colnames(meta))) {
+      group = as.factor(meta[, group])
+      if (is.null(groups)) 
+        groups = levels(group)
+    } else {
+      return(paste(group, "is not an available column name for division."))
+    }
+  }
+  if (length(colors) == 1) {
+    if (is.element(colors, colnames(meta))) {
+      colors = as.numeric(as.factor(meta[, colors]))
+      colors = colormap(length(unique(colors)))[colors]
+    } else {
+      return(paste(colors, "is not an available column name for coloring."))
+    }
+  }
+  
+  par(mfrow = c(1, length(groups)))
+  for (gp in groups) {
+    kp = group == gp
+    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch, col = colors[kp])
+  }
+}
+
+
+
+
 #' Return top mapped correlation-based cluster and confidence
 #' 
 #' Primary function for doing correlation-based mapping to cluster medians and also reporting the
