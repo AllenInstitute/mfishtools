@@ -376,20 +376,19 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 #' @param grouplab label for the grouping in the heatmap (default is 'Grouping' or the value for group)
 #' @param useScaled plot the scaled (TRUE) or unscaled (FALSE; default) values
 #' @param capValue values above capValue will be capped at capValue (default is none)
-#' @param colormap function to use for the colormap for the data (default heat_colors)
+#' @param colormap set of values to use for the colormap for the data (default heat_colors)
 #' @param Rowv,Colv,dendrogram,trace,margins,rowsep,key,... other parameters for heatmap.2 (some 
 #'   default values are different)
 #'
 #' @return Only returns if there is an error
 #'
 plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useScaled = FALSE, 
-  capValue = Inf, colormap = grey.colors, pch = 19, xlim = NULL, ylim = NULL, Rowv = FALSE, 
+  capValue = Inf, colormap = grey.colors(1000), pch = 19, xlim = NULL, ylim = NULL, Rowv = FALSE, 
   Colv = FALSE, dendrogram = "none", trace = "none", margins = c(3, 10), rowsep = 9, 
   key = FALSE, ...) {
   
   library(gplots)
   
-  colormap = match.fun(colormap)
   if (useScaled) {
     plotDat <- datIn$scaleDat
   } else {
