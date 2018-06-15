@@ -314,7 +314,7 @@ filterCells <- function(datIn, kpSamp) {
 #'
 #' @return filtered fishScaleAndMap object
 #'
-plotDistributions <- function(datIn, group, groups = NULL, useScaled = FALSE, colors = rep("black", 
+plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black", 
   dim(datIn$mapDat)[2]), colormap = gray.colors, pch = 19, xlim = NULL, ylim = NULL, 
   ...) {
   
@@ -338,10 +338,16 @@ plotDistributions <- function(datIn, group, groups = NULL, useScaled = FALSE, co
     }
   }
   
+  if(is.null(xlim))
+    xlim = range(datIn$scaledX)
+  if(is.null(ylim))
+    ylim = range(datIn$scaledY)
+  
   par(mfrow = c(1, length(groups)))
   for (gp in groups) {
     kp = group == gp
-    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch, col = colors[kp], ...)
+    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch, col = colors[kp], 
+      xlim=xlim, ylim=ylim, ...)
   }
 }
 
