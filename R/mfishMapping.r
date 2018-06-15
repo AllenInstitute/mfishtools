@@ -416,7 +416,7 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
   plotDat = plotDat[,order(group, -colSums(plotDat)) ]
   rownames(plotDat) = c(rownames(plotDat)[1:(dim(plotDat)[1]-1)],grouplab)
   heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
-    margins = margins, rowsep = rowsep, key = key, col = colormap)
+    margins = margins, rowsep = rowsep, key = key, col = colormap, ...)
 }
 
 
