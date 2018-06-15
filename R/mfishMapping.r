@@ -414,7 +414,7 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
   # Make the plot!
   plotDat = rbind(plotDat,as.numeric(group)*cap/length(groups))
   plotDat = plotDat[,order(group, colSums(plotDat)) ]
-  rownames(plotDat) = gsub(grouplab, colnames(datTmp))
+  rownames(plotDat) = gsub(grouplab, colnames(plotDat))
   heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
     margins = margins, rowsep = rowsep, key = key, col = colormap)
 }
