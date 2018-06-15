@@ -313,7 +313,7 @@ filterCells <- function(datIn, kpSamp) {
 #' @param pch,cex for plot.  Can be single values or vectors
 #' @param main,xlab,ylab,... other parameters for plot (must be single values)
 #'
-#' @return filtered fishScaleAndMap object
+#' @return Only returns if there is an error
 #'
 plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black", dim(datIn$mapDat)[2]), 
   colormap = gray.colors, pch = 19, cex = 1.5, xlim = NULL, ylim = NULL, main = "", 
@@ -347,6 +347,7 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
   if (is.null(ylim)) 
     ylim = range(-datIn$scaledY)
   
+  # Make the plot!
   par(mfrow = c(1, length(groups)))
   for (gp in groups) {
     kp = group == gp
@@ -369,32 +370,38 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 #' Plot the heatmap of cells ordering by a specified order.  This is a wrapper for heatmap.2
 #'
 #' @param datIn  a fishScaleAndMap output list
-#' @param group a character vector (or factor) indicating how to split the data (e.g., cluster 
+#' @param group a character vector (or factor) indicating how to order the heatmap (e.g., cluster 
 #'   call) or a metadata/mappingResults column name
 #' @param groups a character vector of groups to show (default is levels of group)
+#' @param grouplab label for the grouping in the heatmap (default is 'Grouping' or the value for group)
 #' @param useScaled plot the scaled (TRUE) or unscaled (FALSE; default) values
-#' @param colors a character vector (or factor) indicating how to color the plots (e.g., layer 
-#'   or gene expression) or a metadata/mappingResults column name (default is all black)
-#' @param colormap function to use for the colormap for the data (default gray.colors)
-#' @param xlim,ylim for plot, but will be calculated if not entered
-#' @param pch,... other parameters for plot
+#' @param capValue values above capValue will be capped at capValue 
+#' @param colormap function to use for the colormap for the data (default heat_colors)
+#' @param Rowv,Colv,dendrogram,trace,margins,rowsep,key,... other parameters for heatmap.2 (some 
+#'   default values are different)
 #'
-#' @return filtered fishScaleAndMap object
+#' @return Only returns if there is an error
 #'
-plotHeatmap <- function(datIn, group, groups = NULL, useScaled = FALSE, colors = rep("black", 
-  dim(datIn$mapDat)[2]), colormap = gray.colors, pch = 19, xlim = NULL, ylim = NULL, 
+plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useScaled = FALSE, 
+  colormap = heat_colors, pch = 19, xlim = NULL, ylim = NULL, Rowv = FALSE, Colv = FALSE, 
+  dendrogram = "none", trace = "none", margins = c(3, 10), rowsep = 9, key = FALSE, 
   ...) {
   
   library(gplots)
+  
   colormap = match.fun(colormap)
   if (useScaled) {
     plotDat <- datIn$scaleDat
   } else {
     plotDat <- datIn$mapDat
   }
+  plotDat = pmin(plotDat, capValue)
+  
   meta = cbind(datIn$metadata, datIn$mappingResults)
   if (length(group) == 1) {
     if (is.element(group, colnames(meta))) {
+      if (grouplab == "Grouping") 
+        grouplab = group
       group = as.factor(meta[, group])
       if (is.null(groups)) 
         groups = levels(group)
@@ -402,20 +409,14 @@ plotHeatmap <- function(datIn, group, groups = NULL, useScaled = FALSE, colors =
       return(paste(group, "is not an available column name for division."))
     }
   }
-  if (length(colors) == 1) {
-    if (is.element(colors, colnames(meta))) {
-      colors = as.numeric(as.factor(meta[, colors]))
-      colors = colormap(length(unique(colors)))[colors]
-    } else {
-      return(paste(colors, "is not an available column name for coloring."))
-    }
-  }
+  # Update the levels if needed
+  levels(group) = c(intersect(groups, levels(group)), setdiff(levels(group), groups))
   
-  par(mfrow = c(1, length(groups)))
-  for (gp in groups) {
-    kp = group == gp
-    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch, col = colors[kp])
-  }
+  # Make the plot!
+  plotDat = plotDat[order(group, colSums(datIn$mapDat)), ]
+  colnames(plotDat) = gsub(grouplab, colnames(datTmp))
+  heatmap.2(t(plotDat), Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
+    margins = margins, rowsep = rowsep, key = key, col = colormap)
 }
 
 

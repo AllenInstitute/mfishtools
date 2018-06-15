@@ -28,7 +28,7 @@ or gene expression) or a metadata/mappingResults column name (default is all bla
 \item{main, xlab, ylab, ...}{other parameters for plot (must be single values)}
 }
 \value{
-filtered fishScaleAndMap object
+Only returns if there is an error
 }
 \description{
 Plot the distributions of cells across the tissue with overlaying color information.  This is

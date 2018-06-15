@@ -4,31 +4,32 @@
 \alias{plotHeatmap}
 \title{Plot heatmap}
 \usage{
-plotHeatmap(datIn, group, groups = NULL, useScaled = FALSE,
-  colors = rep("black", dim(datIn$mapDat)[2]), colormap = gray.colors,
-  pch = 19, xlim = NULL, ylim = NULL, ...)
+plotHeatmap(datIn, group, groups = NULL, grouplab = "Grouping",
+  useScaled = FALSE, colormap = heat_colors, pch = 19, xlim = NULL,
+  ylim = NULL, Rowv = FALSE, Colv = FALSE, dendrogram = "none",
+  trace = "none", margins = c(3, 10), rowsep = 9, key = FALSE, ...)
 }
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}
 
-\item{group}{a character vector (or factor) indicating how to split the data (e.g., cluster 
+\item{group}{a character vector (or factor) indicating how to order the heatmap (e.g., cluster 
 call) or a metadata/mappingResults column name}
 
 \item{groups}{a character vector of groups to show (default is levels of group)}
 
+\item{grouplab}{label for the grouping in the heatmap (default is "Grouping" or the value for group)}
+
 \item{useScaled}{plot the scaled (TRUE) or unscaled (FALSE; default) values}
 
-\item{colors}{a character vector (or factor) indicating how to color the plots (e.g., layer 
-or gene expression) or a metadata/mappingResults column name (default is all black)}
+\item{colormap}{function to use for the colormap for the data (default heat_colors)}
 
-\item{colormap}{function to use for the colormap for the data (default gray.colors)}
+\item{Rowv, Colv, dendrogram, trace, margins, rowsep, key, ...}{other parameters for heatmap.2 (some 
+default values are different)}
 
-\item{pch, ...}{other parameters for plot}
-
-\item{xlim, ylim}{for plot, but will be calculated if not entered}
+\item{capValue}{values above capValue will be capped at capValue}
 }
 \value{
-filtered fishScaleAndMap object
+Only returns if there is an error
 }
 \description{
 Plot the heatmap of cells ordering by a specified order.  This is a wrapper for heatmap.2
