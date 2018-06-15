@@ -766,7 +766,7 @@ corTreeMapping <- function(mapDat, medianDat, dend = NULL, refDat = NA, clusters
     medianDat = do.call("cbind", tapply(names(clusters), clusters, function(x) rowMedians(refDat[, 
       x])))
   }
-  if (!is.NULL(dend)) 
+  if (!is.null(dend)) 
     medianDat <- leafToNodeMedians(dend, medianDat)
   kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
   corrVar <- cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, ...)

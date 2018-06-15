@@ -224,8 +224,8 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binar
 #' }
 #'
 fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFunction = cellToClusterMapping_byCor, 
-  transform = function(x) x, noisefloor = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
-  metadata = data.frame(), ...) {
+  transform = function(x) x, noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
+  metadata = data.frame(experiment = rep("all",dim(mapDat)[2])), ...) {
   
   # Setup
   mappingFunction <- match.fun(mappingFunction)
@@ -235,8 +235,6 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
     genesToMap <- colnames(mapDat)
   genesToMap <- intersect(genesToMap, colnames(refSummaryDat))
   params <- colnames(metadata)
-  if (!is.element("experiment", params)) 
-    metadata$experiment = "all"
   refSummaryDat <- refSummaryDat[genesToMap, ]
   mapDat <- mapDat[genesToMap, ]
   
@@ -274,8 +272,6 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
   out = list(scaleDat, mappingResults, scaledX = metadata$x, scaledY = metadata$y)
   
 }
-
-
 
 
 #' Return top mapped correlation-based cluster and confidence
@@ -355,23 +351,6 @@ cellToClusterMapping_byRank <- function(mapDat, refDat, clustersF, genesToMap = 
   rownames(rfv) = rownames(corrVar)
   return(rfv)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #' Quantile normalize, truncate, and scale
