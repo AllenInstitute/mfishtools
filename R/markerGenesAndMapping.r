@@ -705,7 +705,8 @@ generateMultipleCellReferenceSet <- function(refDat, clustersF, genesToUse = row
 #'   rowMedians (default)
 #' @param useRank use the rank of the correlation (default) or the correlation itself to 
 #'   determine the top cluster
-#' @param use,... additional parameters for cor
+#' @param use additional parameter for cor (use='p' as default)
+#' @param method additional parameter for cor (method='p' as default)
 #'
 #' @return a two column data matrix where the first column is the mapped cluster and the second
 #'   column is a confidence call indicating how close to the top of the ranked list cells of the
@@ -714,12 +715,12 @@ generateMultipleCellReferenceSet <- function(refDat, clustersF, genesToUse = row
 #'   likely a cell in a training set is to being correctly assigned to the training cluster.
 #'
 cellToClusterMapping_byRank <- function(mapDat, refDat, clustersF, genesToMap = rownames(mapDat), 
-  mergeFunction = rowMedians, useRank = TRUE, use = "p", ...) {
+  mergeFunction = rowMedians, useRank = TRUE, use = "p", method = "p") {
   
   if (is.null(names(clustersF))) 
     names(clustersF) <- colnames(refDat)
   kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(refDat)))
-  corrVar <- cor(mapDat[kpVar, ], refDat[kpVar, ], use = use, ...)
+  corrVar <- cor(mapDat[kpVar, ], refDat[kpVar, ], use = use, method = method)
   corrVar[corrVar > 0.999999] <- NA  # assume any perfect correlation is either an self-to-self mapping, or a mapping using exactly 1 non-zero gene
   if (useRank) 
     rankVar <- t(apply(-corrVar, 1, rank, na.last = "keep"))
@@ -754,13 +755,14 @@ cellToClusterMapping_byRank <- function(mapDat, refDat, clustersF, genesToMap = 
 #' @param refDat normalized data of the REFERENCE data set.  Ignored if medianDat is passed
 #' @param clusters  cluster calls for each cell.  Ignored if medianDat is passed
 #' @param genesToMap which genes to include in the correlation mapping
-#' @param use,... additional parameters for cor
+#' @param use additional parameter for cor (use='p' as default)
+#' @param method additional parameter for cor (method='p' as default)
 #'
 #' @return matrix with the correlation between expression of each cell and representative value for 
 #'   each leaf and node
 #'
 corTreeMapping <- function(mapDat, medianDat, dend = NULL, refDat = NA, clusters = NA, 
-  genesToMap = rownames(mapDat), use = "p", ...) {
+  genesToMap = rownames(mapDat), use = "p", method = "p") {
   if (is.na(medianDat[1])) {
     names(clusters) = colnames(refDat)
     medianDat = do.call("cbind", tapply(names(clusters), clusters, function(x) rowMedians(refDat[, 
@@ -769,7 +771,7 @@ corTreeMapping <- function(mapDat, medianDat, dend = NULL, refDat = NA, clusters
   if (!is.null(dend)) 
     medianDat <- leafToNodeMedians(dend, medianDat)
   kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
-  corrVar <- cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, ...)
+  corrVar <- cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, method = method)
   return(corrVar)
 }
 

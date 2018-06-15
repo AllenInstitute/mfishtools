@@ -6,8 +6,8 @@
 \usage{
 fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
   mappingFunction = cellToClusterMapping_byCor, transform = function(x) x,
-  noisefloor = 0, scaleFunction = quantileTruncate, scaleXY = TRUE,
-  metadata = data.frame(), ...)
+  noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE,
+  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])), ...)
 }
 \arguments{
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
@@ -23,6 +23,8 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 
 \item{transform}{function for transformation of the data (default in none)}
 
+\item{noiselevel}{scalar value below which all values are set to 0 (default is 0)}
+
 \item{scaleFunction}{which function to use for scaling mapDat to refSummaryDat (default is setting
 90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)}
 
@@ -36,8 +38,6 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 }}
 
 \item{...}{additional parameters for passthrough into other functions}
-
-\item{noiselevel}{scalar value below which all values are set to 0 (default is 0)}
 }
 \value{
 a list with the following entrees:

@@ -225,11 +225,11 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binar
 #'
 fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFunction = cellToClusterMapping_byCor, 
   transform = function(x) x, noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
-  metadata = data.frame(experiment = rep("all",dim(mapDat)[2])), ...) {
+  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])), ...) {
   
   # Setup
   mappingFunction <- match.fun(mappingFunction)
-  scaleFunction <- match.fun(scaleFunction)
+  scaleFunction <- match.fun(scaleFunction, ...)
   transform <- match.fun(transform)
   if (is.null(genesToMap)) 
     genesToMap <- colnames(mapDat)
@@ -270,7 +270,6 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
   
   # Return the results
   out = list(scaleDat, mappingResults, scaledX = metadata$x, scaledY = metadata$y)
-  
 }
 
 
@@ -284,72 +283,21 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
 #' @param refDat normalized data of the REFERENCE data set.  Ignored if medianDat is passed
 #' @param clusters  cluster calls for each cell.  Ignored if medianDat is passed
 #' @param genesToMap which genes to include in the correlation mapping
-#' @param use,... additional parameters for cor
+#' @param use additional parameter for cor (use='p' as default)
+#' @param method additional parameter for cor (method='p' as default)
 #'
 #' @return data frame with the top match and associated correlation
 #'
 cellToClusterMapping_byCor <- function(medianDat, mapDat, refDat = NA, clusters = NA, 
-  genesToMap = rownames(mapDat), use = "p", ...) {
+  genesToMap = rownames(mapDat), use = "p", method = "p") {
   corVar <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, refDat = refDat, 
-    clusters = clusters, genesToMap = genesToMap, use = use, ...)
+    clusters = clusters, genesToMap = genesToMap, use = use, method = method)
   corMatch <- getTopMatch(corVar)
   colnames(corMatch) <- c("Class", "Correlation")
   
   dex <- apply(corVar, 2, function(x) return(-diff(order(-x)[1:2])), colnames(medianExpr))
   corMatch$DifferenceBetweenTopTwoCorrelations = dex
   return(corMatch)
-}
-
-
-#' Cell-based cluster mapping
-#' 
-#' Maps cells to clusters by correlating every mapped cell with every reference cell,
-#'   ranking the cells by correlation, and the reporting the cluster with the lowest average rank.
-#'
-#' @param mapDat normalized data of the MAPPING data set.
-#' @param refDat normalized data of the REFERENCE data set
-#' @param clustersF factor indicating which cluster each cell type is actually assigned 
-#'   to in the reference data set
-#' @param genesToMap character vector of which genes to include in the correlation mapping
-#' @param mergeFunction function for combining ranks; the tested choices are rowMeans or 
-#'   rowMedians (default)
-#' @param useRank use the rank of the correlation (default) or the correlation itself to 
-#'   determine the top cluster
-#' @param use,... additional parameters for cor
-#'
-#' @return a two column data matrix where the first column is the mapped cluster and the second
-#'   column is a confidence call indicating how close to the top of the ranked list cells of the
-#'   assigned cluster were located relative to their best possible location in the ranked list.
-#'   This confidence score seems to be a bit more reliable than correlation at determining how
-#'   likely a cell in a training set is to being correctly assigned to the training cluster.
-#'
-cellToClusterMapping_byRank <- function(mapDat, refDat, clustersF, genesToMap = rownames(mapDat), 
-  mergeFunction = rowMedians, useRank = TRUE, use = "p", ...) {
-  
-  if (is.null(names(clustersF))) 
-    names(clustersF) <- colnames(refDat)
-  kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(refDat)))
-  corrVar <- cor(mapDat[kpVar, ], refDat[kpVar, ], use = use, ...)
-  corrVar[corrVar > 0.999999] <- NA  # assume any perfect correlation is either an self-to-self mapping, or a mapping using exactly 1 non-zero gene
-  if (useRank) 
-    rankVar <- t(apply(-corrVar, 1, rank, na.last = "keep"))
-  if (!useRank) 
-    rankVar <- -corrVar
-  colnames(rankVar) <- names(clustersF) <- paste0("n", 1:length(clustersF))
-  clMean <- do.call("cbind", tapply(names(clustersF), clustersF, function(x) match.fun(mergeFunction)(rankVar[, 
-    x], na.rm = TRUE)))
-  clMin <- apply(clMean, 1, min, na.rm = TRUE)
-  clMin[is.na(clMin)] <- 0
-  clMin[clMin == Inf] <- 1e+09
-  clBest <- colnames(clMean)[apply(clMean, 1, function(x) return(which.min(x)[1]))]
-  clBest[is.na(clBest)] = colnames(clMean)[1]
-  if (useRank) 
-    clScore <- (table(clustersF)[clBest]/2)/pmax(clMin, 1e-11)
-  if (!useRank) 
-    clScore <- -clMin
-  rfv <- data.frame(TopLeaf = clBest, Score = as.numeric(as.character(clScore)))
-  rownames(rfv) = rownames(corrVar)
-  return(rfv)
 }
 
 

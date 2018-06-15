@@ -5,7 +5,7 @@
 \title{Return top mapped correlation-based cluster and confidence}
 \usage{
 cellToClusterMapping_byCor(medianDat, mapDat, refDat = NA, clusters = NA,
-  genesToMap = rownames(mapDat), use = "p", ...)
+  genesToMap = rownames(mapDat), use = "p", method = "p")
 }
 \arguments{
 \item{medianDat}{representative value for each leaf and node.  If not entered, it is calculated}
@@ -18,7 +18,9 @@ cellToClusterMapping_byCor(medianDat, mapDat, refDat = NA, clusters = NA,
 
 \item{genesToMap}{which genes to include in the correlation mapping}
 
-\item{use, ...}{additional parameters for cor}
+\item{use}{additional parameter for cor (use="p" as default)}
+
+\item{method}{additional parameter for cor (method="p" as default)}
 }
 \value{
 data frame with the top match and associated correlation
