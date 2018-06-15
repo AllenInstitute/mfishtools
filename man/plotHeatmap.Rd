@@ -5,9 +5,10 @@
 \title{Plot heatmap}
 \usage{
 plotHeatmap(datIn, group, groups = NULL, grouplab = "Grouping",
-  useScaled = FALSE, colormap = heat_colors, pch = 19, xlim = NULL,
-  ylim = NULL, Rowv = FALSE, Colv = FALSE, dendrogram = "none",
-  trace = "none", margins = c(3, 10), rowsep = 9, key = FALSE, ...)
+  useScaled = FALSE, capValue = Inf, colormap = grey.colors, pch = 19,
+  xlim = NULL, ylim = NULL, Rowv = FALSE, Colv = FALSE,
+  dendrogram = "none", trace = "none", margins = c(3, 10), rowsep = 9,
+  key = FALSE, ...)
 }
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}
@@ -17,16 +18,16 @@ call) or a metadata/mappingResults column name}
 
 \item{groups}{a character vector of groups to show (default is levels of group)}
 
-\item{grouplab}{label for the grouping in the heatmap (default is "Grouping" or the value for group)}
+\item{grouplab}{label for the grouping in the heatmap (default is 'Grouping' or the value for group)}
 
 \item{useScaled}{plot the scaled (TRUE) or unscaled (FALSE; default) values}
+
+\item{capValue}{values above capValue will be capped at capValue (default is none)}
 
 \item{colormap}{function to use for the colormap for the data (default heat_colors)}
 
 \item{Rowv, Colv, dendrogram, trace, margins, rowsep, key, ...}{other parameters for heatmap.2 (some 
 default values are different)}
-
-\item{capValue}{values above capValue will be capped at capValue}
 }
 \value{
 Only returns if there is an error
