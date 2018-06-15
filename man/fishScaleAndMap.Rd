@@ -44,6 +44,7 @@ a list with the following entrees:
 \describe{
   \item{scaleDat}{scaled mapDat data matrix}
   \item{mappingResults}{Results of the mapping and associated confidence values (if any)}
+  \item{metadata=metadata}{metadata is passed through unchanged}
   \item{scaledX/Y}{scaled x and y coordinates (or unscaled if scaling was not performed)}
 }
 }
