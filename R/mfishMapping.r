@@ -310,13 +310,14 @@ filterCells <- function(datIn, kpSamp) {
 #'   or gene expression) or a metadata/mappingResults column name (default is all black)
 #' @param colormap function to use for the colormap for the data (default gray.colors)
 #' @param xlim,ylim for plot, but will be calculated if not entered
-#' @param pch,main,xlab,ylab,... other parameters for plot
+#' @param pch,cex for plot.  Can be single values or vectors
+#' @param main,xlab,ylab,... other parameters for plot (must be single values)
 #'
 #' @return filtered fishScaleAndMap object
 #'
 plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black", dim(datIn$mapDat)[2]), 
-  colormap = gray.colors, pch = 19, xlim = NULL, ylim = NULL, main = "", xlab = "", 
-  ylab = "", ...) {
+  colormap = gray.colors, pch = 19, cex = 1.5, xlim = NULL, ylim = NULL, main = "", 
+  xlab = "", ylab = "", ...) {
   
   colormap = match.fun(colormap)
   meta = cbind(datIn$metadata, datIn$mappingResults)
@@ -349,8 +350,16 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
   par(mfrow = c(1, length(groups)))
   for (gp in groups) {
     kp = group == gp
-    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch, col = colors[kp], xlim = xlim, 
-      ylim = ylim, main = paste(main, gp), xlab = xlab, ylab = ylab, ...)
+    pch2 = pch
+    if (length(pch) > 1) 
+      pch2 = pch[kp]
+    cex2 = cex
+    if (length(cex) > 1) 
+      cex2 = cex[kp]
+    
+    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch2, col = colors[kp], xlim = xlim, 
+      ylim = ylim, main = paste(main, gp), xlab = xlab, ylab = ylab, cex = cex2, 
+      ...)
   }
 }
 

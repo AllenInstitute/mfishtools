@@ -5,8 +5,8 @@
 \title{Plot distributions}
 \usage{
 plotDistributions(datIn, group, groups = NULL, colors = rep("black",
-  dim(datIn$mapDat)[2]), colormap = gray.colors, pch = 19, xlim = NULL,
-  ylim = NULL, main = "", xlab = "", ylab = "", ...)
+  dim(datIn$mapDat)[2]), colormap = gray.colors, pch = 19, cex = 1.5,
+  xlim = NULL, ylim = NULL, main = "", xlab = "", ylab = "", ...)
 }
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}
@@ -21,9 +21,11 @@ or gene expression) or a metadata/mappingResults column name (default is all bla
 
 \item{colormap}{function to use for the colormap for the data (default gray.colors)}
 
-\item{pch, main, xlab, ylab, ...}{other parameters for plot}
+\item{pch, cex}{for plot.  Can be single values or vectors}
 
 \item{xlim, ylim}{for plot, but will be calculated if not entered}
+
+\item{main, xlab, ylab, ...}{other parameters for plot (must be single values)}
 }
 \value{
 filtered fishScaleAndMap object
