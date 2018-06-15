@@ -218,6 +218,7 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binar
 #'
 #' @return a list with the following entrees:
 #' \describe{
+#'   \item{mapDat}{mapDat data matrix is passed through}
 #'   \item{scaleDat}{scaled mapDat data matrix}
 #'   \item{mappingResults}{Results of the mapping and associated confidence values (if any)}
 #'   \item{metadata=metadata}{metadata is passed through unchanged}
@@ -270,8 +271,8 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
   }
   
   # Return the results
-  out = list(scaleDat = scaleDat, mappingResults = mappingResults, metadata = metadata, 
-    scaledX = metadata$x, scaledY = metadata$y)
+  out = list(mapDat = mapDat, scaleDat = scaleDat, mappingResults = mappingResults, 
+    metadata = metadata, scaledX = metadata$x, scaledY = metadata$y)
 }
 
 

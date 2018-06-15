@@ -42,6 +42,7 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 \value{
 a list with the following entrees:
 \describe{
+  \item{mapDat}{mapDat data matrix is passed through}
   \item{scaleDat}{scaled mapDat data matrix}
   \item{mappingResults}{Results of the mapping and associated confidence values (if any)}
   \item{metadata=metadata}{metadata is passed through unchanged}
