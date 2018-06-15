@@ -229,7 +229,7 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
   
   # Setup
   mappingFunction <- match.fun(mappingFunction)
-  scaleFunction <- match.fun(scaleFunction, ...)
+  scaleFunction <- match.fun(scaleFunction)
   transform <- match.fun(transform)
   if (is.null(genesToMap)) 
     genesToMap <- colnames(mapDat)
@@ -250,7 +250,7 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
   # Scale to the reference data
   for (ex in unique(metadata$experiment)) {
     isExp = metadata$experiment == ex
-    for (g in genesToMap) scaleDat[g, isExp] <- quantileTruncate(scaleDat[g, isExp], 
+    for (g in genesToMap) scaleDat[g, isExp] <- scaleFunction(scaleDat[g, isExp], 
       maxVal = max(refSummaryDat[g, ]), ...)
   }
   
@@ -285,11 +285,12 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
 #' @param genesToMap which genes to include in the correlation mapping
 #' @param use additional parameter for cor (use='p' as default)
 #' @param method additional parameter for cor (method='p' as default)
+#' @param ... not used
 #'
 #' @return data frame with the top match and associated correlation
 #'
 cellToClusterMapping_byCor <- function(medianDat, mapDat, refDat = NA, clusters = NA, 
-  genesToMap = rownames(mapDat), use = "p", method = "p") {
+  genesToMap = rownames(mapDat), use = "p", method = "p", ...) {
   corVar <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, refDat = refDat, 
     clusters = clusters, genesToMap = genesToMap, use = use, method = method)
   corMatch <- getTopMatch(corVar)
