@@ -20,9 +20,9 @@ corTreeMapping(mapDat, medianDat, dend = NULL, refDat = NA, clusters = NA,
 
 \item{genesToMap}{which genes to include in the correlation mapping}
 
-\item{use}{additional parameter for cor (use="p" as default)}
+\item{use}{additional parameter for cor (use='p' as default)}
 
-\item{method}{additional parameter for cor (method="p" as default)}
+\item{method}{additional parameter for cor (method='p' as default)}
 }
 \value{
 matrix with the correlation between expression of each cell and representative value for 

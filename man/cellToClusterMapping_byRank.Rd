@@ -24,9 +24,9 @@ rowMedians (default)}
 \item{useRank}{use the rank of the correlation (default) or the correlation itself to 
 determine the top cluster}
 
-\item{use}{additional parameter for cor (use="p" as default)}
+\item{use}{additional parameter for cor (use='p' as default)}
 
-\item{method}{additional parameter for cor (method="p" as default)}
+\item{method}{additional parameter for cor (method='p' as default)}
 }
 \value{
 a two column data matrix where the first column is the mapped cluster and the second
