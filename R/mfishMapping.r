@@ -341,7 +341,7 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
   if (is.null(xlim)) 
     xlim = range(datIn$scaledX)
   if (is.null(ylim)) 
-    ylim = range(datIn$scaledY)
+    ylim = range(-datIn$scaledY)
   
   par(mfrow = c(1, length(groups)))
   for (gp in groups) {
