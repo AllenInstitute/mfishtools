@@ -336,12 +336,15 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
     } else {
       return(paste(colors, "is not an available column name for coloring."))
     }
+  } else {
+    colors = as.numeric(as.factor(colors))
+    colors = colormap(length(unique(colors)))[colors]
   }
   
   if (is.null(xlim)) 
     xlim = range(datIn$scaledX)
   if (is.null(ylim)) 
-    ylim = range(datIn$scaledY)
+    ylim = range(-datIn$scaledY)
   
   par(mfrow = c(1, length(groups)))
   for (gp in groups) {
