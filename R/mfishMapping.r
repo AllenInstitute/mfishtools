@@ -233,7 +233,7 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
   transform <- match.fun(transform)
   if (is.null(genesToMap)) 
     genesToMap <- colnames(mapDat)
-  genesToMap <- intersect(genesToMap, colnames(refSummaryDat))
+  genesToMap <- intersect(genesToMap, rownames(refSummaryDat))
   params <- colnames(metadata)
   refSummaryDat <- refSummaryDat[genesToMap, ]
   mapDat <- mapDat[genesToMap, ]
@@ -296,7 +296,7 @@ cellToClusterMapping_byCor <- function(medianDat, mapDat, refDat = NA, clusters 
   corMatch <- getTopMatch(corVar)
   colnames(corMatch) <- c("Class", "Correlation")
   
-  dex <- apply(corVar, 2, function(x) return(-diff(order(-x)[1:2])), colnames(medianExpr))
+  dex <- apply(corVar, 1, function(x) return(diff(sort(-x)[1:2])))
   corMatch$DifferenceBetweenTopTwoCorrelations = dex
   return(corMatch)
 }
