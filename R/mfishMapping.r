@@ -310,13 +310,13 @@ filterCells <- function(datIn, kpSamp) {
 #'   or gene expression) or a metadata/mappingResults column name (default is all black)
 #' @param colormap function to use for the colormap for the data (default gray.colors)
 #' @param xlim,ylim for plot, but will be calculated if not entered
-#' @param pch,... other parameters for plot
+#' @param pch,main,xlab,ylab,... other parameters for plot
 #'
 #' @return filtered fishScaleAndMap object
 #'
-plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black", 
-  dim(datIn$mapDat)[2]), colormap = gray.colors, pch = 19, xlim = NULL, ylim = NULL, 
-  ...) {
+plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black", dim(datIn$mapDat)[2]), 
+  colormap = gray.colors, pch = 19, xlim = NULL, ylim = NULL, main = "", xlab = "", 
+  ylab = "", ...) {
   
   colormap = match.fun(colormap)
   meta = cbind(datIn$metadata, datIn$mappingResults)
@@ -338,16 +338,16 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
     }
   }
   
-  if(is.null(xlim))
+  if (is.null(xlim)) 
     xlim = range(datIn$scaledX)
-  if(is.null(ylim))
+  if (is.null(ylim)) 
     ylim = range(datIn$scaledY)
   
   par(mfrow = c(1, length(groups)))
   for (gp in groups) {
     kp = group == gp
-    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch, col = colors[kp], 
-      xlim=xlim, ylim=ylim, ...)
+    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch, col = colors[kp], xlim = xlim, 
+      ylim = ylim, main = paste(main, gp), xlab = xlab, ylab = ylab, ...)
   }
 }
 
