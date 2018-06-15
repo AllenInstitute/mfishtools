@@ -5,8 +5,8 @@
 \title{Plot heatmap}
 \usage{
 plotHeatmap(datIn, group, groups = NULL, grouplab = "Grouping",
-  useScaled = FALSE, capValue = Inf, colormap = grey.colors, pch = 19,
-  xlim = NULL, ylim = NULL, Rowv = FALSE, Colv = FALSE,
+  useScaled = FALSE, capValue = Inf, colormap = grey.colors(1000),
+  pch = 19, xlim = NULL, ylim = NULL, Rowv = FALSE, Colv = FALSE,
   dendrogram = "none", trace = "none", margins = c(3, 10), rowsep = 9,
   key = FALSE, ...)
 }
@@ -24,7 +24,7 @@ call) or a metadata/mappingResults column name}
 
 \item{capValue}{values above capValue will be capped at capValue (default is none)}
 
-\item{colormap}{function to use for the colormap for the data (default heat_colors)}
+\item{colormap}{set of values to use for the colormap for the data (default heat_colors)}
 
 \item{Rowv, Colv, dendrogram, trace, margins, rowsep, key, ...}{other parameters for heatmap.2 (some 
 default values are different)}

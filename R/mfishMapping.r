@@ -383,9 +383,9 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 #' @return Only returns if there is an error
 #'
 plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useScaled = FALSE, 
-  capValue = Inf, colormap = grey.colors(1000), pch = 19, xlim = NULL, ylim = NULL, Rowv = FALSE, 
-  Colv = FALSE, dendrogram = "none", trace = "none", margins = c(3, 10), rowsep = 9, 
-  key = FALSE, ...) {
+  capValue = Inf, colormap = grey.colors(1000), pch = 19, xlim = NULL, ylim = NULL, 
+  Rowv = FALSE, Colv = FALSE, dendrogram = "none", trace = "none", margins = c(3, 10), 
+  rowsep = 9, key = FALSE, ...) {
   
   library(gplots)
   
@@ -408,13 +408,13 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
       return(paste(group, "is not an available column name for division."))
     }
   }
-  # Update the levels if needed
-  levels(group) = c(groups, setdiff(levels(group), groups))
+  # Update the groups if needed
+  groups = c(groups, setdiff(levels(group), groups))
   
   # Make the plot!
-  plotDat = rbind(plotDat,as.numeric(group)*cap/length(groups))
-  plotDat = plotDat[,order(group, -colSums(plotDat)) ]
-  rownames(plotDat) = c(rownames(plotDat)[1:(dim(plotDat)[1]-1)],grouplab)
+  plotDat = rbind(plotDat, match(group, groups) * cap/length(groups))
+  plotDat = plotDat[, order(group, -colSums(plotDat))]
+  rownames(plotDat) = c(rownames(plotDat)[1:(dim(plotDat)[1] - 1)], grouplab)
   heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
     margins = margins, rowsep = rowsep, key = key, col = colormap, ...)
 }
