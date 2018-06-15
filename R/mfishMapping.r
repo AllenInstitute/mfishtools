@@ -409,10 +409,10 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
     }
   }
   # Update the levels if needed
-  levels(group) = c(intersect(groups, levels(group)), setdiff(levels(group), groups))
+  levels(group) = c(groups, setdiff(levels(group), groups))
   
   # Make the plot!
-  plotDat = plotDat[order(group, colSums(datIn$mapDat)), ]
+  plotDat = plotDat[order(group, colSums(plotDat$mapDat)), ]
   colnames(plotDat) = gsub(grouplab, colnames(datTmp))
   heatmap.2(t(plotDat), Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
     margins = margins, rowsep = rowsep, key = key, col = colormap)
