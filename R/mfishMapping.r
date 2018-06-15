@@ -269,7 +269,8 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
   }
   
   # Return the results
-  out = list(scaleDat, mappingResults, scaledX = metadata$x, scaledY = metadata$y)
+  out = list(scaleDat=scaleDat, mappingResults=mappingResults, 
+    scaledX = metadata$x, scaledY = metadata$y)
 }
 
 
