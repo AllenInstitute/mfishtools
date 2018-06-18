@@ -17,6 +17,9 @@ quantileTruncate(x, qprob = 0.9, maxVal = 1, truncate = TRUE, ...)
 
 \item{...}{not used}
 }
+\value{
+scaled vector
+}
 \description{
 Quantile normalize, truncate, and scale a numeric vector (e.g. mFISH data from one gene)
 }

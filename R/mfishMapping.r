@@ -322,6 +322,7 @@ filterCells <- function(datIn, kpSamp) {
 #' @param colors a character vector (or factor) indicating how to color the plots (e.g., layer 
 #'   or gene expression) or a metadata/mappingResults column name (default is all black)
 #' @param colormap function to use for the colormap for the data (default gray.colors)
+#' @param maxrow maximum number of plots to show in one row (default=12)
 #' @param xlim,ylim for plot, but will be calculated if not entered
 #' @param pch,cex for plot.  Can be single values or vectors
 #' @param main,xlab,ylab,... other parameters for plot (must be single values)
@@ -329,8 +330,8 @@ filterCells <- function(datIn, kpSamp) {
 #' @return Only returns if there is an error
 #'
 plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black", dim(datIn$mapDat)[2]), 
-  colormap = gray.colors, pch = 19, cex = 1.5, xlim = NULL, ylim = NULL, main = "", 
-  xlab = "", ylab = "", ...) {
+  colormap = gray.colors, maxrow = 12, pch = 19, cex = 1.5, xlim = NULL, ylim = NULL, 
+  main = "", xlab = "", ylab = "", ...) {
   
   colormap = match.fun(colormap)
   meta = cbind(datIn$metadata, datIn$mappingResults)
@@ -361,7 +362,9 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
     ylim = range(-datIn$scaledY)
   
   # Make the plot!
-  par(mfrow = c(1, length(groups)))
+  nrow = min(length(groups), maxrow)
+  ncol = ceiling(length(groups), maxrow)
+  par(mfrow = c(nrow, ncol))
   for (gp in groups) {
     kp = group == gp
     pch2 = pch
@@ -473,7 +476,6 @@ cellToClusterMapping_byCor <- function(medianDat, mapDat, refDat = NA, clusters 
 #' @param ... not used
 #'
 #' @return scaled vector
-#' }
 #'
 quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE, ...) {
   qs = quantile(x[x > 0], probs = qprob, na.rm = TRUE)
