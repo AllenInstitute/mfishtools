@@ -362,9 +362,9 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
     ylim = range(-datIn$scaledY)
   
   # Make the plot!
-  nrow = min(length(groups), maxrow)
-  ncol = ceiling(length(groups)/maxrow)
-  par(mfrow = c(nrow, ncol))
+  ncolv = min(length(groups), maxrow)
+  nrowv = ceiling(length(groups)/maxrow)
+  par(mfrow = c(nrowv, ncolv))
   for (gp in groups) {
     kp = group == gp
     pch2 = pch
