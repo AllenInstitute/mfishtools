@@ -401,7 +401,7 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useScaled = FALSE, 
   capValue = Inf, colormap = grey.colors(1000), pch = 19, xlim = NULL, ylim = NULL, 
   Rowv = FALSE, Colv = FALSE, dendrogram = "none", trace = "none", margins = c(6, 10), 
-  rowsep = NULL, colsep=NULL, key = FALSE, ...) {
+  rowsep = NULL, colsep = NULL, key = FALSE, ...) {
   
   library(gplots)
   
@@ -426,16 +426,15 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
   }
   # Update the groups if needed
   groups <- c(groups, setdiff(levels(group), groups))
-  tab    <- table(droplevels(factor(group, levels = groups)))
-  split  <- cumsum(tab)
+  tab <- table(droplevels(factor(group, levels = groups)))
+  split <- cumsum(tab)
   if (is.null(colsep)) 
     colsep <- split
   
-  # Make the plot!
-  plotDat <- rbind(plotDat, match(group, groups) * cap/length(groups))
+  # Make the plot! plotDat <- rbind(plotDat, match(group, groups) * cap/length(groups))
   plotDat <- plotDat[, order(group, -colSums(plotDat))]
-  rownames(plotDat) <- c(rownames(plotDat)[1:(dim(plotDat)[1] - 1)], grouplab)
-  colnames(plotDat)[split] <- paste(names(tab),"|",colnames(plotDat)[split])
+  # rownames(plotDat) <- c(rownames(plotDat)[1:(dim(plotDat)[1] - 1)], grouplab)
+  colnames(plotDat)[split] <- paste(names(tab), "|", colnames(plotDat)[split])
   heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
     margins = margins, rowsep = rowsep, colsep = colsep, key = key, col = colormap, 
     ...)
@@ -491,5 +490,70 @@ quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE, ...) {
     x[x > qs] = qs
   return(x * maxVal/qs)
 }
+
+
+#' Plot TSNE
+#' 
+#' Plot a TSNE of the data, with assigned colors and labels from provided variables.  Note that this
+#'   function is a modification of code from Pabloc (https://www.r-bloggers.com/author/pabloc/) from 
+#'   https://www.r-bloggers.com/playing-with-dimensions-from-clustering-pca-t-sne-to-carl-sagan/ 
+#'
+#' @param datIn  a fishScaleAndMap output list
+#' @param colorGroup a character vector (or factor) indicating how to color the Tsne (e.g., cluster 
+#'   call) or a metadata/mappingResults column name (default=NULL)
+#' @param labelGroup a character vector (or factor) indicating how to label the Tsne (e.g., cluster 
+#'   call) or a metadata/mappingResults column name (default=NULL)
+#' @param useScaled plot the scaled (TRUE) or unscaled (FALSE; default) values
+#' @param capValue values above capValue will be capped at capValue (default is none)
+#' @param perplexity,theta other parameters for Rtsne
+#' @param main title of the plot
+#'
+#' @return Only returns if there is an error
+#'
+plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", useScaled = FALSE, 
+  capValue = Inf, perplexity = 10, theta = 0.5, main = "TSNE plot") {
+  
+  library(Rtsne)
+  library(ggplot2)
+  
+  # Get the data
+  if (useScaled) {
+    plotDat <- datIn$scaleDat
+  } else {
+    plotDat <- datIn$mapDat
+  }
+  plotDat = pmin(plotDat, capValue)
+  plotDat = t(plotDat)
+  
+  # Color and label groups
+  meta = cbind(datIn$metadata, datIn$mappingResults)
+  if (length(colorGroup) == 1) {
+    if (is.element(colorGroup, colnames(meta))) {
+      colorGroup = as.factor(meta[, colorGroup])
+    } else {
+      colorGroup = as.factor(rep("none", dim(meta)[1]))
+    }
+  }
+  if (length(labelGroup) == 1) {
+    if (is.element(labelGroup, colnames(meta))) {
+      labelGroup = as.factor(meta[, labelGroup])
+    } else {
+      labelGroup = as.factor(rep("*", dim(meta)[1]))
+    }
+  }
+  
+  # Get the tsne corrdinates
+  tsne_model_1 <- Rtsne(as.matrix(plotDat), check_duplicates = FALSE, pca = TRUE, perplexity = perplexity, 
+    theta = theta, dims = 2)
+  d_tsne_1 = as.data.frame(tsne_model_1$Y)
+  
+  # Make the plot!
+  plot_k = ggplot(d_tsne_1, aes_string(x = "V1", y = "V2", color = colorGroup, label = labelGroup)) + 
+    geom_text() + xlab("TSNE 1") + ylab("TSNE 2") + ggtitle(main) + theme(legend.title = element_blank())
+  scale_colour_discrete()
+  
+  return(plot_k)
+}
+
 
 

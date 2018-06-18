@@ -16,4 +16,6 @@ Imports:
     gplots (>= 3.0.1),
     pdist (>= 1.2),
     matrixStats (>= 0.53.1)
+    Rtsne (>= 0.13)
+    ggplot2 (>= 2.2.1)
 RoxygenNote: 6.0.1
