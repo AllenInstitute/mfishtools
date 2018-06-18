@@ -426,7 +426,7 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
   }
   # Update the groups if needed
   groups <- c(groups, setdiff(levels(group), groups))
-  tab    <- droplevels(table(factor(group, levels = groups)))
+  tab    <- table(droplevels(factor(group, levels = groups)))
   split  <- cumsum(tab)
   if (is.null(colsep)) 
     colsep <- split
