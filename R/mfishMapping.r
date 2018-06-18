@@ -401,7 +401,7 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useScaled = FALSE, 
   capValue = Inf, colormap = grey.colors(1000), pch = 19, xlim = NULL, ylim = NULL, 
   Rowv = FALSE, Colv = FALSE, dendrogram = "none", trace = "none", margins = c(3, 10), 
-  rowsep = NULL, key = FALSE, ...) {
+  rowsep = NULL, colsep=NULL, key = FALSE, ...) {
   
   library(gplots)
   
