@@ -8,7 +8,7 @@ buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
   medianDat = NA, requiredGenes = 2, clusters = NA,
   mappedAsReference = FALSE, genesToMap = rownames(mapDat),
   plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5),
-  use = "p", ...)
+  main = NULL, ylab = NULL, use = "p", ...)
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}
@@ -33,6 +33,8 @@ clustered under a node which are mapped to the correct node.}
 \item{plotdendro}{should the dendrogram be plotted (default = TRUE)}
 
 \item{mar}{margins (for use with par)}
+
+\item{main, ylab}{add title and labels to plot (default is NULL)}
 
 \item{use, ...}{additional parameters for cor}
 

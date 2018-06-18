@@ -19,6 +19,7 @@
 #' @param plotdendro should the dendrogram be plotted (default = TRUE)
 #' @param returnDendro should the dendrogram be returned (default = TRUE)
 #' @param mar margins (for use with par)
+#' @param main,ylab add title and labels to plot (default is NULL)
 #' @param use,... additional parameters for cor
 #'
 #' @return a list where the first entry is the resulting tree and the second entry is the 
@@ -26,7 +27,8 @@
 #'
 buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA, 
   requiredGenes = 2, clusters = NA, mappedAsReference = FALSE, genesToMap = rownames(mapDat), 
-  plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5), use = "p", ...) {
+  plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5), main = NULL, ylab = NULL, 
+  use = "p", ...) {
   
   library(dendextend)
   
@@ -88,6 +90,7 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
     par(mar = mar)
     dend %>% set("nodes_cex", 0) %>% set("branches_col", "grey") %>% plot
     text(get_nodes_xy(dend)[, 1], get_nodes_xy(dend)[, 2], round(fracAgree * 100))
+    title(main = main, ylab = ylab)
   }
   
   # Return the results (if desired)
