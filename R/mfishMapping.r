@@ -393,8 +393,8 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 #' @param useScaled plot the scaled (TRUE) or unscaled (FALSE; default) values
 #' @param capValue values above capValue will be capped at capValue (default is none)
 #' @param colormap set of values to use for the colormap for the data (default heat_colors)
-#' @param Rowv,Colv,dendrogram,trace,margins,rowsep,key,... other parameters for heatmap.2 (some 
-#'   default values are different)
+#' @param Rowv,Colv,dendrogram,trace,margins,rowsep,colsep,key,... other parameters for heatmap.2 
+#'   (some default values are different)
 #'
 #' @return Only returns if there is an error
 #'
@@ -426,14 +426,16 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
   }
   # Update the groups if needed
   groups <- c(groups, setdiff(levels(group), groups))
-  colsep <- cumsum(table(factor(group, levels = groups)))
+  if (is.null(colsep)) 
+    colsep <- cumsum(table(factor(group, levels = groups)))
   
   # Make the plot!
   plotDat = rbind(plotDat, match(group, groups) * cap/length(groups))
   plotDat = plotDat[, order(group, -colSums(plotDat))]
   rownames(plotDat) = c(rownames(plotDat)[1:(dim(plotDat)[1] - 1)], grouplab)
   heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
-    margins = margins, rowsep = rowsep, key = key, col = colormap, ...)
+    margins = margins, rowsep = rowsep, colsep = colsep, key = key, col = colormap, 
+    ...)
 }
 
 

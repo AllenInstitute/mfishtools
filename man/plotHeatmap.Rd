@@ -26,8 +26,8 @@ call) or a metadata/mappingResults column name}
 
 \item{colormap}{set of values to use for the colormap for the data (default heat_colors)}
 
-\item{Rowv, Colv, dendrogram, trace, margins, rowsep, key, ...}{other parameters for heatmap.2 (some 
-default values are different)}
+\item{Rowv, Colv, dendrogram, trace, margins, rowsep, colsep, key, ...}{other parameters for heatmap.2 
+(some default values are different)}
 }
 \value{
 Only returns if there is an error
