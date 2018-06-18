@@ -363,7 +363,7 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
   
   # Make the plot!
   nrow = min(length(groups), maxrow)
-  ncol = ceiling(length(groups), maxrow)
+  ncol = ceiling(length(groups)/maxrow)
   par(mfrow = c(nrow, ncol))
   for (gp in groups) {
     kp = group == gp
