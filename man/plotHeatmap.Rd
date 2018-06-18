@@ -7,8 +7,8 @@
 plotHeatmap(datIn, group, groups = NULL, grouplab = "Grouping",
   useScaled = FALSE, capValue = Inf, colormap = grey.colors(1000),
   pch = 19, xlim = NULL, ylim = NULL, Rowv = FALSE, Colv = FALSE,
-  dendrogram = "none", trace = "none", margins = c(3, 10), rowsep = 9,
-  key = FALSE, ...)
+  dendrogram = "none", trace = "none", margins = c(3, 10),
+  rowsep = NULL, key = FALSE, ...)
 }
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}

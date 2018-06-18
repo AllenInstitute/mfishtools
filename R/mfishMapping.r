@@ -401,7 +401,7 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useScaled = FALSE, 
   capValue = Inf, colormap = grey.colors(1000), pch = 19, xlim = NULL, ylim = NULL, 
   Rowv = FALSE, Colv = FALSE, dendrogram = "none", trace = "none", margins = c(3, 10), 
-  rowsep = 9, key = FALSE, ...) {
+  rowsep = NULL, key = FALSE, ...) {
   
   library(gplots)
   
@@ -425,7 +425,8 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
     }
   }
   # Update the groups if needed
-  groups = c(groups, setdiff(levels(group), groups))
+  groups <- c(groups, setdiff(levels(group), groups))
+  colsep <- cumsum(table(factor(group, levels = groups)))
   
   # Make the plot!
   plotDat = rbind(plotDat, match(group, groups) * cap/length(groups))
