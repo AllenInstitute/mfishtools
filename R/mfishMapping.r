@@ -400,7 +400,7 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 #'
 plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useScaled = FALSE, 
   capValue = Inf, colormap = grey.colors(1000), pch = 19, xlim = NULL, ylim = NULL, 
-  Rowv = FALSE, Colv = FALSE, dendrogram = "none", trace = "none", margins = c(3, 10), 
+  Rowv = FALSE, Colv = FALSE, dendrogram = "none", trace = "none", margins = c(10, 10), 
   rowsep = NULL, colsep=NULL, key = FALSE, ...) {
   
   library(gplots)
@@ -426,13 +426,15 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
   }
   # Update the groups if needed
   groups <- c(groups, setdiff(levels(group), groups))
+  split  <- cumsum(table(factor(group, levels = groups)))
   if (is.null(colsep)) 
-    colsep <- cumsum(table(factor(group, levels = groups)))
+    colsep <- split
   
   # Make the plot!
-  plotDat = rbind(plotDat, match(group, groups) * cap/length(groups))
-  plotDat = plotDat[, order(group, -colSums(plotDat))]
-  rownames(plotDat) = c(rownames(plotDat)[1:(dim(plotDat)[1] - 1)], grouplab)
+  plotDat <- rbind(plotDat, match(group, groups) * cap/length(groups))
+  plotDat <- plotDat[, order(group, -colSums(plotDat))]
+  rownames(plotDat) <- c(rownames(plotDat)[1:(dim(plotDat)[1] - 1)], grouplab)
+  colnames(plotDat)[split] <- paste(colnames(plotDat)[split],"|",groups)
   heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
     margins = margins, rowsep = rowsep, colsep = colsep, key = key, col = colormap, 
     ...)
