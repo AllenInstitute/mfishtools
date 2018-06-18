@@ -6,8 +6,9 @@
 \usage{
 buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
   medianDat = NA, requiredGenes = 2, clusters = NA,
-  genesToMap = rownames(mapDat), plotdendro = TRUE, returndendro = TRUE,
-  mar = c(12, 5, 5, 5), use = "p", ...)
+  mappedAsReference = FALSE, genesToMap = rownames(mapDat),
+  plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5),
+  use = "p", ...)
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}
@@ -22,6 +23,10 @@ buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
 of medianDat) for the cluster to be included (default=2)}
 
 \item{clusters}{cluster calls for each cell}
+
+\item{mappedAsReference}{if TRUE, returns the fraction of cells mapped to a node which are
+were orginally clustered from that node; if FALSE (default) returns the fraction of cells 
+clustered under a node which are mapped to the correct node.}
 
 \item{genesToMap}{which genes to include in the correlation mapping}
 

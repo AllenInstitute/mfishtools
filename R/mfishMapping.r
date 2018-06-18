@@ -12,6 +12,9 @@
 #' @param requiredGenes minimum number of genes required to be expressed in a cluster (column
 #'   of medianDat) for the cluster to be included (default=2)
 #' @param clusters  cluster calls for each cell
+#' @param mappedAsReference if TRUE, returns the fraction of cells mapped to a node which are
+#'   were orginally clustered from that node; if FALSE (default) returns the fraction of cells 
+#'   clustered under a node which are mapped to the correct node.
 #' @param genesToMap which genes to include in the correlation mapping
 #' @param plotdendro should the dendrogram be plotted (default = TRUE)
 #' @param returnDendro should the dendrogram be returned (default = TRUE)
@@ -22,8 +25,8 @@
 #'   fraction of cells correctly mapping to each node using the inputted gene panel.
 #'
 buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA, 
-  requiredGenes = 2, clusters = NA, genesToMap = rownames(mapDat), plotdendro = TRUE, 
-  returndendro = TRUE, mar = c(12, 5, 5, 5), use = "p", ...) {
+  requiredGenes = 2, clusters = NA, mappedAsReference = FALSE, genesToMap = rownames(mapDat), 
+  plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5), use = "p", ...) {
   
   library(dendextend)
   
@@ -59,8 +62,15 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
   rownames(node_labels) <- get_nodes_attr(dend, "label")
   colnames(node_labels) <- labels(dend)
   
-  # Which clusters agree at the node level?
+  # Swap the mapped and reference nodes if mappedAsReference=TRUE
   clTmp = as.character(clusters[kpDat])
+  if (mappedAsReference) {
+    temp <- clTmp
+    clTmp <- facsCl
+    facsCl <- temp
+  }
+  
+  # Which clusters agree at the node level?
   agreeNodes = apply(cbind(facsCl, clTmp), 1, function(lab, node_labels) {
     rowSums(node_labels[, lab]) == 2
   }, node_labels)
