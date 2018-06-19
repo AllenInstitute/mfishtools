@@ -25,18 +25,18 @@
 #' @return a list where the first entry is the resulting tree and the second entry is the 
 #'   fraction of cells correctly mapping to each node using the inputted gene panel.
 #'
-buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medianDat = NA, 
-  requiredGenes = 2, clusters = NA, mappedAsReference = FALSE, genesToMap = rownames(mapDat), 
-  plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5), main = NULL, ylab = NULL, 
-  use = "p", ...) {
+buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, 
+  medianDat = NA, requiredGenes = 2, clusters = NA, mappedAsReference = FALSE, 
+  genesToMap = rownames(mapDat), plotdendro = TRUE, returndendro = TRUE, 
+  mar = c(12, 5, 5, 5), main = NULL, ylab = NULL, use = "p", ...) {
   
   library(dendextend)
   
   # Calculate the median, if needed.
   if (is.na(medianDat[1])) {
     names(clusters) = colnames(refDat)
-    medianDat = do.call("cbind", tapply(names(clusters), clusters, function(x) rowMedians(refDat[, 
-      x])))
+    medianDat = do.call("cbind", tapply(names(clusters), clusters, 
+      function(x) rowMedians(refDat[, x])))
     medianDat = leafToNodeMedians(dend, medianDat)
   }
   gns = intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
@@ -45,19 +45,23 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
   medianDat <- medianDat[gns, ]
   mapDat <- mapDat[gns, ]
   medianDat <- medianDat[, colSums(medianDat > 0) >= requiredGenes]
-  kpDat <- (colSums(mapDat > 0) >= requiredGenes) & (is.element(clusters, colnames(medianDat)))
+  kpDat <- (colSums(mapDat > 0) >= requiredGenes) & (is.element(clusters, 
+    colnames(medianDat)))
   mapDat <- mapDat[, kpDat]
   
   # Perform the correlation mapping
-  facsCor <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, use = use, ...)
+  facsCor <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, 
+    use = use, ...)
   facsCl <- colnames(facsCor)[apply(facsCor, 1, which.max)]
   
   # Build a new tree based on mapping
-  sCore <- function(x, use, ...) return(as.dist(1 - cor(x, use = use, ...)))
+  sCore <- function(x, use, ...) return(as.dist(1 - cor(x, use = use, 
+    ...)))
   dend <- getDend(medianDat, sCore, use = use, ...)
   
   # Which leaves have which nodes?
-  has_any_labels <- function(sub_dend, the_labels) any(labels(sub_dend) %in% the_labels)
+  has_any_labels <- function(sub_dend, the_labels) any(labels(sub_dend) %in% 
+    the_labels)
   node_labels <- NULL
   for (lab in labels(dend)) node_labels <- cbind(node_labels, noded_with_condition(dend, 
     has_any_labels, the_labels = lab))
@@ -84,12 +88,15 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
   }, clTmp, dend))
   colnames(isInNodes) = clTmp
   
-  # For each node, plot the fraction of cells that match if desired?
+  # For each node, plot the fraction of cells that match if
+  # desired?
   fracAgree = rowSums(agreeNodes)/rowSums(isInNodes)
   if (plotdendro) {
     par(mar = mar)
-    dend %>% set("nodes_cex", 0) %>% set("branches_col", "grey") %>% plot
-    text(get_nodes_xy(dend)[, 1], get_nodes_xy(dend)[, 2], round(fracAgree * 100))
+    dend %>% set("nodes_cex", 0) %>% set("branches_col", "grey") %>% 
+      plot
+    text(get_nodes_xy(dend)[, 1], get_nodes_xy(dend)[, 2], round(fracAgree * 
+      100))
     title(main = main, ylab = ylab)
   }
   
@@ -110,10 +117,12 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat, medi
 #'
 #' @return dendrogram 
 #'
-getDend <- function(dat, distFun = function(x) return(as.dist(1 - cor(x))), ...) {
+getDend <- function(dat, distFun = function(x) return(as.dist(1 - 
+  cor(x))), ...) {
   distCor = distFun(dat, ...)
   distCor[is.na(distCor)] = max(distCor, na.rm = TRUE) * 1.2
-  # Avoid crashing by setting NA values to hang off the side of the tree.
+  # Avoid crashing by setting NA values to hang off the side of the
+  # tree.
   avgClust = hclust(distCor, method = "average")
   dend = as.dendrogram(avgClust)
   dend = labelDend(dend)[[1]]
@@ -163,8 +172,8 @@ labelDend <- function(dend, n = 1) {
 #'
 #' @return matrix of summarized values
 #'
-summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binarize = FALSE, 
-  binMin = 0.5, summaryFunction = median, ...) {
+summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, 
+  binarize = FALSE, binMin = 0.5, summaryFunction = median, ...) {
   
   # Make sure the names match up
   if (is.null(colnames(mat))) 
@@ -180,18 +189,19 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binar
       return(apply(mat[, x], 1, summaryFunction, ...))
     return(mat[, x])
   }
-  summarizedMat <- do.call("cbind", tapply(names(group), group, runFunction, ...))
+  summarizedMat <- do.call("cbind", tapply(names(group), group, 
+    runFunction, ...))
   if (is.factor(group)) 
     summarizedMat = summarizedMat[, levels(group)]
   rownames(summarizedMat) = rownames(mat)
   
   # Scale the data if desired
   if (substr(scale, 1, 1) == "r") 
-    for (i in 1:dim(summarizedMat)[1]) summarizedMat[i, ] = summarizedMat[i, ]/max(1e-06, 
-      quantile(summarizedMat[i, ], probs = scaleQuantile))
+    for (i in 1:dim(summarizedMat)[1]) summarizedMat[i, ] = summarizedMat[i, 
+      ]/max(1e-06, quantile(summarizedMat[i, ], probs = scaleQuantile))
   if (substr(scale, 1, 1) == "c") 
-    for (i in 1:dim(summarizedMat)[2]) summarizedMat[, i] = summarizedMat[, i]/max(1e-06, 
-      quantile(summarizedMat[, i], probs = scaleQuantile))
+    for (i in 1:dim(summarizedMat)[2]) summarizedMat[, i] = summarizedMat[, 
+      i]/max(1e-06, quantile(summarizedMat[, i], probs = scaleQuantile))
   
   # Binarize the data if desired
   if (binarize) {
@@ -238,9 +248,11 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1, binar
 #'   \item{scaledX/Y}{scaled x and y coordinates (or unscaled if scaling was not performed)}
 #' }
 #'
-fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFunction = cellToClusterMapping_byCor, 
-  transform = function(x) x, noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
-  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])), ...) {
+fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, 
+  mappingFunction = cellToClusterMapping_byCor, transform = function(x) x, 
+  noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
+  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])), 
+  ...) {
   
   # Setup
   mappingFunction <- match.fun(mappingFunction)
@@ -265,14 +277,15 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL, mappingFun
   # Scale to the reference data
   for (ex in unique(metadata$experiment)) {
     isExp = metadata$experiment == ex
-    for (g in genesToMap) scaleDat[g, isExp] <- scaleFunction(scaleDat[g, isExp], 
-      maxVal = max(refSummaryDat[g, ]), ...)
+    for (g in genesToMap) scaleDat[g, isExp] <- scaleFunction(scaleDat[g, 
+      isExp], maxVal = max(refSummaryDat[g, ]), ...)
   }
   
   # Map the map data to the reference data
   mappingResults <- mappingFunction(refSummaryDat, scaleDat, ...)
   
-  # Scale x and y coordinates to (0,1) within experiment, if desired
+  # Scale x and y coordinates to (0,1) within experiment, if
+  # desired
   if (scaleXY) {
     for (ex in unique(metadata$experiment)) {
       isExp = metadata$experiment == ex
@@ -329,9 +342,10 @@ filterCells <- function(datIn, kpSamp) {
 #'
 #' @return Only returns if there is an error
 #'
-plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black", dim(datIn$mapDat)[2]), 
-  colormap = gray.colors, maxrow = 12, pch = 19, cex = 1.5, xlim = NULL, ylim = NULL, 
-  main = "", xlab = "", ylab = "", ...) {
+plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black", 
+  dim(datIn$mapDat)[2]), colormap = gray.colors, maxrow = 12, pch = 19, 
+  cex = 1.5, xlim = NULL, ylim = NULL, main = "", xlab = "", ylab = "", 
+  ...) {
   
   colormap = match.fun(colormap)
   meta = cbind(datIn$metadata, datIn$mappingResults)
@@ -374,9 +388,9 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
     if (length(cex) > 1) 
       cex2 = cex[kp]
     
-    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch2, col = colors[kp], xlim = xlim, 
-      ylim = ylim, main = paste(main, gp), xlab = xlab, ylab = ylab, cex = cex2, 
-      ...)
+    plot(datIn$scaledX[kp], -datIn$scaledY[kp], pch = pch2, col = colors[kp], 
+      xlim = xlim, ylim = ylim, main = paste(main, gp), xlab = xlab, 
+      ylab = ylab, cex = cex2, ...)
   }
 }
 
@@ -398,10 +412,11 @@ plotDistributions <- function(datIn, group, groups = NULL, colors = rep("black",
 #'
 #' @return Only returns if there is an error
 #'
-plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useScaled = FALSE, 
-  capValue = Inf, colormap = grey.colors(1000), pch = 19, xlim = NULL, ylim = NULL, 
-  Rowv = FALSE, Colv = FALSE, dendrogram = "none", trace = "none", margins = c(6, 10), 
-  rowsep = NULL, colsep = NULL, key = FALSE, ...) {
+plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", 
+  useScaled = FALSE, capValue = Inf, colormap = grey.colors(1000), 
+  pch = 19, xlim = NULL, ylim = NULL, Rowv = FALSE, Colv = FALSE, 
+  dendrogram = "none", trace = "none", margins = c(6, 10), rowsep = NULL, 
+  colsep = NULL, key = FALSE, ...) {
   
   library(gplots)
   
@@ -431,13 +446,15 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
   if (is.null(colsep)) 
     colsep <- split
   
-  # Make the plot! plotDat <- rbind(plotDat, match(group, groups) * cap/length(groups))
+  # Make the plot! plotDat <- rbind(plotDat, match(group, groups) *
+  # cap/length(groups))
   plotDat <- plotDat[, order(group, -colSums(plotDat))]
-  # rownames(plotDat) <- c(rownames(plotDat)[1:(dim(plotDat)[1] - 1)], grouplab)
+  # rownames(plotDat) <- c(rownames(plotDat)[1:(dim(plotDat)[1] -
+  # 1)], grouplab)
   colnames(plotDat)[split] <- paste(names(tab), "|", colnames(plotDat)[split])
-  heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, trace = trace, 
-    margins = margins, rowsep = rowsep, colsep = colsep, key = key, col = colormap, 
-    ...)
+  heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, 
+    trace = trace, margins = margins, rowsep = rowsep, colsep = colsep, 
+    key = key, col = colormap, ...)
 }
 
 
@@ -457,10 +474,12 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping", useS
 #'
 #' @return data frame with the top match and associated correlation
 #'
-cellToClusterMapping_byCor <- function(medianDat, mapDat, refDat = NA, clusters = NA, 
-  genesToMap = rownames(mapDat), use = "p", method = "p", ...) {
-  corVar <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, refDat = refDat, 
-    clusters = clusters, genesToMap = genesToMap, use = use, method = method)
+cellToClusterMapping_byCor <- function(medianDat, mapDat, refDat = NA, 
+  clusters = NA, genesToMap = rownames(mapDat), use = "p", method = "p", 
+  ...) {
+  corVar <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, 
+    refDat = refDat, clusters = clusters, genesToMap = genesToMap, 
+    use = use, method = method)
   corMatch <- getTopMatch(corVar)
   colnames(corMatch) <- c("Class", "Correlation")
   
@@ -482,7 +501,8 @@ cellToClusterMapping_byCor <- function(medianDat, mapDat, refDat = NA, clusters 
 #'
 #' @return scaled vector
 #'
-quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE, ...) {
+quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE, 
+  ...) {
   qs = quantile(x[x > 0], probs = qprob, na.rm = TRUE)
   if (is.na(qs)) 
     return(x)
@@ -510,8 +530,9 @@ quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE, ...) {
 #'
 #' @return Only returns if there is an error
 #'
-plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", useScaled = FALSE, 
-  capValue = Inf, perplexity = 10, theta = 0.5, main = "TSNE plot") {
+plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", 
+  useScaled = FALSE, capValue = Inf, perplexity = 10, theta = 0.5, 
+  main = "TSNE plot") {
   
   library(Rtsne)
   library(ggplot2)
@@ -543,13 +564,14 @@ plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", useScaled 
   }
   
   # Get the tsne corrdinates
-  tsne_model_1 <- Rtsne(as.matrix(plotDat), check_duplicates = FALSE, pca = TRUE, perplexity = perplexity, 
-    theta = theta, dims = 2)
+  tsne_model_1 <- Rtsne(as.matrix(plotDat), check_duplicates = FALSE, 
+    pca = TRUE, perplexity = perplexity, theta = theta, dims = 2)
   d_tsne_1 = as.data.frame(tsne_model_1$Y)
   
   # Make the plot!
-  plot_k = ggplot(d_tsne_1, aes_string(x = "V1", y = "V2", color = colorGroup, label = labelGroup)) + 
-    geom_text() + xlab("TSNE 1") + ylab("TSNE 2") + ggtitle(main) + theme(legend.title = element_blank())
+  plot_k = ggplot(d_tsne_1, aes_string(x = "V1", y = "V2", color = colorGroup, 
+    label = labelGroup)) + geom_text() + xlab("TSNE 1") + ylab("TSNE 2") + 
+    ggtitle(main) + theme(legend.title = element_blank())
   scale_colour_discrete()
   
   return(plot_k)
