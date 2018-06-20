@@ -37,7 +37,7 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA, mapDat = refDat,
     names(clusters) = colnames(refDat)
     medianDat = do.call("cbind", tapply(names(clusters), clusters, 
       function(x) rowMedians(refDat[, x])))
-    medianDat = leafToNodeMedians(dend, medianDat)
+    if(!is.na(dend)) medianDat = leafToNodeMedians(dend, medianDat)
   }
   gns = intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
   
