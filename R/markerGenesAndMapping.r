@@ -810,6 +810,7 @@ corTreeMapping <- function(mapDat, medianDat, dend = NULL, refDat = NA,
     names(clusters) = colnames(refDat)
     medianDat = do.call("cbind", tapply(names(clusters), clusters, 
       function(x) rowMedians(refDat[, x])))
+    rownames(medianDat) <- rownames(refDat)
   }
   if (!is.null(dend)) 
     medianDat <- leafToNodeMedians(dend, medianDat)
