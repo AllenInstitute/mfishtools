@@ -6,7 +6,7 @@
 \usage{
 plotTsne(datIn, colorGroup = "none", labelGroup = "none",
   useScaled = FALSE, capValue = Inf, perplexity = 10, theta = 0.5,
-  main = "TSNE plot", maxNchar = Inf, seed = 10)
+  main = "TSNE plot", maxNchar = 1000, seed = 10)
 }
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}

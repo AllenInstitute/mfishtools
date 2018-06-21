@@ -229,7 +229,7 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1,
 #'   second data the reference.  Additional parameters are okay.  Output must be a data frame where 
 #'   the first value is a mapped class.  Additional columns are okay and will be returned)
 #' @param transform function for transformation of the data (default in none)
-#' @param noiselevel scalar value below which all values are set to 0 (default is 0)
+#' @param noiselevel scalar value at or below which all values are set to 0 (default is 0)
 #' @param scaleFunction which function to use for scaling mapDat to refSummaryDat (default is setting
 #'   90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)
 #' @param scaleXY should x and y coordinates be scaled from 0-1 within experiments (default = TRUE)
@@ -269,7 +269,7 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL,
   
   # Transform the data to be mapped
   scaleDat <- as.matrix(mapDat[genesToMap, ])
-  scaleDat[scaleDat < noiselevel] = 0  # Set values less than noiselevel to 0
+  scaleDat[scaleDat <= noiselevel] = 0  # Set values less than or equal to noiselevel to 0
   if (is.element("area", params)) {
     # Account for spot area in gene expression calculation
     scaleDat <- t(t(scaleDat)/metadata$area) * mean(metadata$area)
@@ -484,19 +484,20 @@ plotHeatmap <- function(datIn, group, groups = NULL, grouplab = "Grouping",
       return(paste(group, "is not an available column name for division."))
     }
   }
-  # Update the groups if needed
+  
+  # Update the cell order
   groups <- c(groups, setdiff(levels(group), groups))
-  tab <- table(droplevels(factor(group, levels = groups)))
+  ord <- order(factor(group, levels = groups), -colSums(plotDat))
+  plotDat <- plotDat[, ord]
+  group <- group[ord]
+  tab <- table(droplevels(factor(group, levels = unique(group))))
   split <- cumsum(tab)
   if (is.null(colsep)) 
     colsep <- split
+  loc <- round((split + c(0, split[1:(length(split) - 1)]))/2)
+  colnames(plotDat)[loc] <- paste(unique(group), "|", colnames(plotDat)[loc])
   
-  # Make the plot! plotDat <- rbind(plotDat, match(group, groups) *
-  # cap/length(groups))
-  plotDat <- plotDat[, order(group, -colSums(plotDat))]
-  # rownames(plotDat) <- c(rownames(plotDat)[1:(dim(plotDat)[1] -
-  # 1)], grouplab)
-  colnames(plotDat)[split] <- paste(names(tab), "|", colnames(plotDat)[split])
+  # Make the plot!
   heatmap.2(plotDat, Rowv = Rowv, Colv = Colv, dendrogram = dendrogram, 
     trace = trace, margins = margins, rowsep = rowsep, colsep = colsep, 
     key = key, col = colormap, ...)
@@ -579,7 +580,7 @@ quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE,
 #'
 plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", 
   useScaled = FALSE, capValue = Inf, perplexity = 10, theta = 0.5, 
-  main = "TSNE plot", maxNchar = Inf, seed = 10) {
+  main = "TSNE plot", maxNchar = 1000, seed = 10) {
   
   library(Rtsne)
   library(ggplot2)
@@ -605,14 +606,14 @@ plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none",
   if (length(labelGroup) == 1) {
     if (is.element(labelGroup, colnames(meta))) {
       labelGroup = as.factor(meta[, labelGroup])
-      # Subset to maxNchar characters
-      levs = substr(levels(labelGroup), 1, maxNchar)
-      labelGroup = factor(as.character(substr(labelGroup, 1, 
-        maxNchar)), levels = unique(levs))
     } else {
       labelGroup = as.factor(rep("*", dim(meta)[1]))
     }
   }
+  # Subset to maxNchar characters
+  levs = substr(levels(as.factor(labelGroup)), 1, maxNchar)
+  labelGroup = factor(as.character(substr(labelGroup, 1, maxNchar)), 
+    levels = as.character(unique(levs)))
   
   # Get the tsne corrdinates
   set.seed(seed)

@@ -23,7 +23,7 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 
 \item{transform}{function for transformation of the data (default in none)}
 
-\item{noiselevel}{scalar value below which all values are set to 0 (default is 0)}
+\item{noiselevel}{scalar value at or below which all values are set to 0 (default is 0)}
 
 \item{scaleFunction}{which function to use for scaling mapDat to refSummaryDat (default is setting
 90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)}
