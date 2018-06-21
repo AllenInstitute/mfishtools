@@ -573,12 +573,13 @@ quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE,
 #' @param perplexity,theta other parameters for Rtsne
 #' @param main title of the plot
 #' @param maxNchar what is the maximum number of characters to display in the plot for each entry?
+#' @param seed for reproducibility
 #'
 #' @return Only returns if there is an error
 #'
 plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", 
   useScaled = FALSE, capValue = Inf, perplexity = 10, theta = 0.5, 
-  main = "TSNE plot", maxNchar = Inf) {
+  main = "TSNE plot", maxNchar = Inf, seed = 10) {
   
   library(Rtsne)
   library(ggplot2)
@@ -605,15 +606,16 @@ plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none",
     if (is.element(labelGroup, colnames(meta))) {
       labelGroup = as.factor(meta[, labelGroup])
       # Subset to maxNchar characters
-      levs = substr(substr(levels(labelGroup), 1, maxNchar))
+      levs = substr(levels(labelGroup), 1, maxNchar)
       labelGroup = factor(as.character(substr(labelGroup, 1, 
-        maxNchar)), levels = levs)
+        maxNchar)), levels = unique(levs))
     } else {
       labelGroup = as.factor(rep("*", dim(meta)[1]))
     }
   }
   
   # Get the tsne corrdinates
+  set.seed(seed)
   tsne_model_1 <- Rtsne(as.matrix(plotDat), check_duplicates = FALSE, 
     pca = TRUE, perplexity = perplexity, theta = theta, dims = 2)
   d_tsne_1 = as.data.frame(tsne_model_1$Y)
