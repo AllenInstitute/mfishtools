@@ -233,6 +233,7 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1,
 #' @param scaleFunction which function to use for scaling mapDat to refSummaryDat (default is setting
 #'   90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)
 #' @param scaleXY should x and y coordinates be scaled from 0-1 within experiments (default = TRUE)
+#' @param omitGenes genes to be included in the data frames but excluded from the mapping
 #' @param metadata a data frame of possible metadata (additional columns are okay and ignored):
 #' \describe{
 #'   \item{area}{a vector of cell areas for normalization}
@@ -284,7 +285,11 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL,
   }
   
   # Map the map data to the reference data
-  mappingResults <- mappingFunction(refSummaryDat, scaleDat, ...)
+  genesToMap2 <- setdiff(genesToMap, omitGenes)
+  scaleDat2 <- scaleDat[genesToMap2, ]
+  refSummaryDat2 <- refSummaryDat[genesToMap2, ]
+  mappingResults <- mappingFunction(refSummaryDat2, scaleDat2, 
+    ...)
   
   # Scale x and y coordinates to (0,1) within experiment, if
   # desired

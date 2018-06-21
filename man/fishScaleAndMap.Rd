@@ -38,6 +38,8 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 }}
 
 \item{...}{additional parameters for passthrough into other functions}
+
+\item{omitGenes}{genes to be included in the data frames but excluded from the mapping}
 }
 \value{
 a list with the following entrees:
