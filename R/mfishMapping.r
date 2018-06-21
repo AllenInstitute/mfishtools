@@ -572,12 +572,13 @@ quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE,
 #' @param capValue values above capValue will be capped at capValue (default is none)
 #' @param perplexity,theta other parameters for Rtsne
 #' @param main title of the plot
+#' @param maxNchar what is the maximum number of characters to display in the plot for each entry?
 #'
 #' @return Only returns if there is an error
 #'
 plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", 
   useScaled = FALSE, capValue = Inf, perplexity = 10, theta = 0.5, 
-  main = "TSNE plot") {
+  main = "TSNE plot",maxNchar = Inf) {
   
   library(Rtsne)
   library(ggplot2)
@@ -603,6 +604,9 @@ plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none",
   if (length(labelGroup) == 1) {
     if (is.element(labelGroup, colnames(meta))) {
       labelGroup = as.factor(meta[, labelGroup])
+      # Subset to maxNchar characters
+      levs = substr(nchar(levels(labelGroup),1,maxNchar))
+      labelGroup = factor(as.character(nchar(labelGroup,1,maxNchar)),levels=levs)
     } else {
       labelGroup = as.factor(rep("*", dim(meta)[1]))
     }
