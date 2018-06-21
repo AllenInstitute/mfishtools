@@ -578,7 +578,7 @@ quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, truncate = TRUE,
 #'
 plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", 
   useScaled = FALSE, capValue = Inf, perplexity = 10, theta = 0.5, 
-  main = "TSNE plot",maxNchar = Inf) {
+  main = "TSNE plot", maxNchar = Inf) {
   
   library(Rtsne)
   library(ggplot2)
@@ -605,8 +605,9 @@ plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none",
     if (is.element(labelGroup, colnames(meta))) {
       labelGroup = as.factor(meta[, labelGroup])
       # Subset to maxNchar characters
-      levs = substr(nchar(levels(labelGroup),1,maxNchar))
-      labelGroup = factor(as.character(nchar(labelGroup,1,maxNchar)),levels=levs)
+      levs = substr(substr(levels(labelGroup), 1, maxNchar))
+      labelGroup = factor(as.character(substr(labelGroup, 1, 
+        maxNchar)), levels = levs)
     } else {
       labelGroup = as.factor(rep("*", dim(meta)[1]))
     }

@@ -6,7 +6,7 @@
 \usage{
 plotTsne(datIn, colorGroup = "none", labelGroup = "none",
   useScaled = FALSE, capValue = Inf, perplexity = 10, theta = 0.5,
-  main = "TSNE plot")
+  main = "TSNE plot", maxNchar = Inf)
 }
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}
@@ -24,6 +24,8 @@ call) or a metadata/mappingResults column name (default=NULL)}
 \item{perplexity, theta}{other parameters for Rtsne}
 
 \item{main}{title of the plot}
+
+\item{maxNchar}{what is the maximum number of characters to display in the plot for each entry?}
 }
 \value{
 Only returns if there is an error
