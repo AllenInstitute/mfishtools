@@ -8,7 +8,7 @@ fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
   mappingFunction = cellToClusterMapping_byCor, transform = function(x) x,
   noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE,
   metadata = data.frame(experiment = rep("all", dim(mapDat)[2])),
-  integerWeights = NULL, ...)
+  integerWeights = NULL, binarize = FALSE, binMin = 0.5, ...)
 }
 \arguments{
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
@@ -41,6 +41,10 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 \item{integerWeights}{if not NULL (default) a vector of integers corresponding to how many times
 each gene should be counted as part of the correlation.  This is equivalent to calculating
 a weighted correlation, but only allows for integer weight values (for use with cor).}
+
+\item{binarize}{should the data be binarized? (default=FALSE)}
+
+\item{binMin}{minimum ON value for the binarized matrix (ignored if binarize=FALSE)}
 
 \item{...}{additional parameters for passthrough into other functions}
 

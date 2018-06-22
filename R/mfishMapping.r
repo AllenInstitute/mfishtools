@@ -243,6 +243,8 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1,
 #' @param integerWeights if not NULL (default) a vector of integers corresponding to how many times
 #'   each gene should be counted as part of the correlation.  This is equivalent to calculating
 #'   a weighted correlation, but only allows for integer weight values (for use with cor).
+#' @param binarize should the data be binarized? (default=FALSE)
+#' @param binMin minimum ON value for the binarized matrix (ignored if binarize=FALSE)
 #' @param ... additional parameters for passthrough into other functions
 #'
 #' @return a list with the following entrees:
@@ -258,7 +260,7 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL,
   mappingFunction = cellToClusterMapping_byCor, transform = function(x) x, 
   noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
   metadata = data.frame(experiment = rep("all", dim(mapDat)[2])), 
-  integerWeights = NULL, ...) {
+  integerWeights = NULL, binarize = FALSE, binMin = 0.5, ...) {
   
   # Setup
   mappingFunction <- match.fun(mappingFunction)
@@ -285,6 +287,12 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL,
     isExp = metadata$experiment == ex
     for (g in genesToMap) scaleDat[g, isExp] <- scaleFunction(scaleDat[g, 
       isExp], maxVal = max(refSummaryDat[g, ]), ...)
+  }
+  
+  # Binarize, if desired
+  if (binarize) {
+    scaleDat = scaleDat > binMin
+    scaleDat = scaleDat + 1 - 1
   }
   
   # Omit genes and weight scaling, if desired
