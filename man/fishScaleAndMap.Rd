@@ -7,7 +7,8 @@
 fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
   mappingFunction = cellToClusterMapping_byCor, transform = function(x) x,
   noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE,
-  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])), ...)
+  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])),
+  integerWeights = NULL, ...)
 }
 \arguments{
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
@@ -36,6 +37,10 @@ the first value is a mapped class.  Additional columns are okay and will be retu
   \item{experiment}{a vector indicating if multiple experiments should be scaled separately}
   \item{x,y}{x (e.g., parallel to layer) and y (e.g., across cortical layers) coordinates in tissue}
 }}
+
+\item{integerWeights}{if not NULL (default) a vector of integers corresponding to how many times
+each gene should be counted as part of the correlation.  This is equivalent to calculating
+a weighted correlation, but only allows for integer weight values (for use with cor).}
 
 \item{...}{additional parameters for passthrough into other functions}
 

@@ -240,6 +240,9 @@ summarizeMatrix <- function(mat, group, scale = "none", scaleQuantile = 1,
 #'   \item{experiment}{a vector indicating if multiple experiments should be scaled separately}
 #'   \item{x,y}{x (e.g., parallel to layer) and y (e.g., across cortical layers) coordinates in tissue}
 #' }
+#' @param integerWeights if not NULL (default) a vector of integers corresponding to how many times
+#'   each gene should be counted as part of the correlation.  This is equivalent to calculating
+#'   a weighted correlation, but only allows for integer weight values (for use with cor).
 #' @param ... additional parameters for passthrough into other functions
 #'
 #' @return a list with the following entrees:
@@ -255,7 +258,7 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL,
   mappingFunction = cellToClusterMapping_byCor, transform = function(x) x, 
   noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE, 
   metadata = data.frame(experiment = rep("all", dim(mapDat)[2])), 
-  ...) {
+  integerWeights = NULL, ...) {
   
   # Setup
   mappingFunction <- match.fun(mappingFunction)
@@ -284,8 +287,13 @@ fishScaleAndMap <- function(mapDat, refSummaryDat, genesToMap = NULL,
       isExp], maxVal = max(refSummaryDat[g, ]), ...)
   }
   
+  # Omit genes and weight scaling, if desired
+  genesToMap2 <- genesToMap
+  if (!is.null(integerWeights)) 
+    genesToMap2 = rep(genesToMap2, integerWeights)
+  genesToMap2 <- genesToMap2[!is.element(genesToMap2, omitGenes)]
+  
   # Map the map data to the reference data
-  genesToMap2 <- setdiff(genesToMap, omitGenes)
   scaleDat2 <- scaleDat[genesToMap2, ]
   refSummaryDat2 <- refSummaryDat[genesToMap2, ]
   mappingResults <- mappingFunction(refSummaryDat2, scaleDat2, 
