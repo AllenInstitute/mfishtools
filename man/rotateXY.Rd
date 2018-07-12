@@ -4,16 +4,17 @@
 \alias{rotateXY}
 \title{Rotate coordinates}
 \usage{
-rotateXY(datFish, flatVector = NULL, subset = NULL)
+rotateXY(datFish, flatVector = NULL, flipVector = NULL)
 }
 \arguments{
 \item{datFish}{a fishScaleAndMap output list}
 
-\item{flatVector}{a TRUE/FALSE vector ordered in the same way as the elements (e.g., cells) 
+\item{flatVector}{a TRUE/FALSE vector ordred in the same way as the elements (e.g., cells) 
 in datIn where all TRUE values correspond to cells who should have the same Y coordinate 
 (e.g., be in the same layer).  Alternatively a numeric vector of cell indices to include}
 
-\item{subset}{a boolean or numeric vector indicating which samples to rotate (default = All)}
+\item{flipVector}{a numeric vector of values to ensure proper reflection on Y-axes (e.g., 
+layer; default=NULL)}
 }
 \value{
 a fishScaleAndMap output list with updated scaledX and scaleY coordinates

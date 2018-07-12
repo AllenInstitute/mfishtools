@@ -386,8 +386,14 @@ filterCells <- function(datIn, kpSamp) {
 #'
 rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
   ## Error checking
-  if ((length(flatVector) != length(datFish$scaledX)) & (!is.numeric(flatVector))) {
+  if ((length(flatVector) != length(datFish$scaledX)) & 
+    (!is.numeric(flatVector))) {
     print("flatVector is incorrect format.  Returning original entry.")
+    return(datFish)
+  }
+  if (((length(flipVector) != length(datFish$scaledX)) & 
+    (!is.numeric(flipVector))) | (!is.null(flipVector))) {
+    print("flipVector is incorrect format.  Returning original entry.")
     return(datFish)
   }
   if (is.numeric(flatVector)) 
@@ -395,20 +401,22 @@ rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
   
   ## Caculate best angle
   v <- prcomp(cbind(datFish$scaledX, datFish$scaledY)[flatVector, 
-                                                      ])$rotation
+    ])$rotation
   beta <- -v[2, 1]/v[1, 1]
   
   ## Rotate coordinates
   M <- cbind(datFish$scaledX, datFish$scaledY)
-  rotm <- matrix(c(cos(beta), sin(beta), -sin(beta), cos(beta)), 
-                 ncol = 2)  #rotation matrix
+  rotm <- matrix(c(cos(beta), sin(beta), -sin(beta), 
+    cos(beta)), ncol = 2)  #rotation matrix
   M2.1 <- t(t(M) - c(M[1, 1], M[1, 2]))  #shift points, so that turning point is (0,0)
   M2.2 <- t(rotm %*% (t(M2.1)))  #rotate
   M2.3 <- t(t(M2.2) + c(M[1, 1], M[1, 2]))  #shift back
   datFish$scaledX <- M2.3[, 1]
   datFish$scaledY <- M2.3[, 2]
-  if ((datFish$scaledY*flipVector)>((1-datFish$scaledY)*flipVector))
-    datFish$scaledY = 1-datFish$scaledY
+  if (!is.null(flipVector)) 
+    if ((datFish$scaledY * flipVector) > ((1 - 
+      datFish$scaledY) * flipVector)) 
+      datFish$scaledY = 1 - datFish$scaledY
   
   return(datFish)
 }
