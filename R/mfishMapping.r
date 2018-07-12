@@ -369,6 +369,41 @@ filterCells <- function(datIn, kpSamp) {
 }
 
 
+#' Subset fishScaleAndMap object
+#' 
+#' Subsets all components in a fishScaleAndMap object 
+#'
+#' @param datFish a fishScaleAndMap output list
+#' @param subset  a boolean or numeric vector of the elements to retain
+#'
+#' @return a fishScaleAndMap output list with updated scaledX and scaleY coordinates 
+#'
+subsetFish <- function(datFish, subset) {
+  ## Error checking
+  if ((length(subset) != length(datFish$scaledX)) & (!is.numeric(subset))) {
+    print("subset is incorrect format.  Returning original entry.")
+    return(datFish)
+  }
+  if (is.numeric(subset)) 
+    subset <- intersect(subset, 1:length(datFish$scaledX))
+  
+  ## Subset all of the elements
+  datFish$mapDat <- datFish$mapDat[, subset]
+  datFish$scaleDat <- datFish$scaleDat[, subset]
+  datFish$metadata <- datFish$metadata[subset, ]
+  datFish$scaledX <- datFish$scaledX[subset]
+  datFish$scaledY <- datFish$scaledY[subset]
+  if (!is.null(datFish$mappingResults)) 
+    datFish$mappingResults <- datFish$mappingResults[subset, ]
+  return(datFish)
+}
+
+
+
+
+
+
+
 #' Rotate coordinates
 #' 
 #' Rotates the scaledX and scaledY elements of a fishScaleAndMap output list so that the
@@ -414,7 +449,8 @@ rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
   datFish$scaledX <- M2.3[, 1]
   datFish$scaledY <- M2.3[, 2]
   if (!is.null(flipVector)) 
-    if (sum(datFish$scaledY * flipVector) > sum((1 - datFish$scaledY) * flipVector)) 
+    if (sum(datFish$scaledY * flipVector) < sum((1 - 
+      datFish$scaledY) * flipVector)) 
       datFish$scaledY = 1 - datFish$scaledY
   
   return(datFish)
