@@ -392,7 +392,7 @@ rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
     return(datFish)
   }
   if (((length(flipVector) != length(datFish$scaledX)) & 
-    (!is.numeric(flipVector))) | (!is.null(flipVector))) {
+    (!is.numeric(flipVector))) & (!is.null(flipVector))) {
     print("flipVector is incorrect format.  Returning original entry.")
     return(datFish)
   }
