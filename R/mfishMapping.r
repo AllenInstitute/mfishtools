@@ -380,7 +380,8 @@ filterCells <- function(datIn, kpSamp) {
 #'
 subsetFish <- function(datFish, subset) {
   ## Error checking
-  if ((length(subset) != length(datFish$scaledX)) & (!is.numeric(subset))) {
+  if ((length(subset) != length(datFish$scaledX)) & 
+    (!is.numeric(subset))) {
     print("subset is incorrect format.  Returning original entry.")
     return(datFish)
   }
@@ -394,12 +395,35 @@ subsetFish <- function(datFish, subset) {
   datFish$scaledX <- datFish$scaledX[subset]
   datFish$scaledY <- datFish$scaledY[subset]
   if (!is.null(datFish$mappingResults)) 
-    datFish$mappingResults <- datFish$mappingResults[subset, ]
+    datFish$mappingResults <- datFish$mappingResults[subset, 
+      ]
   return(datFish)
 }
 
 
-
+#' Merge two fishScaleAndMap objects
+#' 
+#' Merges all components of two fishScaleAndMap objects to create a new 
+#'   one. Note: only meta-data and mappingResults that is present in BOTH 
+#'   objects will be returned. 
+#'
+#' @param datFish1 a fishScaleAndMap output list
+#' @param datFish2 a second fishScaleAndMap output list.  
+#'
+#' @return a new fishScaleAndMap output list with the two original ones merged 
+#'
+mergeFish <- function(datFish1, datFish2) {
+  datFish <- datFish1
+  datFish$mapDat <- cbind(datFish1$mapDat, datFish2$mapDat)
+  datFish$scaleDat <- cbind(datFish1$scaleDat, datFish2$scaleDat)
+  datFish$metadata <- rbind(datFish1$metadata, datFish2$metadata)
+  datFish$scaledX <- c(datFish1$scaledX, datFish2$scaledX)
+  datFish$scaledY <- c(datFish1$scaledY, datFish2$scaledY)
+  if ((!is.null(datFish1$mappingResults)) & (!is.null(datFish2$mappingResults))) 
+    datFish$mappingResults <- rbind(datFish1$mappingResults, 
+      datFish2$mappingResults)
+  return(datFish)
+}
 
 
 
