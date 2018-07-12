@@ -379,10 +379,12 @@ filterCells <- function(datIn, kpSamp) {
 #' @param flatVector a TRUE/FALSE vector ordred in the same way as the elements (e.g., cells) 
 #'   in datIn where all TRUE values correspond to cells who should have the same Y coordinate 
 #'   (e.g., be in the same layer).  Alternatively a numeric vector of cell indices to include
+#' @param flipVector a numeric vector of values to ensure proper reflection on Y-axes (e.g., 
+#'   layer; default=NULL)
 #'
 #' @return a fishScaleAndMap output list with updated scaledX and scaleY coordinates 
 #'
-rotateXY <- function(datFish, flatVector = NULL) {
+rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
   ## Error checking
   if ((length(flatVector) != length(datFish$scaledX)) & (!is.numeric(flatVector))) {
     print("flatVector is incorrect format.  Returning original entry.")
@@ -405,6 +407,8 @@ rotateXY <- function(datFish, flatVector = NULL) {
   M2.3 <- t(t(M2.2) + c(M[1, 1], M[1, 2]))  #shift back
   datFish$scaledX <- M2.3[, 1]
   datFish$scaledY <- M2.3[, 2]
+  if ((datFish$scaledY*flipVector)>((1-datFish$scaledY)*flipVector))
+    datFish$scaledY = 1-datFish$scaledY
   
   return(datFish)
 }
