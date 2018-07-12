@@ -376,45 +376,35 @@ filterCells <- function(datIn, kpSamp) {
 #'   Rotation code is from  https://stackoverflow.com/questions/15463462/rotate-graph-by-angle 
 #'
 #' @param datFish a fishScaleAndMap output list
-#' @param flatVector a TRUE/FALSE vector ordered in the same way as the elements (e.g., cells) 
+#' @param flatVector a TRUE/FALSE vector ordred in the same way as the elements (e.g., cells) 
 #'   in datIn where all TRUE values correspond to cells who should have the same Y coordinate 
 #'   (e.g., be in the same layer).  Alternatively a numeric vector of cell indices to include
-#' @param subset a boolean or numeric vector indicating which samples to rotate (default = All)
 #'
 #' @return a fishScaleAndMap output list with updated scaledX and scaleY coordinates 
 #'
-rotateXY <- function(datFish, flatVector = NULL, subset = NULL) {
+rotateXY <- function(datFish, flatVector = NULL) {
   ## Error checking
-  if (is.null(subset)) 
-    subset = 1:datFish$scaledX
-  if (!is.numeric(subset)) 
-    subset = which(subset)
-  if ((length(flatVector) != length(datFish$scaledX)) & 
-    (!is.numeric(flatVector)) & (length(flatVector) != 
-    length(datFish$scaledX[subset]))) {
+  if ((length(flatVector) != length(datFish$scaledX)) & (!is.numeric(flatVector))) {
     print("flatVector is incorrect format.  Returning original entry.")
     return(datFish)
   }
-  if (length(flatVector) == length(datFish$scaledX)) 
-    flatVector <- flatVector[subset]
   if (is.numeric(flatVector)) 
-    flatVector <- intersect(flatVector, subset)
+    flatVector <- intersect(flatVector, 1:length(datFish$scaledX))
   
   ## Caculate best angle
   v <- prcomp(cbind(datFish$scaledX, datFish$scaledY)[flatVector, 
-    ])$rotation
+                                                      ])$rotation
   beta <- -v[2, 1]/v[1, 1]
   
   ## Rotate coordinates
-  M <- cbind(datFish$scaledX, datFish$scaledY)[subset, 
-    ]
-  rotm <- matrix(c(cos(beta), sin(beta), -sin(beta), 
-    cos(beta)), ncol = 2)  #rotation matrix
+  M <- cbind(datFish$scaledX, datFish$scaledY)
+  rotm <- matrix(c(cos(beta), sin(beta), -sin(beta), cos(beta)), 
+                 ncol = 2)  #rotation matrix
   M2.1 <- t(t(M) - c(M[1, 1], M[1, 2]))  #shift points, so that turning point is (0,0)
   M2.2 <- t(rotm %*% (t(M2.1)))  #rotate
   M2.3 <- t(t(M2.2) + c(M[1, 1], M[1, 2]))  #shift back
-  datFish$scaledX[subset] <- M2.3[, 1]
-  datFish$scaledY[subset] <- M2.3[, 2]
+  datFish$scaledX <- M2.3[, 1]
+  datFish$scaledY <- M2.3[, 2]
   
   return(datFish)
 }
