@@ -12,7 +12,7 @@ subsetFish(datFish, subset)
 \item{subset}{a boolean or numeric vector of the elements to retain}
 }
 \value{
-a fishScaleAndMap output list with updated scaledX and scaleY coordinates
+a fishScaleAndMap output subsetted to the requested elements
 }
 \description{
 Subsets all components in a fishScaleAndMap object

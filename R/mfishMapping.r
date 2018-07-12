@@ -376,7 +376,7 @@ filterCells <- function(datIn, kpSamp) {
 #' @param datFish a fishScaleAndMap output list
 #' @param subset  a boolean or numeric vector of the elements to retain
 #'
-#' @return a fishScaleAndMap output list with updated scaledX and scaleY coordinates 
+#' @return a fishScaleAndMap output subsetted to the requested elements 
 #'
 subsetFish <- function(datFish, subset) {
   ## Error checking
@@ -440,14 +440,21 @@ mergeFish <- function(datFish1, datFish2) {
 #'   (e.g., be in the same layer).  Alternatively a numeric vector of cell indices to include
 #' @param flipVector a numeric vector of values to ensure proper reflection on Y-axes (e.g., 
 #'   layer; default=NULL)
+#' @param subset  a boolean or numeric vector of the elements to retain
 #'
 #' @return a fishScaleAndMap output list with updated scaledX and scaleY coordinates 
 #'
-rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
+rotateXY <- function(datFishIn, flatVector = NULL, 
+  flipVector = NULL, subset = NULL) {
   ## Error checking
   if ((length(flatVector) != length(datFish$scaledX)) & 
     (!is.numeric(flatVector))) {
     print("flatVector is incorrect format.  Returning original entry.")
+    return(datFish)
+  }
+  if ((length(subset) != length(datFish$scaledX)) & 
+    (!is.numeric(subset))) {
+    print("subset is incorrect format.  Returning original entry.")
     return(datFish)
   }
   if (((length(flipVector) != length(datFish$scaledX)) & 
@@ -457,6 +464,11 @@ rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
   }
   if (is.numeric(flatVector)) 
     flatVector <- intersect(flatVector, 1:length(datFish$scaledX))
+  
+  ## Subset the data if needed
+  datFish = datFishIn
+  if (!is.null(subset)) 
+    datFish <- subsetFish(datFishIn, subset)
   
   ## Caculate best angle
   v <- prcomp(cbind(datFish$scaledX, datFish$scaledY)[flatVector, 
@@ -477,7 +489,12 @@ rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
       datFish$scaledY) * flipVector)) 
       datFish$scaledY = 1 - datFish$scaledY
   
-  return(datFish)
+  ## Unsubset and return the data
+  if (is.null(subset)) 
+    return(datFish)
+  
+  datFishIn$scaledX[subset] <- datFish$scaledX
+  datFishIn$scaledY[subset] <- datFish$scaledY
 }
 
 
