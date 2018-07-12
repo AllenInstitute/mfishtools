@@ -414,8 +414,7 @@ rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL) {
   datFish$scaledX <- M2.3[, 1]
   datFish$scaledY <- M2.3[, 2]
   if (!is.null(flipVector)) 
-    if ((datFish$scaledY * flipVector) > ((1 - 
-      datFish$scaledY) * flipVector)) 
+    if (sum(datFish$scaledY * flipVector) > sum((1 - datFish$scaledY) * flipVector)) 
       datFish$scaledY = 1 - datFish$scaledY
   
   return(datFish)
