@@ -246,7 +246,6 @@ summarizeMatrix <- function(mat, group, scale = "none",
 #' @param noiselevel scalar value at or below which all values are set to 0 (default is 0)
 #' @param scaleFunction which function to use for scaling mapDat to refSummaryDat (default is setting
 #'   90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)
-#' @param scaleXY should x and y coordinates be scaled from 0-1 within experiments (default = TRUE)
 #' @param omitGenes genes to be included in the data frames but excluded from the mapping
 #' @param metadata a data frame of possible metadata (additional columns are okay and ignored):
 #' \describe{
@@ -273,9 +272,9 @@ summarizeMatrix <- function(mat, group, scale = "none",
 fishScaleAndMap <- function(mapDat, refSummaryDat, 
   genesToMap = NULL, mappingFunction = cellToClusterMapping_byCor, 
   transform = function(x) x, noiselevel = 0, scaleFunction = quantileTruncate, 
-  scaleXY = TRUE, metadata = data.frame(experiment = rep("all", 
-    dim(mapDat)[2])), integerWeights = NULL, binarize = FALSE, 
-  binMin = 0.5, ...) {
+  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])), 
+  integerWeights = NULL, binarize = FALSE, binMin = 0.5, 
+  ...) {
   
   # Setup
   mappingFunction <- match.fun(mappingFunction)
@@ -328,17 +327,14 @@ fishScaleAndMap <- function(mapDat, refSummaryDat,
   
   # Scale x and y coordinates to (0,1) within
   # experiment, if desired
-  if (scaleXY) {
-    for (ex in unique(metadata$experiment)) {
-      isExp = metadata$experiment == ex
-      metadata$x[isExp] = metadata$x[isExp] - 
-        min(metadata$x[isExp])
-      metadata$x[isExp] = metadata$x[isExp]/max(metadata$x[isExp])
-      metadata$y[isExp] = metadata$y[isExp] - 
-        min(metadata$y[isExp])
-      metadata$y[isExp] = metadata$y[isExp]/max(metadata$y[isExp])
-    }
+  for (ex in unique(metadata$experiment)) {
+    isExp = metadata$experiment == ex
+    metadata$x[isExp] = metadata$x[isExp] - min(metadata$x[isExp])
+    metadata$x[isExp] = metadata$x[isExp]/max(metadata$x[isExp])
+    metadata$y[isExp] = metadata$y[isExp] - min(metadata$y[isExp])
+    metadata$y[isExp] = metadata$y[isExp]/max(metadata$y[isExp])
   }
+  
   
   # Return the results
   out = list(mapDat = mapDat, scaleDat = scaleDat, 
@@ -347,29 +343,7 @@ fishScaleAndMap <- function(mapDat, refSummaryDat,
 }
 
 
-#' Filter cells
-#' 
-#' Remove a select set of cells from all elements of a fishScaleAndMap output
-#'
-#' @param datIn a fishScaleAndMap output list
-#' @param kpSamp a vector of samples to keep (of the same length as the number of cells in datIn)
-#'
-#' @return filtered fishScaleAndMap object
-#'
-filterCells <- function(datIn, kpSamp) {
-  datOut <- datIn
-  datOut$mapDat <- datOut$mapDat[, kpSamp]
-  datOut$scaleDat <- datOut$scaleDat[, kpSamp]
-  datOut$mappingResults <- datOut$mappingResults[kpSamp, 
-    ]
-  datOut$metadata <- datOut$metadata[kpSamp, ]
-  datOut$scaledX <- datOut$scaledX[kpSamp]
-  datOut$scaledY <- datOut$scaledY[kpSamp]
-  return(datOut)
-}
-
-
-#' Subset fishScaleAndMap object
+#' Filter (subset) fishScaleAndMap object
 #' 
 #' Subsets all components in a fishScaleAndMap object 
 #'
@@ -378,7 +352,7 @@ filterCells <- function(datIn, kpSamp) {
 #'
 #' @return a fishScaleAndMap output subsetted to the requested elements 
 #'
-subsetFish <- function(datFish, subset) {
+filterCells <- function(datFish, subset) {
   ## Error checking
   if ((length(subset) != length(datFish$scaledX)) & 
     (!is.numeric(subset))) {
@@ -444,19 +418,22 @@ mergeFish <- function(datFish1, datFish2) {
 #'
 #' @return a fishScaleAndMap output list with updated scaledX and scaleY coordinates 
 #'
-rotateXY <- function(datFishIn, flatVector = NULL, 
-  flipVector = NULL, subset = NULL) {
+rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL, 
+  subset = NULL) {
+  
   ## Error checking
+  datFishIn = datFish
   if ((length(flatVector) != length(datFish$scaledX)) & 
     (!is.numeric(flatVector))) {
     print("flatVector is incorrect format.  Returning original entry.")
     return(datFish)
   }
-  if ((length(subset) != length(datFish$scaledX)) & 
-    (!is.numeric(subset))) {
-    print("subset is incorrect format.  Returning original entry.")
-    return(datFish)
-  }
+  if (!is.null(subset)) 
+    if ((length(subset) != length(datFish$scaledX)) & 
+      (!is.numeric(subset))) {
+      print("subset is incorrect format.  Returning original entry.")
+      return(datFish)
+    }
   if (((length(flipVector) != length(datFish$scaledX)) & 
     (!is.numeric(flipVector))) & (!is.null(flipVector))) {
     print("flipVector is incorrect format.  Returning original entry.")
@@ -467,27 +444,44 @@ rotateXY <- function(datFishIn, flatVector = NULL,
   
   ## Subset the data if needed
   datFish = datFishIn
-  if (!is.null(subset)) 
-    datFish <- subsetFish(datFishIn, subset)
+  if (!is.null(subset)) {
+    datFish <- filterCells(datFishIn, subset)
+    flatVector <- flatVector[subset]
+    flipVector <- flipVector[subset]
+  }
   
   ## Caculate best angle
   v <- prcomp(cbind(datFish$scaledX, datFish$scaledY)[flatVector, 
     ])$rotation
   beta <- -v[2, 1]/v[1, 1]
   
-  ## Rotate coordinates
-  M <- cbind(datFish$scaledX, datFish$scaledY)
-  rotm <- matrix(c(cos(beta), sin(beta), -sin(beta), 
-    cos(beta)), ncol = 2)  #rotation matrix
-  M2.1 <- t(t(M) - c(M[1, 1], M[1, 2]))  #shift points, so that turning point is (0,0)
-  M2.2 <- t(rotm %*% (t(M2.1)))  #rotate
-  M2.3 <- t(t(M2.2) + c(M[1, 1], M[1, 2]))  #shift back
-  datFish$scaledX <- M2.3[, 1]
-  datFish$scaledY <- M2.3[, 2]
+  ## Rotate coordinates (internal function)
+  rotCor <- function(datFish, beta) {
+    M <- cbind(datFish$scaledX, datFish$scaledY)
+    rotm <- matrix(c(cos(beta), sin(beta), -sin(beta), 
+      cos(beta)), ncol = 2)  #rotation matrix
+    M2.1 <- t(t(M) - c(M[1, 1], M[1, 2]))  #shift points, so that turning point is (0,0)
+    M2.2 <- t(rotm %*% (t(M2.1)))  #rotate
+    M2.3 <- t(t(M2.2) + c(M[1, 1], M[1, 2]))  #shift back
+    x <- M2.3[, 1]
+    y <- M2.3[, 2]
+    
+    x <- x - min(x)
+    x <- x/max(x)
+    y <- y - min(y)
+    y <- y/max(y)
+    
+    datFish$scaledX <- x
+    datFish$scaledY <- y
+    return(datFish)
+  }
+  datFish2 <- rotCor(datFish, beta)
+  
   if (!is.null(flipVector)) 
-    if (sum(datFish$scaledY * flipVector) < sum((1 - 
-      datFish$scaledY) * flipVector)) 
-      datFish$scaledY = 1 - datFish$scaledY
+    if (sum(datFish2$scaledY * flipVector) < sum((1 - 
+      datFish2$scaledY) * flipVector)) 
+      datFish2 <- rotCor(datFish, beta + pi)
+  datFish = datFish2
   
   ## Unsubset and return the data
   if (is.null(subset)) 
@@ -495,6 +489,7 @@ rotateXY <- function(datFishIn, flatVector = NULL,
   
   datFishIn$scaledX[subset] <- datFish$scaledX
   datFishIn$scaledY[subset] <- datFish$scaledY
+  return(datFishIn)
 }
 
 

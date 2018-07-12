@@ -2,18 +2,18 @@
 % Please edit documentation in R/mfishMapping.r
 \name{filterCells}
 \alias{filterCells}
-\title{Filter cells}
+\title{Filter (subset) fishScaleAndMap object}
 \usage{
-filterCells(datIn, kpSamp)
+filterCells(datFish, subset)
 }
 \arguments{
-\item{datIn}{a fishScaleAndMap output list}
+\item{datFish}{a fishScaleAndMap output list}
 
-\item{kpSamp}{a vector of samples to keep (of the same length as the number of cells in datIn)}
+\item{subset}{a boolean or numeric vector of the elements to retain}
 }
 \value{
-filtered fishScaleAndMap object
+a fishScaleAndMap output subsetted to the requested elements
 }
 \description{
-Remove a select set of cells from all elements of a fishScaleAndMap output
+Subsets all components in a fishScaleAndMap object
 }

@@ -6,7 +6,7 @@
 \usage{
 fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
   mappingFunction = cellToClusterMapping_byCor, transform = function(x) x,
-  noiselevel = 0, scaleFunction = quantileTruncate, scaleXY = TRUE,
+  noiselevel = 0, scaleFunction = quantileTruncate,
   metadata = data.frame(experiment = rep("all", dim(mapDat)[2])),
   integerWeights = NULL, binarize = FALSE, binMin = 0.5, ...)
 }
@@ -28,8 +28,6 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 
 \item{scaleFunction}{which function to use for scaling mapDat to refSummaryDat (default is setting
 90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)}
-
-\item{scaleXY}{should x and y coordinates be scaled from 0-1 within experiments (default = TRUE)}
 
 \item{metadata}{a data frame of possible metadata (additional columns are okay and ignored):
 \describe{
