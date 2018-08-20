@@ -1218,7 +1218,7 @@ layerFraction <- function(layerIn, useLayer = "L1",
 #' @return a vector of possible clusters for cells that meet a set of priors for each layer
 #'
 possibleClustersByPriors <- function(cluster, layer, 
-  subsetVector = rep(TRUE, length/(cluster)), useClusters = sort(unique(cluster)), 
+  subsetVector = rep(TRUE, length(cluster)), useClusters = sort(unique(cluster)), 
   rareLimit = 0.005, layerNm = c("L1", "L2/3", "L4", 
     "L5", "L6"), scaleByLayer = TRUE, smartWeight = TRUE, 
   spillFactor = 0.15, weightCutoff = 0.02) {
