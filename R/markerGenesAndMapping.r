@@ -21,6 +21,7 @@ NULL
 #' @return a 3 x count matrix of the top confused pairs of clusters with the three columns corresponding
 #'   to mapped cluster, assigned cluster, and fraction of cells incorrectly mapped, respectively.
 #'
+#' @export
 outputTopConfused <- function(confusionProp, count = 10) {
   topConfused = NULL
   mfp = confusionProp
@@ -52,6 +53,7 @@ outputTopConfused <- function(confusionProp, count = 10) {
 #' @param realCluster character vector of assigned clusters
 #' @param ... additional parameters for the plot function
 #'
+#' @export
 plotConfusionVsConfidence <- function(foundClusterAndScore, 
   realCluster, RI = (31:100)/100, main = "% mapping (blue) / correct (orange)", 
   ylab = "Percent", xlab = "Fraction correctly mapped to leaf", 
@@ -80,6 +82,7 @@ plotConfusionVsConfidence <- function(foundClusterAndScore,
 #' @param foundCluster character vector of mapped clusters
 #' @param proportions FALSE if the counts are to be returned and TRUE if the proportions are to be returned
 #'
+#' @export
 getConfusionMatrix <- function(realCluster, foundCluster, 
   proportions = TRUE) {
   realCluster = as.character(realCluster)
@@ -107,6 +110,7 @@ getConfusionMatrix <- function(realCluster, foundCluster,
 #'
 #' @return a list of branch information for use with leafToNodeMedians
 #'
+#' @export
 getBranchList <- function(dend, branches = list(), 
   allTips = as.character(dend %>% labels)) {
   library(dendextend)
@@ -155,6 +159,7 @@ getBranchList <- function(dend, branches = list(),
 #' 
 #' @return a matrix of mean node expression (rows=genes, columns=nodes)
 #' 
+#' @export
 leafToNodeMedians <- function(dend, medianDat, branches = getBranchList(dend), 
   fnIn = mean) {
   library(dendextend)
@@ -221,6 +226,7 @@ leafToNodeMedians <- function(dend, medianDat, branches = getBranchList(dend),
 #'
 #' @return an ordere character vector corresponding to the marker gene panel
 #'
+#' @export
 buildMappingBasedMarkerPanel <- function(mapDat, medianDat = NA, 
   clustersF = NA, panelSize = 50, subSamp = 20, maxFcGene = 1000, 
   qMin = 0.75, seed = 10, currentPanel = NULL, panelMin = 5, 
@@ -383,6 +389,7 @@ buildMappingBasedMarkerPanel <- function(mapDat, medianDat = NA,
 #'
 #' @return a matrix of correlation values with rows as mapped cells and columns as clusters
 #'
+#' @export
 corTreeMapping_withFilter <- function(dend = NA, refDat = NA, 
   mapDat = refDat, medianExpr = NA, propExpr = NA, 
   filterMatrix = NA, clusters = NA, numberOfGenes = 1200, 
@@ -469,6 +476,7 @@ corTreeMapping_withFilter <- function(dend = NA, refDat = NA,
 #'
 #' @return matrix of Euclidean distances between cells (rows) and clusters (columns)
 #'
+#' @export
 distTreeMapping <- function(dend = NA, refDat = NA, 
   mapDat = refDat, medianDat = NA, clusters = NA, 
   genesToMap = rownames(mapDat), returnSimilarity = TRUE, 
@@ -518,6 +526,7 @@ distTreeMapping <- function(dend = NA, refDat = NA,
 #'   as tree node/leafs.  Values indicate the fraction of permutations in which the cell
 #'   mapped to that node/leaf using the subset of cells/genes in map_dend
 #'
+#' @export
 rfTreeMapping <- function(dend, refDat, clustersF, 
   mapDat = refDat, p = 0.7, low.th = 0.15, seed = 1) {
   refDat <- as.matrix(refDat)
@@ -572,6 +581,7 @@ rfTreeMapping <- function(dend, refDat, clustersF,
 #'   as tree node/leafs.  Values indicate the fraction of permutations in which the cell
 #'   mapped to that node/leaf using the subset of cells/genes in map_dend
 #'
+#' @export
 map_dend <- function(dend, cl, dat, map.dat, select.cells, 
   p = 0.8, low.th = 0.2, default.markers = NULL) {
   final.cl = c(setNames(rep(attr(dend, "label"), 
@@ -628,6 +638,7 @@ map_dend <- function(dend, cl, dat, map.dat, select.cells,
 #'
 #' @return a vector of the mapped cluster
 #'
+#' @export
 resolve_cl <- function(cl.g, cl.med, markers, dat, 
   map.dat, select.cells, p = 0.7, low.th = 0.2) {
   library(matrixStats)
@@ -718,6 +729,7 @@ resolve_cl <- function(cl.g, cl.med, markers, dat,
 #'
 #' @return a matrix where first column is found cluster and second column is confidence score
 #'
+#' @export
 getTopMatch <- function(memb.cl) {
   tmp.cl = apply(memb.cl, 1, function(x) {
     y = which.max(x)[1]
@@ -747,6 +759,7 @@ getTopMatch <- function(memb.cl) {
 #' @return list where first element is data matrix of multi-cells by genes and
 #'   second element is a vector of corresponding clusters
 #'
+#' @export
 generateMultipleCellReferenceSet <- function(refDat, 
   clustersF, genesToUse = rownames(refDat), cellsPerMerge = 5, 
   numberOfMerges = 10, mergeFunction = rowMedians, 
@@ -805,6 +818,7 @@ generateMultipleCellReferenceSet <- function(refDat,
 #'   This confidence score seems to be a bit more reliable than correlation at determining how
 #'   likely a cell in a training set is to being correctly assigned to the training cluster.
 #'
+#' @export
 cellToClusterMapping_byRank <- function(mapDat, refDat, 
   clustersF, genesToMap = rownames(mapDat), mergeFunction = rowMedians, 
   useRank = TRUE, use = "p", method = "p") {
@@ -858,6 +872,7 @@ cellToClusterMapping_byRank <- function(mapDat, refDat,
 #' @return matrix with the correlation between expression of each cell and representative value for 
 #'   each leaf and node
 #'
+#' @export
 corTreeMapping <- function(mapDat, medianDat, dend = NULL, 
   refDat = NA, clusters = NA, genesToMap = rownames(mapDat), 
   use = "p", method = "p") {
@@ -884,6 +899,7 @@ corTreeMapping <- function(mapDat, medianDat, dend = NULL,
 #'
 #' @return vector of subtree labels
 #'
+#' @export
 get_subtree_label <- function(dend) {
   library(dendextend)
   l = attr(dend, "label")
@@ -907,6 +923,7 @@ get_subtree_label <- function(dend) {
 #'
 #' @return The function will return a vector for lowest common ancestor for every pair of nodes in l1 and l2
 #'
+#' @export
 lca <- function(dend, l1, l2, l = rep(attr(dend, "label"), 
   length(l1))) {
   library(dendextend)
@@ -943,6 +960,7 @@ lca <- function(dend, l1, l2, l = rep(attr(dend, "label"),
 #' @return The function will return a vector for lowest common ancestor for every pair of leaves
 #'   in dend.  Vector names are l1|||l2 for string parsing in other functions.
 #'
+#' @export
 makeLCAtable <- function(dend, includeInternalNodes = FALSE, 
   verbose = FALSE) {
   library(dendextend)
@@ -977,6 +995,7 @@ makeLCAtable <- function(dend, includeInternalNodes = FALSE,
 #' @param pch vector of node pch shapes (or a single value)
 #' @param ... additional parameters for the plot function
 #'
+#' @export
 plotNodes <- function(tree, value = rep(1, length(labels(tree))), 
   cexScale = 2, margins = c(10, 5, 2, 2), cols = "black", 
   pch = 19, ...) {
@@ -1013,6 +1032,7 @@ plotNodes <- function(tree, value = rep(1, length(labels(tree))),
 #'   correctly assigned cells in cluster; offCorrect = fraction of cells correctly assigned outside
 #'   of cluster; dexTotal = additional dex explained by last gene added.
 #'
+#' @export
 buildPanel_oneCluster <- function(mapDat, clustersF, 
   medianDat = NA, propIn = NA, clust = as.character(clustersF[1]), 
   subSamp = NA, seed = 10, maxSize = 20, dexCutoff = 0.001, 
@@ -1110,6 +1130,7 @@ buildPanel_oneCluster <- function(mapDat, clustersF,
 #'
 #' @return vector indicating the fraction of cells in each layerNm layer
 #'
+#' @export
 layerScale <- function(layerIn, layerNm = c("L1", "L2/3", 
   "L4", "L5", "L6"), scale = TRUE) {
   if (is.null(layerNm)) {
@@ -1141,6 +1162,7 @@ layerScale <- function(layerIn, layerNm = c("L1", "L2/3",
 #' @return numeric vector saying how to weight a particular cell for each layer, using a smart
 #'   weighting strategy
 #'
+#' @export
 smartLayerAllocation <- function(layerIn, useLayer = "L1", 
   spillFactor = 0.15, weightCutoff = 0.02, layerNm = c("L1", 
     "L2/3", "L4", "L5", "L6")) {
@@ -1183,6 +1205,7 @@ smartLayerAllocation <- function(layerIn, useLayer = "L1",
 #'
 #' @return numeric vector with weights for cells in input layer
 #'
+#' @export
 layerFraction <- function(layerIn, useLayer = "L1", 
   cluster = NA, ...) {
   weight = rep(0, length(layerIn))
@@ -1217,6 +1240,7 @@ layerFraction <- function(layerIn, useLayer = "L1",
 #'
 #' @return a vector of possible clusters for cells that meet a set of priors for each layer
 #'
+#' @export
 possibleClustersByPriors <- function(cluster, layer, 
   subsetVector = rep(TRUE, length(cluster)), useClusters = sort(unique(cluster)), 
   rareLimit = 0.005, layerNm = c("L1", "L2/3", "L4", 
@@ -1272,6 +1296,7 @@ possibleClustersByPriors <- function(cluster, layer,
 #'
 #' @return a vector of node heights
 #'
+#' @export
 getNodeHeight <- function(dendIn) {
   nodeHeight = get_nodes_attr(dendIn, "height")
   nodeHeight = 1 - nodeHeight/max(nodeHeight)
@@ -1297,6 +1322,7 @@ getNodeHeight <- function(dendIn) {
 #' @return matrix of two columns: (1) node name and (2) the fraction of cells in that node that 
 #'   are correctly assigned 
 #'
+#' @export
 fractionCorrectPerNode <- function(dendIn, clActual, 
   clPredict, minCount = 0.1, defaultSum = -1, out = NULL) {
   clActual = as.character(clActual)
@@ -1340,6 +1366,7 @@ fractionCorrectPerNode <- function(dendIn, clActual,
 #' @return a matrix of filters with rows as clusters and columns as classes with entries of TRUE or
 #'   FALSE indicating whether cells from a given class can assigned to that cluster, given threshold.
 #'
+#' @export
 filterByClass <- function(classVector, sampleInfo, 
   classColumn = "cluster_type_label", clusterColumn = "cluster_label", 
   threshold = 0.1) {
@@ -1379,6 +1406,7 @@ filterByClass <- function(classVector, sampleInfo,
 #'
 #' @return returns a vector of TRUE / FALSE with a maximum of subSamp TRUE calls per category
 #'
+#' @export
 subsampleCells <- function(clusters, subSamp = 25, 
   seed = 5) {
   kpSamp = rep(FALSE, length(clusters))
@@ -1409,6 +1437,7 @@ subsampleCells <- function(clusters, subSamp = 25,
 #'
 #' @return a vector showing the fraction of cells correctly mapped to each cluster
 #'
+#' @export
 fractionCorrectWithGenes <- function(orderedGenes, 
   mapDat, medianDat, clustersF, verbose = FALSE, 
   plot = TRUE, return = TRUE, ...) {
@@ -1447,7 +1476,8 @@ fractionCorrectWithGenes <- function(orderedGenes,
 #' 
 #' @return a matrix of fractions of cells correctly mapped for different tree heights (columns)
 #'   and different gene panels (rows)
-#' 
+#'
+#' @export 
 buildQualityTable <- function(orderedGenes, dend, mapDat, 
   medianDat, clustersF, minVal = 2, heights = c((0:100)/100), 
   verbose = FALSE) {
@@ -1487,6 +1517,7 @@ buildQualityTable <- function(orderedGenes, dend, mapDat,
 #' @param genes ordered character vector (e.g., of genes) to be plotted; default is names(frac)
 #' @param ... additional parameters for plot.
 #'
+#' @export
 plotCorrectWithGenes <- function(frac, genes = names(frac), 
   xlab = "Number of genes in panel", main = "All clusters gene panel", 
   ylim = c(-10, 100), lwd = 5, ylab = "Percent of nuclei correctly mapping", 
@@ -1515,6 +1546,7 @@ plotCorrectWithGenes <- function(frac, genes = names(frac),
 #'
 #' @return returns a numeric vector of beta score (or ranks)
 #'
+#' @export
 getBetaScore <- function(propExpr, returnScore = TRUE, 
   spec.exp = 2) {
   

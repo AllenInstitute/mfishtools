@@ -25,6 +25,7 @@
 #' @return a list where the first entry is the resulting tree and the second entry is the 
 #'   fraction of cells correctly mapping to each node using the inputted gene panel.
 #'
+#' @export
 buildTreeFromGenePanel <- function(dend = NA, refDat = NA, 
   mapDat = refDat, medianDat = NA, requiredGenes = 2, 
   clusters = NA, mappedAsReference = FALSE, genesToMap = rownames(mapDat), 
@@ -128,6 +129,7 @@ buildTreeFromGenePanel <- function(dend = NA, refDat = NA,
 #'
 #' @return dendrogram 
 #'
+#' @export
 getDend <- function(dat, distFun = function(x) return(as.dist(1 - 
   cor(x))), ...) {
   distCor = distFun(dat, ...)
@@ -152,6 +154,7 @@ getDend <- function(dat, distFun = function(x) return(as.dist(1 -
 #' @return a list where the first item is the new dendrogram object and the second item is the final
 #'   numeric node value 
 #'
+#' @export
 labelDend <- function(dend, n = 1) {
   if (is.null(attr(dend, "label"))) {
     attr(dend, "label") = paste0("n", n)
@@ -184,6 +187,7 @@ labelDend <- function(dend, n = 1) {
 #'
 #' @return matrix of summarized values
 #'
+#' @export
 summarizeMatrix <- function(mat, group, scale = "none", 
   scaleQuantile = 1, binarize = FALSE, binMin = 0.5, 
   summaryFunction = median, ...) {
@@ -269,6 +273,7 @@ summarizeMatrix <- function(mat, group, scale = "none",
 #'   \item{scaledX/Y}{scaled x and y coordinates (or unscaled if scaling was not performed)}
 #' }
 #'
+#' @export
 fishScaleAndMap <- function(mapDat, refSummaryDat, 
   genesToMap = NULL, mappingFunction = cellToClusterMapping_byCor, 
   transform = function(x) x, noiselevel = 0, scaleFunction = quantileTruncate, 
@@ -352,6 +357,7 @@ fishScaleAndMap <- function(mapDat, refSummaryDat,
 #'
 #' @return a fishScaleAndMap output subsetted to the requested elements 
 #'
+#' @export
 filterCells <- function(datFish, subset) {
   ## Error checking
   if ((length(subset) != length(datFish$scaledX)) & 
@@ -386,6 +392,7 @@ filterCells <- function(datFish, subset) {
 #'
 #' @return a new fishScaleAndMap output list with the two original ones merged 
 #'
+#' @export
 mergeFish <- function(datFish1, datFish2) {
   datFish <- datFish1
   datFish$mapDat <- cbind(datFish1$mapDat, datFish2$mapDat)
@@ -418,6 +425,7 @@ mergeFish <- function(datFish1, datFish2) {
 #'
 #' @return a fishScaleAndMap output list with updated scaledX and scaleY coordinates 
 #'
+#' @export
 rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL, 
   subset = NULL) {
   
@@ -514,6 +522,7 @@ rotateXY <- function(datFish, flatVector = NULL, flipVector = NULL,
 #'
 #' @return Only returns if there is an error
 #'
+#' @export
 plotDistributions <- function(datIn, group, groups = NULL, 
   colors = rep("black", dim(datIn$mapDat)[2]), colormap = gray.colors, 
   maxrow = 12, pch = 19, cex = 1.5, xlim = NULL, 
@@ -585,6 +594,7 @@ plotDistributions <- function(datIn, group, groups = NULL,
 #'
 #' @return Only returns if there is an error
 #'
+#' @export
 plotHeatmap <- function(datIn, group, groups = NULL, 
   grouplab = "Grouping", useScaled = FALSE, capValue = Inf, 
   colormap = grey.colors(1000), pch = 19, xlim = NULL, 
@@ -652,6 +662,7 @@ plotHeatmap <- function(datIn, group, groups = NULL,
 #'
 #' @return data frame with the top match and associated correlation
 #'
+#' @export
 cellToClusterMapping_byCor <- function(medianDat, mapDat, 
   refDat = NA, clusters = NA, genesToMap = rownames(mapDat), 
   use = "p", method = "p", ...) {
@@ -679,6 +690,7 @@ cellToClusterMapping_byCor <- function(medianDat, mapDat,
 #'
 #' @return scaled vector
 #'
+#' @export
 quantileTruncate <- function(x, qprob = 0.9, maxVal = 1, 
   truncate = TRUE, ...) {
   qs = quantile(x[x > 0], probs = qprob, na.rm = TRUE)
@@ -710,6 +722,7 @@ quantileTruncate <- function(x, qprob = 0.9, maxVal = 1,
 #'
 #' @return Only returns if there is an error
 #'
+#' @export
 plotTsne <- function(datIn, colorGroup = "none", labelGroup = "none", 
   useScaled = FALSE, capValue = Inf, perplexity = 10, 
   theta = 0.5, main = "TSNE plot", maxNchar = 1000, 
