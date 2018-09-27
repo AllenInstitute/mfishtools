@@ -13,15 +13,15 @@ cellToClusterMapping_byRank(mapDat, refDat, clustersF,
 
 \item{refDat}{normalized data of the REFERENCE data set}
 
-\item{clustersF}{factor indicating which cluster each cell type is actually assigned 
+\item{clustersF}{factor indicating which cluster each cell type is actually assigned
 to in the reference data set}
 
 \item{genesToMap}{character vector of which genes to include in the correlation mapping}
 
-\item{mergeFunction}{function for combining ranks; the tested choices are rowMeans or 
+\item{mergeFunction}{function for combining ranks; the tested choices are rowMeans or
 rowMedians (default)}
 
-\item{useRank}{use the rank of the correlation (default) or the correlation itself to 
+\item{useRank}{use the rank of the correlation (default) or the correlation itself to
 determine the top cluster}
 
 \item{use}{additional parameter for cor (use='p' as default)}

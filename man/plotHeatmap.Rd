@@ -13,7 +13,7 @@ plotHeatmap(datIn, group, groups = NULL, grouplab = "Grouping",
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}
 
-\item{group}{a character vector (or factor) indicating how to order the heatmap (e.g., cluster 
+\item{group}{a character vector (or factor) indicating how to order the heatmap (e.g., cluster
 call) or a metadata/mappingResults column name}
 
 \item{groups}{a character vector of groups to show (default is levels of group)}
@@ -26,7 +26,7 @@ call) or a metadata/mappingResults column name}
 
 \item{colormap}{set of values to use for the colormap for the data (default heat_colors)}
 
-\item{Rowv, Colv, dendrogram, trace, margins, rowsep, colsep, key, ...}{other parameters for heatmap.2 
+\item{Rowv, Colv, dendrogram, trace, margins, rowsep, colsep, key, ...}{other parameters for heatmap.2
 (some default values are different)}
 }
 \value{

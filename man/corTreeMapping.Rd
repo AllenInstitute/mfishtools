@@ -4,8 +4,9 @@
 \alias{corTreeMapping}
 \title{Correlation-based cluster mapping}
 \usage{
-corTreeMapping(mapDat, medianDat, dend = NULL, refDat = NA, clusters = NA,
-  genesToMap = rownames(mapDat), use = "p", method = "p")
+corTreeMapping(mapDat, medianDat, dend = NULL, refDat = NA,
+  clusters = NA, genesToMap = rownames(mapDat), use = "p",
+  method = "p")
 }
 \arguments{
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
@@ -25,7 +26,7 @@ corTreeMapping(mapDat, medianDat, dend = NULL, refDat = NA, clusters = NA,
 \item{method}{additional parameter for cor (method='p' as default)}
 }
 \value{
-matrix with the correlation between expression of each cell and representative value for 
+matrix with the correlation between expression of each cell and representative value for
   each leaf and node
 }
 \description{

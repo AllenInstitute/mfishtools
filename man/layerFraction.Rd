@@ -19,6 +19,6 @@ layerFraction(layerIn, useLayer = "L1", cluster = NA, ...)
 numeric vector with weights for cells in input layer
 }
 \description{
-Returns a numeric vector saying how to weight a particular cell for each layer.  This is a 
+Returns a numeric vector saying how to weight a particular cell for each layer.  This is a
   wrapper for smartLayerAllocation
 }

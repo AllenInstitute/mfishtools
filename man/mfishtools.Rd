@@ -6,7 +6,7 @@
 \alias{mfishtools-package}
 \title{mfishtools: Building Gene Sets and Mapping mFISH Data.}
 \description{
-This repository includes code for gene selection for spatial transcriptomics methods and for 
+This repository includes code for gene selection for spatial transcriptomics methods and for
 mapping of spatial transcriptomics (or RNA-Seq data) onto a RNA-Seq reference. Specific topics include:
 1) Correlation-based mapping of cells to reference cell types
 2) Iterative building of gene panels a greedy algorithm with pre-defined constraints

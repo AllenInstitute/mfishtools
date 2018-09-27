@@ -25,7 +25,7 @@ of medianDat) for the cluster to be included (default=2)}
 \item{clusters}{cluster calls for each cell}
 
 \item{mappedAsReference}{if TRUE, returns the fraction of cells mapped to a node which are
-were orginally clustered from that node; if FALSE (default) returns the fraction of cells 
+were orginally clustered from that node; if FALSE (default) returns the fraction of cells
 clustered under a node which are mapped to the correct node.}
 
 \item{genesToMap}{which genes to include in the correlation mapping}
@@ -41,12 +41,12 @@ clustered under a node which are mapped to the correct node.}
 \item{returnDendro}{should the dendrogram be returned (default = TRUE)}
 }
 \value{
-a list where the first entry is the resulting tree and the second entry is the 
+a list where the first entry is the resulting tree and the second entry is the
   fraction of cells correctly mapping to each node using the inputted gene panel.
 }
 \description{
-Build and plot a dendrogram using correlation-based average linkage hierarchical clustering
-  and only using a specified set of genes.  The output is the expected accuracy of mapping 
-  to each node in the tree, which gives an idea of the best-case expected results for 
-  mFISH analysis.
+Build and plot a dendrogram using correlation-based average linkage hierarchical
+  clustering and only using a specified set of genes.  The output is the expected
+  accuracy of mapping to each node in the tree, which gives an idea of the best-case
+  expected results for mFISH analysis.
 }

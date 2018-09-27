@@ -12,8 +12,8 @@ labelDend(dend, n = 1)
 \item{distFun}{starting numeric node value (default=1)}
 }
 \value{
-a list where the first item is the new dendrogram object and the second item is the final
-  numeric node value
+a list where the first item is the new dendrogram object and the
+  second item is the final numeric node value.
 }
 \description{
 Add numeric node labels to a dendrogram.

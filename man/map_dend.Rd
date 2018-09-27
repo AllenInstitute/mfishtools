@@ -15,12 +15,14 @@ in the reference data set}
 
 \item{dat}{normalized data of the REFERENCE data set}
 
-\item{map.dat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
+\item{map.dat}{normalized data of the MAPPING data set.  Default is to map the
+data onto itself.}
 
-\item{p}{proportion of marker genes to include in each iteration of the mapping algorithm.}
+\item{p}{proportion of marker genes to include in each iteration of the mapping 
+algorithm.}
 
-\item{low.th}{the minimum difference in Pearson correlation required to decide on which branch
-to map to. otherwise, a random branch is chosen.}
+\item{low.th}{the minimum difference in Pearson correlation required to decide 
+on which branch to map to. otherwise, a random branch is chosen.}
 
 \item{default.markers}{not used}
 }

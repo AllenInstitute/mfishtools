@@ -12,9 +12,11 @@ outputTopConfused(confusionProp, count = 10)
 \item{count}{number of top confusions to show}
 }
 \value{
-a 3 x count matrix of the top confused pairs of clusters with the three columns corresponding
-  to mapped cluster, assigned cluster, and fraction of cells incorrectly mapped, respectively.
+a 3 x count matrix of the top confused pairs of clusters with the three 
+  columns corresponding to mapped cluster, assigned cluster, and fraction of 
+  cells incorrectly mapped, respectively.
 }
 \description{
-This function returns a table of the top confused clusters (assigned clusters incorrectly mapped)
+This function returns a table of the top confused clusters (assigned clusters 
+  incorrectly mapped)
 }

@@ -11,10 +11,10 @@ plotTsne(datIn, colorGroup = "none", labelGroup = "none",
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}
 
-\item{colorGroup}{a character vector (or factor) indicating how to color the Tsne (e.g., cluster 
+\item{colorGroup}{a character vector (or factor) indicating how to color the Tsne (e.g., cluster
 call) or a metadata/mappingResults column name (default=NULL)}
 
-\item{labelGroup}{a character vector (or factor) indicating how to label the Tsne (e.g., cluster 
+\item{labelGroup}{a character vector (or factor) indicating how to label the Tsne (e.g., cluster
 call) or a metadata/mappingResults column name (default=NULL)}
 
 \item{useScaled}{plot the scaled (TRUE) or unscaled (FALSE; default) values}
@@ -34,6 +34,6 @@ Only returns if there is an error
 }
 \description{
 Plot a TSNE of the data, with assigned colors and labels from provided variables.  Note that this
-  function is a modification of code from Pabloc (https://www.r-bloggers.com/author/pabloc/) from 
+  function is a modification of code from Pabloc (https://www.r-bloggers.com/author/pabloc/) from
   https://www.r-bloggers.com/playing-with-dimensions-from-clustering-pca-t-sne-to-carl-sagan/
 }

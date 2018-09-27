@@ -23,7 +23,7 @@ actual cluster (e.g., cases that aren't considered at all)}
 \item{out}{required for recursive function.  Do not set!}
 }
 \value{
-matrix of two columns: (1) node name and (2) the fraction of cells in that node that 
+matrix of two columns: (1) node name and (2) the fraction of cells in that node that
   are correctly assigned
 }
 \description{

@@ -5,8 +5,8 @@
 \title{Generate reference set of pseudo-cells}
 \usage{
 generateMultipleCellReferenceSet(refDat, clustersF,
-  genesToUse = rownames(refDat), cellsPerMerge = 5, numberOfMerges = 10,
-  mergeFunction = rowMedians, seed = 1)
+  genesToUse = rownames(refDat), cellsPerMerge = 5,
+  numberOfMerges = 10, mergeFunction = rowMedians, seed = 1)
 }
 \arguments{
 \item{refDat}{normalized data of the REFERENCE data set}

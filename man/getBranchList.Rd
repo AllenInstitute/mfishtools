@@ -4,8 +4,8 @@
 \alias{getBranchList}
 \title{Branch list}
 \usage{
-getBranchList(dend, branches = list(), allTips = as.character(dend \%>\%
-  labels))
+getBranchList(dend, branches = list(), allTips = as.character(dend
+  \%>\% labels()))
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}

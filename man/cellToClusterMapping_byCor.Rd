@@ -4,8 +4,9 @@
 \alias{cellToClusterMapping_byCor}
 \title{Return top mapped correlation-based cluster and confidence}
 \usage{
-cellToClusterMapping_byCor(medianDat, mapDat, refDat = NA, clusters = NA,
-  genesToMap = rownames(mapDat), use = "p", method = "p", ...)
+cellToClusterMapping_byCor(medianDat, mapDat, refDat = NA,
+  clusters = NA, genesToMap = rownames(mapDat), use = "p",
+  method = "p", ...)
 }
 \arguments{
 \item{medianDat}{representative value for each leaf and node.  If not entered, it is calculated}

@@ -4,7 +4,7 @@
 \alias{getNodeHeight}
 \title{Get node height}
 \usage{
-getNodeHeight(dendIn)
+getNodeHeight(tree)
 }
 \arguments{
 \item{tree}{a dendrogram object}

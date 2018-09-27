@@ -7,8 +7,9 @@
 buildMappingBasedMarkerPanel(mapDat, medianDat = NA, clustersF = NA,
   panelSize = 50, subSamp = 20, maxFcGene = 1000, qMin = 0.75,
   seed = 10, currentPanel = NULL, panelMin = 5, writeText = TRUE,
-  corMapping = TRUE, optimize = "FractionCorrect", clusterDistance = NULL,
-  clusterGenes = NULL, dend = NULL, percentSubset = 100)
+  corMapping = TRUE, optimize = "FractionCorrect",
+  clusterDistance = NULL, clusterGenes = NULL, dend = NULL,
+  percentSubset = 100)
 }
 \arguments{
 \item{mapDat}{normalized data of the mapping (=reference) data set.}
@@ -24,45 +25,45 @@ set as NA to not subsample}
 
 \item{maxFcGene}{maximum number of genes to consider at each iteration (to increase speed)}
 
-\item{qMin}{minimum quantile for fold change comparison (between 0 and 1, higher = more 
+\item{qMin}{minimum quantile for fold change comparison (between 0 and 1, higher = more
 specific marker genes are included)}
 
 \item{seed}{for reproducibility}
 
 \item{currentPanel}{starting panel.  Default is NULL.}
 
-\item{panelMin}{if there are fewer genes than this, the top number of these genes by fc 
+\item{panelMin}{if there are fewer genes than this, the top number of these genes by fc
 rank are set as the starting panel.  Cannot be less than 2.}
 
 \item{writeText}{should gene names and marker scores be output (default TRUE)}
 
-\item{corMapping}{if TRUE (default) map by correlation; otherwise, map by Euclidean 
+\item{corMapping}{if TRUE (default) map by correlation; otherwise, map by Euclidean
 distance (not recommended)}
 
-\item{optimize}{if 'FractionCorrect' (default) will seek to maximize the fraction of 
+\item{optimize}{if 'FractionCorrect' (default) will seek to maximize the fraction of
 cells correctly mapping to final clusters
-if 'CorrelationDistance' will seek to minimize the total distance between actual 
+if 'CorrelationDistance' will seek to minimize the total distance between actual
 cluster calls and mapped clusters
-if 'DendrogramHeight' will seek to minimize the total dendrogram height between 
+if 'DendrogramHeight' will seek to minimize the total dendrogram height between
 actual cluster calls and mapped clusters}
 
-\item{clusterDistance}{only used if optimize='CorrelationDistance'; a matrix (or 
-vector) of cluster distances.  Will be calculated if NULL and if clusterGenes provided.
-(NOTE: order must be the same as medianDat and/or have column and row names corresponding
-to clusters in clustersF)}
+\item{clusterDistance}{only used if optimize='CorrelationDistance'; a matrix (or
+vector) of cluster distances.  Will be calculated if NULL and if clusterGenes 
+provided. (NOTE: order must be the same as medianDat and/or have column and row 
+names corresponding to clusters in clustersF)}
 
-\item{clusterGenes}{a vector of genes used to calculate the cluster distance.  Only used 
-if optimize='CorrelationDistance' and clusterDistance=NULL.}
+\item{clusterGenes}{a vector of genes used to calculate the cluster distance.
+Only used if optimize='CorrelationDistance' and clusterDistance=NULL.}
 
 \item{dend}{only used if optimize='DendrogramHeight' dendrogram; will error out of not provided}
 
-\item{percentSubset}{for each iteration the function can subset the set of possible genes to 
-speed up the calculation.}
+\item{percentSubset}{for each iteration the function can subset the set of possible
+genes to speed up the calculation.}
 }
 \value{
-an ordere character vector corresponding to the marker gene panel
+an ordered character vector corresponding to the marker gene panel
 }
 \description{
-This is the primary function that iteratively builds a marker gene panel, one gene at a 
+This is the primary function that iteratively builds a marker gene panel, one gene at a
   time by iteratively adding the most informative gene to the existing gene panel.
 }

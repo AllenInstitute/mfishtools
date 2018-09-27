@@ -15,7 +15,7 @@ mergeFish(datFish1, datFish2)
 a new fishScaleAndMap output list with the two original ones merged
 }
 \description{
-Merges all components of two fishScaleAndMap objects to create a new 
-  one. Note: only meta-data and mappingResults that is present in BOTH 
+Merges all components of two fishScaleAndMap objects to create a new
+  one. Note: only meta-data and mappingResults that is present in BOTH
   objects will be returned.
 }

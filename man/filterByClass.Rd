@@ -4,11 +4,12 @@
 \alias{filterByClass}
 \title{Filter by meta-data}
 \usage{
-filterByClass(classVector, sampleInfo, classColumn = "cluster_type_label",
-  clusterColumn = "cluster_label", threshold = 0.1)
+filterByClass(classVector, sampleInfo,
+  classColumn = "cluster_type_label", clusterColumn = "cluster_label",
+  threshold = 0.1)
 }
 \arguments{
-\item{classVector}{vector corresponding to the class information for filtering (e.g., vector 
+\item{classVector}{vector corresponding to the class information for filtering (e.g., vector
 of label calls)}
 
 \item{sampleInfo}{matrix of sample information with rows corresponding to cells and columns

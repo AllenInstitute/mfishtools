@@ -20,6 +20,6 @@ leafToNodeMedians(dend, medianDat, branches = getBranchList(dend),
 a matrix of mean node expression (rows=genes, columns=nodes)
 }
 \description{
-Define expression at a node as the MEAN expression for each leaf as default (using the 
+Define expression at a node as the MEAN expression for each leaf as default (using the
   median removes all specific marker genes!)
 }

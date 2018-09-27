@@ -5,8 +5,8 @@
 \title{Scale mFISH data and map to RNA-seq reference}
 \usage{
 fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
-  mappingFunction = cellToClusterMapping_byCor, transform = function(x) x,
-  noiselevel = 0, scaleFunction = quantileTruncate,
+  mappingFunction = cellToClusterMapping_byCor, transform = function(x)
+  x, noiselevel = 0, scaleFunction = quantileTruncate,
   metadata = data.frame(experiment = rep("all", dim(mapDat)[2])),
   integerWeights = NULL, binarize = FALSE, binMin = 0.5, ...)
 }
@@ -18,8 +18,8 @@ fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
 \item{genesToMap}{which genes to include in the mapping (calculated in not entered)}
 
 \item{mappingFunction}{which function to use for mapping (default is cellToClusterMapping_byCor)
-The function must include at least two parameters with the first one being mapped data and the 
-second data the reference.  Additional parameters are okay.  Output must be a data frame where 
+The function must include at least two parameters with the first one being mapped data and the
+second data the reference.  Additional parameters are okay.  Output must be a data frame where
 the first value is a mapped class.  Additional columns are okay and will be returned)}
 
 \item{transform}{function for transformation of the data (default in none)}
@@ -59,7 +59,7 @@ a list with the following entrees:
 }
 }
 \description{
-This function is a wrapper for several other functions which aim to scale mFISH data to 
+This function is a wrapper for several other functions which aim to scale mFISH data to
   more closely match RNA-seq data and then map the mFISH data to the closest reference
   classes.  There are several parameters allowing flexability in filtering and analysis.
 }
