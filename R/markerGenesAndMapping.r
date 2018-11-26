@@ -555,7 +555,7 @@ rfTreeMapping <- function(dend,
   refDat <- as.matrix(refDat)
   mapDat <- as.matrix(mapDat)
   pseq.cells <- colnames(mapDat)
-  isMarker   <- ifelse(is.na(adjustMarkers[1]), FALSE, TRUE)
+  #isMarker   <- ifelse(is.na(adjustMarkers[1]), FALSE, TRUE) # Doesn't do anything
 
   pseq.mem <- sapply(1:100, function(i) {
     j  <- i
