@@ -27,13 +27,13 @@ interest (e.g., Cre lines); default is all}
 
 \item{scaleByLayer}{if TRUE, scales to the proportion of cells in each layer}
 
-\item{scaleByFn}{what function should be used for the layer scaling (default=max, ignored 
+\item{scaleByFn}{what function should be used for the layer scaling (default=max, ignored
 if scaleByLayer=FALSE)}
 
-\item{smartWeight}{if TRUE, multilayer dissections are weighted smartly by cluster, rather 
+\item{smartWeight}{if TRUE, multilayer dissections are weighted smartly by cluster, rather
 than evenly by cluster (FALSE)}
 
-\item{spillFactor}{fractional amount of cells in a layer below which it is assumed no cells 
+\item{spillFactor}{fractional amount of cells in a layer below which it is assumed no cells
 are from that layer in multilayer dissection}
 
 \item{weightCutoff}{anything less than this is set to 0 for convenience}

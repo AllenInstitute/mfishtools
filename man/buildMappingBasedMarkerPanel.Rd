@@ -48,8 +48,8 @@ if 'DendrogramHeight' will seek to minimize the total dendrogram height between
 actual cluster calls and mapped clusters}
 
 \item{clusterDistance}{only used if optimize='CorrelationDistance'; a matrix (or
-vector) of cluster distances.  Will be calculated if NULL and if clusterGenes 
-provided. (NOTE: order must be the same as medianDat and/or have column and row 
+vector) of cluster distances.  Will be calculated if NULL and if clusterGenes
+provided. (NOTE: order must be the same as medianDat and/or have column and row
 names corresponding to clusters in clustersF)}
 
 \item{clusterGenes}{a vector of genes used to calculate the cluster distance.

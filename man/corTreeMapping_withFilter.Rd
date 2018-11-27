@@ -13,27 +13,27 @@ corTreeMapping_withFilter(dend = NA, refDat = NA, mapDat = refDat,
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}
 
-\item{refDat}{normalized data of the REFERENCE data set.  Ignored if medianExpr 
+\item{refDat}{normalized data of the REFERENCE data set.  Ignored if medianExpr
 and propExpr are passed}
 
-\item{mapDat}{normalized data of the MAPPING data set.  Default is to map the 
+\item{mapDat}{normalized data of the MAPPING data set.  Default is to map the
 data onto itself.}
 
-\item{medianExpr}{representative value for each leaf.  If not entered, it is 
+\item{medianExpr}{representative value for each leaf.  If not entered, it is
 calculated}
 
-\item{propExpr}{proportion of cells in each type expressing a given gene.  If not 
+\item{propExpr}{proportion of cells in each type expressing a given gene.  If not
 entered, it is calculated}
 
-\item{filterMatrix}{a matrix of TRUE/FALSE values to indicate whether a given 
+\item{filterMatrix}{a matrix of TRUE/FALSE values to indicate whether a given
 cluster is possible}
 
-\item{clusters}{cluster calls for each cell.  Ignored if medianExpr and propExpr 
+\item{clusters}{cluster calls for each cell.  Ignored if medianExpr and propExpr
 are passed}
 
 \item{numberOfGenes}{how many variables genes}
 
-\item{outerLimitGenes}{choose different numberOfGenes per cell from the top overall 
+\item{outerLimitGenes}{choose different numberOfGenes per cell from the top overall
 outerLimitGenes (to speed up function)}
 
 \item{use, ...}{additional parameters for cor}
@@ -44,7 +44,7 @@ outerLimitGenes (to speed up function)}
 a matrix of correlation values with rows as mapped cells and columns as clusters
 }
 \description{
-Returns the correlation between expression of each cell and representative 
-  value for each node and leaf.  NOTE: this function is unstable and will 
+Returns the correlation between expression of each cell and representative
+  value for each node and leaf.  NOTE: this function is unstable and will
   eventually be merged with corTreeMapping.
 }

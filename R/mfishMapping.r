@@ -58,16 +58,16 @@ buildTreeFromGenePanel <- function(dend = NA,
   medianDat <- medianDat[gns, ]
   mapDat <- mapDat[gns, ]
   medianDat <- medianDat[, colSums(medianDat > 0) >= requiredGenes]
-  kpDat  <- (colSums(mapDat > 0) >= requiredGenes) & (is.element(clusters, colnames(medianDat)))
+  kpDat <- (colSums(mapDat > 0) >= requiredGenes) & (is.element(clusters, colnames(medianDat)))
   mapDat <- mapDat[, kpDat]
 
   # Perform the correlation mapping
   facsCor <- corTreeMapping(medianDat = medianDat, mapDat = mapDat, use = use, ...)
-  facsCl  <- colnames(facsCor)[apply(facsCor, 1, which.max)]
+  facsCl <- colnames(facsCor)[apply(facsCor, 1, which.max)]
 
   # Build a new tree based on mapping
   sCore <- function(x, use, ...) return(as.dist(1 - cor(x, use = use, ...)))
-  dend  <- getDend(medianDat, sCore, use = use, ...)
+  dend <- getDend(medianDat, sCore, use = use, ...)
 
   # Which leaves have which nodes?
   has_any_labels <- function(sub_dend, the_labels) any(labels(sub_dend) %in% the_labels)
@@ -82,8 +82,8 @@ buildTreeFromGenePanel <- function(dend = NA,
   # mappedAsReference=TRUE
   clTmp <- as.character(clusters[kpDat])
   if (mappedAsReference) {
-    temp   <- clTmp
-    clTmp  <- facsCl
+    temp <- clTmp
+    clTmp <- facsCl
     facsCl <- temp
   }
 
@@ -211,12 +211,12 @@ summarizeMatrix <- function(mat,
   # Scale the data if desired
   if (substr(scale, 1, 1) == "r") {
     for (i in 1:dim(summarizedMat)[1])
-      summarizedMat[i, ] <- summarizedMat[i, ] / 
+      summarizedMat[i, ] <- summarizedMat[i, ] /
         max(1e-06, quantile(summarizedMat[i, ], probs = scaleQuantile))
   }
   if (substr(scale, 1, 1) == "c") {
     for (i in 1:dim(summarizedMat)[2])
-      summarizedMat[, i] <- summarizedMat[, i] / 
+      summarizedMat[, i] <- summarizedMat[, i] /
         max(1e-06, quantile(summarizedMat[, i], probs = scaleQuantile))
   }
 
@@ -285,8 +285,8 @@ fishScaleAndMap <- function(mapDat,
 
   # Setup
   mappingFunction <- match.fun(mappingFunction)
-  scaleFunction   <- match.fun(scaleFunction)
-  transform  <- match.fun(transform)
+  scaleFunction <- match.fun(scaleFunction)
+  transform <- match.fun(transform)
   if (is.null(genesToMap)) genesToMap <- colnames(mapDat)
   genesToMap <- intersect(genesToMap, rownames(refSummaryDat))
   params <- colnames(metadata)
@@ -306,7 +306,8 @@ fishScaleAndMap <- function(mapDat,
   for (ex in unique(metadata$experiment)) {
     isExp <- metadata$experiment == ex
     for (g in genesToMap) scaleDat[g, isExp] <- scaleFunction(scaleDat[
-        g, isExp], maxVal = max(refSummaryDat[g, ]), ...)
+        g, isExp
+      ], maxVal = max(refSummaryDat[g, ]), ...)
   }
 
   # Binarize, if desired
@@ -321,7 +322,7 @@ fishScaleAndMap <- function(mapDat,
   genesToMap2 <- genesToMap2[!is.element(genesToMap2, omitGenes)]
 
   # Map the map data to the reference data
-  scaleDat2      <- scaleDat[genesToMap2, ]
+  scaleDat2 <- scaleDat[genesToMap2, ]
   refSummaryDat2 <- refSummaryDat[genesToMap2, ]
   mappingResults <- mappingFunction(refSummaryDat2, scaleDat2, ...)
 
@@ -363,11 +364,11 @@ filterCells <- function(datFish,
   if (is.numeric(subset)) subset <- intersect(subset, 1:length(datFish$scaledX))
 
   ## Subset all of the elements
-  datFish$mapDat   <- datFish$mapDat[, subset]
+  datFish$mapDat <- datFish$mapDat[, subset]
   datFish$scaleDat <- datFish$scaleDat[, subset]
   datFish$metadata <- datFish$metadata[subset, ]
-  datFish$scaledX  <- datFish$scaledX[subset]
-  datFish$scaledY  <- datFish$scaledY[subset]
+  datFish$scaledX <- datFish$scaledX[subset]
+  datFish$scaledY <- datFish$scaledY[subset]
   if (!is.null(datFish$mappingResults)) {
     datFish$mappingResults <- datFish$mappingResults[subset, ]
   }
@@ -450,25 +451,25 @@ rotateXY <- function(datFish,
   ## Subset the data if needed
   datFish <- datFishIn
   if (!is.null(subset)) {
-    datFish    <- filterCells(datFishIn, subset)
+    datFish <- filterCells(datFishIn, subset)
     flatVector <- flatVector[subset]
     flipVector <- flipVector[subset]
   }
 
   ## Caculate best angle
-  v    <- prcomp(cbind(datFish$scaledX, datFish$scaledY)[flatVector, ])$rotation
+  v <- prcomp(cbind(datFish$scaledX, datFish$scaledY)[flatVector, ])$rotation
   beta <- -v[2, 1] / v[1, 1]
 
   ## Rotate coordinates (internal function)
-  rotCor <- function(datFish, 
-                     beta) {
-    M    <- cbind(datFish$scaledX, datFish$scaledY)
+  rotCor <- function(datFish,
+                       beta) {
+    M <- cbind(datFish$scaledX, datFish$scaledY)
     rotm <- matrix(c(cos(beta), sin(beta), -sin(beta), cos(beta)), ncol = 2) # rotation matrix
     M2.1 <- t(t(M) - c(M[1, 1], M[1, 2])) # shift points, so that turning point is (0,0)
     M2.2 <- t(rotm %*% (t(M2.1))) # rotate
     M2.3 <- t(t(M2.2) + c(M[1, 1], M[1, 2])) # shift back
-    x    <- M2.3[, 1]
-    y    <- M2.3[, 2]
+    x <- M2.3[, 1]
+    y <- M2.3[, 2]
 
     x <- x - min(x)
     x <- x / max(x)
@@ -561,7 +562,7 @@ plotDistributions <- function(datIn,
   nrowv <- ceiling(length(groups) / maxrow)
   par(mfrow = c(nrowv, ncolv))
   for (gp in groups) {
-    kp   <- group == gp
+    kp <- group == gp
     pch2 <- pch
     if (length(pch) > 1) pch2 <- pch[kp]
     cex2 <- cex
@@ -632,14 +633,14 @@ plotHeatmap <- function(datIn,
   }
 
   # Update the cell order
-  groups  <- c(groups, setdiff(levels(group), groups))
-  ord     <- order(factor(group, levels = groups), -colSums(plotDat))
+  groups <- c(groups, setdiff(levels(group), groups))
+  ord <- order(factor(group, levels = groups), -colSums(plotDat))
   plotDat <- plotDat[, ord]
-  group   <- group[ord]
-  tab     <- table(droplevels(factor(group, levels = unique(group))))
-  split   <- cumsum(tab)
+  group <- group[ord]
+  tab <- table(droplevels(factor(group, levels = unique(group))))
+  split <- cumsum(tab)
   if (is.null(colsep)) colsep <- split
-  loc     <- round((split + c(0, split[1:(length(split) - 1)])) / 2)
+  loc <- round((split + c(0, split[1:(length(split) - 1)])) / 2)
   colnames(plotDat)[loc] <- paste(unique(group), "|", colnames(plotDat)[loc])
 
   # Make the plot!
@@ -677,7 +678,8 @@ cellToClusterMapping_byCor <- function(medianDat,
                                        use = "p",
                                        method = "p",
                                        ...) {
-  corVar <- corTreeMapping(medianDat = medianDat,
+  corVar <- corTreeMapping(
+    medianDat = medianDat,
     mapDat = mapDat, refDat = refDat, clusters = clusters,
     genesToMap = genesToMap, use = use, method = method
   )
@@ -782,14 +784,17 @@ plotTsne <- function(datIn,
 
   # Get the tsne corrdinates
   set.seed(seed)
-  tsne_model_1 <- Rtsne(as.matrix(plotDat), check_duplicates = FALSE,
+  tsne_model_1 <- Rtsne(as.matrix(plotDat),
+    check_duplicates = FALSE,
     pca = TRUE, perplexity = perplexity, theta = theta, dims = 2
   )
   d_tsne_1 <- as.data.frame(tsne_model_1$Y)
 
   # Make the plot!
-  plot_k <- ggplot(d_tsne_1, aes_string(x = "V1",  y = "V2", 
-                                        color = colorGroup, label = labelGroup)) +
+  plot_k <- ggplot(d_tsne_1, aes_string(
+    x = "V1", y = "V2",
+    color = colorGroup, label = labelGroup
+  )) +
     geom_text() + xlab("TSNE 1") + ylab("TSNE 2") +
     ggtitle(main) + theme(legend.title = element_blank())
   scale_colour_discrete()

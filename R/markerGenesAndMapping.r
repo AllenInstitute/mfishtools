@@ -13,18 +13,18 @@ NULL
 
 #' Table of confused clusters
 #'
-#' This function returns a table of the top confused clusters (assigned clusters 
+#' This function returns a table of the top confused clusters (assigned clusters
 #'   incorrectly mapped)
 #'
 #' @param confusionProp confusion matrix (e.g., output from getConfusionMatrix).
 #' @param count number of top confusions to show
 #'
-#' @return a 3 x count matrix of the top confused pairs of clusters with the three 
-#'   columns corresponding to mapped cluster, assigned cluster, and fraction of 
+#' @return a 3 x count matrix of the top confused pairs of clusters with the three
+#'   columns corresponding to mapped cluster, assigned cluster, and fraction of
 #'   cells incorrectly mapped, respectively.
 #'
 #' @export
-outputTopConfused <- function(confusionProp, 
+outputTopConfused <- function(confusionProp,
                               count = 10) {
   topConfused <- NULL
   mfp <- confusionProp
@@ -65,7 +65,7 @@ plotConfusionVsConfidence <- function(foundClusterAndScore,
                                       ...) {
   fracMap <- fracRight <- NULL
   for (r in RI) {
-    isMap   <- foundClusterAndScore[, 2] >= r
+    isMap <- foundClusterAndScore[, 2] >= r
     fracMap <- c(fracMap, round(1000 * mean(isMap)) / 10)
     isRight <- (realCluster == foundClusterAndScore[, 1])[isMap]
     fracRight <- c(fracRight, round(1000 * mean(isRight)) / 10)
@@ -88,13 +88,13 @@ plotConfusionVsConfidence <- function(foundClusterAndScore,
 #' @param proportions FALSE if the counts are to be returned and TRUE if the proportions are to be returned
 #'
 #' @export
-getConfusionMatrix <- function(realCluster, 
+getConfusionMatrix <- function(realCluster,
                                foundCluster,
                                proportions = TRUE) {
-  realCluster  <- as.character(realCluster)
+  realCluster <- as.character(realCluster)
   foundCluster <- as.character(foundCluster)
   lev <- sort(unique(c(realCluster, foundCluster)))
-  realCluster  <- factor(realCluster, levels = lev)
+  realCluster <- factor(realCluster, levels = lev)
   foundCluster <- factor(foundCluster, levels = lev)
   confusion <- table(foundCluster, realCluster)
   if (proportions) {
@@ -117,13 +117,13 @@ getConfusionMatrix <- function(realCluster,
 #' @return a list of branch information for use with leafToNodeMedians
 #'
 #' @export
-getBranchList <- function(dend, 
+getBranchList <- function(dend,
                           branches = list(),
                           allTips = as.character(dend %>% labels())) {
   library(dendextend)
   numBranch <- dend %>% nnodes()
   if (numBranch > 1) {
-    lb   <- attr(dend, "label")
+    lb <- attr(dend, "label")
     lab1 <- paste("BranchInTree___", lb, sep = "")
     branches[[lab1]] <- list()
     cn <- as.character(dend %>% labels())
@@ -159,8 +159,8 @@ getBranchList <- function(dend,
 #' @return a matrix of mean node expression (rows=genes, columns=nodes)
 #'
 #' @export
-leafToNodeMedians <- function(dend, 
-                              medianDat, 
+leafToNodeMedians <- function(dend,
+                              medianDat,
                               branches = getBranchList(dend),
                               fnIn = mean) {
   library(dendextend)
@@ -168,8 +168,8 @@ leafToNodeMedians <- function(dend,
     rownames(medianDat) <- 1:dim(medianDat)[1]
   }
   allGenes <- rownames(medianDat)
-  brNames  <- names(branches)
-  brNames  <- brNames[grep("BranchInTree", brNames)]
+  brNames <- names(branches)
+  brNames <- brNames[grep("BranchInTree", brNames)]
   medianNode <- matrix(0, nrow = length(allGenes), ncol = length(brNames))
   rownames(medianNode) <- allGenes
   colnames(medianNode) <- brNames
@@ -215,10 +215,10 @@ leafToNodeMedians <- function(dend,
 #'   if 'DendrogramHeight' will seek to minimize the total dendrogram height between
 #'   actual cluster calls and mapped clusters
 #' @param clusterDistance only used if optimize='CorrelationDistance'; a matrix (or
-#'   vector) of cluster distances.  Will be calculated if NULL and if clusterGenes 
-#'   provided. (NOTE: order must be the same as medianDat and/or have column and row 
+#'   vector) of cluster distances.  Will be calculated if NULL and if clusterGenes
+#'   provided. (NOTE: order must be the same as medianDat and/or have column and row
 #'   names corresponding to clusters in clustersF)
-#' @param clusterGenes a vector of genes used to calculate the cluster distance.  
+#' @param clusterGenes a vector of genes used to calculate the cluster distance.
 #'   Only used if optimize='CorrelationDistance' and clusterDistance=NULL.
 #' @param dend only used if optimize='DendrogramHeight' dendrogram; will error out of not provided
 #' @param percentSubset for each iteration the function can subset the set of possible
@@ -354,11 +354,15 @@ buildMappingBasedMarkerPanel <- function(mapDat,
     addGene <- as.character(otherGenes)[wm]
     if (writeText) {
       if (optimize == "FractionCorrect") {
-        print(paste("Added", addGene, "with", signif(matchCount[wm], 3), 
-                    "now matching [", length(currentPanel), "]."))
+        print(paste(
+          "Added", addGene, "with", signif(matchCount[wm], 3),
+          "now matching [", length(currentPanel), "]."
+        ))
       } else {
-        print(paste("Added", addGene, "with average cluster distance", 
-                    -signif(matchCount[wm], 3), "[", length(currentPanel), "]."))
+        print(paste(
+          "Added", addGene, "with average cluster distance",
+          -signif(matchCount[wm], 3), "[", length(currentPanel), "]."
+        ))
       }
     }
     currentPanel <- c(currentPanel, addGene)
@@ -377,25 +381,25 @@ buildMappingBasedMarkerPanel <- function(mapDat,
 
 #' Correlation between nodes and leafs (deprecated)
 #'
-#' Returns the correlation between expression of each cell and representative 
-#'   value for each node and leaf.  NOTE: this function is unstable and will 
+#' Returns the correlation between expression of each cell and representative
+#'   value for each node and leaf.  NOTE: this function is unstable and will
 #'   eventually be merged with corTreeMapping.
 #'
 #' @param dend dendrogram for mapping.  Ignored if medianDat is passed
-#' @param refDat normalized data of the REFERENCE data set.  Ignored if medianExpr 
+#' @param refDat normalized data of the REFERENCE data set.  Ignored if medianExpr
 #'   and propExpr are passed
-#' @param mapDat normalized data of the MAPPING data set.  Default is to map the 
+#' @param mapDat normalized data of the MAPPING data set.  Default is to map the
 #'   data onto itself.
-#' @param medianExpr representative value for each leaf.  If not entered, it is 
+#' @param medianExpr representative value for each leaf.  If not entered, it is
 #'   calculated
-#' @param propExpr proportion of cells in each type expressing a given gene.  If not 
+#' @param propExpr proportion of cells in each type expressing a given gene.  If not
 #'   entered, it is calculated
-#' @param filterMatrix a matrix of TRUE/FALSE values to indicate whether a given 
+#' @param filterMatrix a matrix of TRUE/FALSE values to indicate whether a given
 #'   cluster is possible
-#' @param clusters cluster calls for each cell.  Ignored if medianExpr and propExpr 
+#' @param clusters cluster calls for each cell.  Ignored if medianExpr and propExpr
 #'   are passed
 #' @param numberOfGenes how many variables genes
-#' @param outerLimitGenes choose different numberOfGenes per cell from the top overall 
+#' @param outerLimitGenes choose different numberOfGenes per cell from the top overall
 #'   outerLimitGenes (to speed up function)
 #' @param genesToMap which genes to include in the correlation mapping
 #' @param use,... additional parameters for cor
@@ -435,10 +439,10 @@ corTreeMapping_withFilter <- function(dend = NA,
 
   # -- take the top outerLimitGenes for the
   # proportion and median
-  rankGn    <- rankGeneFunction(propExpr)
-  kpGn      <- rankGn <= outerLimitGenes
+  rankGn <- rankGeneFunction(propExpr)
+  kpGn <- rankGn <= outerLimitGenes
   medianDat <- medianExpr[kpGn, ]
-  propDat   <- propExpr[kpGn, ]
+  propDat <- propExpr[kpGn, ]
 
   # -- find all possible filters
   filterVec <- apply(filterMatrix, 1, function(x) paste(x, collapse = "|", sep = "|"))
@@ -555,10 +559,10 @@ rfTreeMapping <- function(dend,
   refDat <- as.matrix(refDat)
   mapDat <- as.matrix(mapDat)
   pseq.cells <- colnames(mapDat)
-  #isMarker   <- ifelse(is.na(adjustMarkers[1]), FALSE, TRUE) # Doesn't do anything
+  # isMarker   <- ifelse(is.na(adjustMarkers[1]), FALSE, TRUE) # Doesn't do anything
 
   pseq.mem <- sapply(1:100, function(i) {
-    j  <- i
+    j <- i
     if (i %% 25 == 0) print(i)
     go <- TRUE
     while (go) {
@@ -566,7 +570,8 @@ rfTreeMapping <- function(dend,
       j <- j + 1000
       set.seed(j + seed) # Added for reproducibility
       tmp <- try(map_dend(dend, clustersF, refDat,
-        mapDat, pseq.cells, p = p, low.th = low.th
+        mapDat, pseq.cells,
+        p = p, low.th = low.th
       ))
       if (length(tmp) > 1) go <- FALSE
     }
@@ -593,9 +598,9 @@ rfTreeMapping <- function(dend,
 #' @param dat normalized data of the REFERENCE data set
 #' @param map.dat normalized data of the MAPPING data set.  Default is to map the
 #'   data onto itself.
-#' @param p proportion of marker genes to include in each iteration of the mapping 
+#' @param p proportion of marker genes to include in each iteration of the mapping
 #'   algorithm.
-#' @param low.th the minimum difference in Pearson correlation required to decide 
+#' @param low.th the minimum difference in Pearson correlation required to decide
 #'   on which branch to map to. otherwise, a random branch is chosen.
 #' @param default.markers not used
 #'
@@ -604,13 +609,13 @@ rfTreeMapping <- function(dend,
 #'   mapped to that node/leaf using the subset of cells/genes in map_dend
 #'
 #' @export
-map_dend <- function(dend, 
-                     cl, 
-                     dat, 
-                     map.dat, 
+map_dend <- function(dend,
+                     cl,
+                     dat,
+                     map.dat,
                      select.cells,
-                     p = 0.8, 
-                     low.th = 0.2, 
+                     p = 0.8,
+                     low.th = 0.2,
                      default.markers = NULL) {
   final.cl <- c(setNames(rep(attr(dend, "label"), length(select.cells)), select.cells))
   if (length(dend) <= 1) {
@@ -618,7 +623,7 @@ map_dend <- function(dend,
   }
   markers <- attr(dend, "markers")
   markers <- markers[names(markers) %in% row.names(map.dat)]
-  cl.g    <- sapply(dend, labels, simplify = F)
+  cl.g <- sapply(dend, labels, simplify = F)
   names(cl.g) <- 1:length(cl.g)
   select.cl <- cl[cl %in% unlist(cl.g)]
   ### Sampling the cells from the reference cluster
@@ -634,14 +639,16 @@ map_dend <- function(dend,
   row.names(cl.med) <- genes
   ### determine which branch to take.
   mapped.cl <- resolve_cl(cl.g, cl.med, markers, dat,
-    map.dat, select.cells, p = p, low.th = low.th
+    map.dat, select.cells,
+    p = p, low.th = low.th
   )
   if (length(mapped.cl) > 0) {
     for (i in unique(mapped.cl)) {
       select.cells <- names(mapped.cl)[mapped.cl == i]
       if (length(select.cells) > 0) {
         final.cl <- c(final.cl, map_dend(dend[[as.integer(i)]],
-          cl, dat, map.dat, select.cells, p = p, low.th = low.th
+          cl, dat, map.dat, select.cells,
+          p = p, low.th = low.th
         ))
       }
     }
@@ -699,7 +706,9 @@ resolve_cl <- function(cl.g,
   cl.cor[is.na(cl.cor)] <- 0
   ### Compute the best match in each branch.
   tmp.score <- do.call("cbind", sapply(cl.g, function(x) rowMaxs(cl.cor[,
-      x, drop = F]), simplify = F))
+      x,
+      drop = F
+    ]), simplify = F))
   row.names(tmp.score) <- row.names(cl.cor)
   #### Determine the best match.
   best.score <- setNames(rowMaxs(tmp.score), row.names(tmp.score))
@@ -709,14 +718,16 @@ resolve_cl <- function(cl.g,
   #### Give up on cells can't be discriminated,choose
   #### one branch randomly.
   unresolved.cl <- row.names(tmp.score)[rowSums(diff.score < low.th) == ncol(diff.score)]
-  mapped.cl     <- setNames(sample(colnames(tmp.score), length(unresolved.cl), replace = T), unresolved.cl)
+  mapped.cl <- setNames(sample(colnames(tmp.score), length(unresolved.cl), replace = T), unresolved.cl)
 
   ### Cells mapped to one or more branches.
-  mapped.cells  <- setdiff(row.names(cl.cor), unresolved.cl)
+  mapped.cells <- setdiff(row.names(cl.cor), unresolved.cl)
   ### For binary branch, done already
   if (length(cl.g) == 2) {
     mapped.cl <- c(mapped.cl, setNames(colnames(diff.score)[apply(diff.score[mapped.cells,
-      , drop = F], 1, which.min)], mapped.cells))
+      ,
+      drop = F
+    ], 1, which.min)], mapped.cells))
     return(mapped.cl)
   }
   ## The remaining options for mapped cells
@@ -735,7 +746,8 @@ resolve_cl <- function(cl.g,
       tmp.cl <- unlist(strsplit(cat, " "))
       select.cells <- names(tmp.cat)[tmp.cat == cat]
       mapped.cl <- c(mapped.cl, resolve_cl(cl.g[tmp.cl],
-        cl.med, markers, dat, map.dat, select.cells, p = p, low.th = low.th
+        cl.med, markers, dat, map.dat, select.cells,
+        p = p, low.th = low.th
       ))
     }
   }
@@ -807,7 +819,8 @@ generateMultipleCellReferenceSet <- function(refDat,
       i <- c(i, sample(val, min(cellsPerMerge, length(val))))
     }
     i <- is.element(1:length(clustersF), i)
-    refOut[, (index + 1):(index + length(clusts))] <- do.call("cbind",
+    refOut[, (index + 1):(index + length(clusts))] <- do.call(
+      "cbind",
       tapply(names(clustersF[i]), clustersF[i], function(x) rowMedians(refUse[, i][, x]))
     )
     index <- index + length(clusts)
@@ -849,7 +862,7 @@ cellToClusterMapping_byRank <- function(mapDat,
                                         use = "p",
                                         method = "p") {
   if (is.null(names(clustersF))) names(clustersF) <- colnames(refDat)
-  kpVar   <- intersect(genesToMap, intersect(rownames(mapDat), rownames(refDat)))
+  kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(refDat)))
   corrVar <- cor(mapDat[kpVar, ], refDat[kpVar, ], use = use, method = method)
   corrVar[corrVar > 0.999999] <- NA # assume any perfect correlation is either an self-to-self mapping, or a mapping using exactly 1 non-zero gene
   if (useRank) rankVar <- t(apply(-corrVar, 1, rank, na.last = "keep"))
@@ -864,7 +877,7 @@ cellToClusterMapping_byRank <- function(mapDat,
   clMin[clMin == Inf] <- 1e+09
   clBest <- colnames(clMean)[apply(clMean, 1, function(x) return(which.min(x)[1]))]
   clBest[is.na(clBest)] <- colnames(clMean)[1]
-  if (useRank)  clScore <- (table(clustersF)[clBest] / 2) / pmax(clMin, 1e-11)
+  if (useRank) clScore <- (table(clustersF)[clBest] / 2) / pmax(clMin, 1e-11)
   if (!useRank) clScore <- -clMin
   rfv <- data.frame(TopLeaf = clBest, Score = as.numeric(as.character(clScore)))
   rownames(rfv) <- rownames(corrVar)
@@ -908,7 +921,7 @@ corTreeMapping <- function(mapDat,
   if (!is.null(dend)) {
     medianDat <- leafToNodeMedians(dend, medianDat)
   }
-  kpVar   <- intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
+  kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
   corrVar <- cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, method = method)
   return(corrVar)
 }
@@ -953,11 +966,11 @@ lca <- function(dend,
   node.height <- setNames(get_nodes_attr(dend, "height"), get_nodes_attr(dend, "label"))
   if (length(dend) > 1) {
     for (i in 1:length(dend)) {
-      tmp.l  <- attr(dend[[i]], "label")
+      tmp.l <- attr(dend[[i]], "label")
       labels <- get_subtree_label(dend[[i]])
       select <- l1 %in% labels & l2 %in% labels
       if (sum(select) > 0) {
-        select    <- which(select)[node.height[l[select]] > node.height[tmp.l]]
+        select <- which(select)[node.height[l[select]] > node.height[tmp.l]]
         l[select] <- tmp.l
         l <- lca(dend[[i]], l1, l2, l)
       }
@@ -988,7 +1001,7 @@ makeLCAtable <- function(dend,
   nodes <- get_leaves_attr(dend, "label")
   if (includeInternalNodes) nodes <- get_nodes_attr(dend, "label")
   out <- nm <- rep(0, length(nodes)^2)
-  i   <- 1
+  i <- 1
   for (l1 in nodes) {
     if (verbose) print(l1)
     for (l2 in nodes) {
@@ -1022,9 +1035,9 @@ plotNodes <- function(tree,
                       cols = "black",
                       pch = 19,
                       ...) {
-  tree  <- set(tree, "nodes_pch", pch)
-  tree  <- set(tree, "nodes_col", cols)
-  tree  <- set(tree, "labels_cex", 1)
+  tree <- set(tree, "nodes_pch", pch)
+  tree <- set(tree, "nodes_col", cols)
+  tree <- set(tree, "labels_cex", 1)
   treeN <- set(tree, "nodes_cex", cexScale * value)
   par(mar = margins)
   plot(treeN, ylab = "height", ...)
@@ -1097,7 +1110,7 @@ buildPanel_oneCluster <- function(mapDat,
     medianDat <- do.call("cbind", tapply(
       names(clustersF), clustersF, function(x) rowMedians(mapDat[, x])
     ))
-  }  # switched clustersIn to clustersF
+  } # switched clustersIn to clustersF
   rownames(medianDat) <- rownames(mapDat)
 
   # FIND THE BEST GENE IN THE PANEL, UNTIL THE
@@ -1122,19 +1135,19 @@ buildPanel_oneCluster <- function(mapDat,
       corMapTmp[is.na(corMapTmp)] <- -1
       higherOn <- corMapTmp[, clust] == apply(corMapTmp, 1, max)
       matchCount[i] <- sum((clustersF == clust) & (higherOn)) / sum(clustersF == clust)
-      offTarget[i]  <- sum((clustersF != clust) & (!higherOn)) / sum(clustersF != clust)
+      offTarget[i] <- sum((clustersF != clust) & (!higherOn)) / sum(clustersF != clust)
       totalCount[i] <- mean(c(matchCount[i], offTarget[i]))
     }
-    wm  <- which.max(totalCount)
+    wm <- which.max(totalCount)
     dex <- totalCount[wm] - tt
-    cr  <- matchCount[wm]
-    tt  <- totalCount[wm]
-    ot  <- offTarget[wm]
+    cr <- matchCount[wm]
+    tt <- totalCount[wm]
+    ot <- offTarget[wm]
     addGene <- as.character(otherGenes)[wm]
-    panel   <- c(panel, addGene)
-    onCorrect  <- c(onCorrect, cr)
+    panel <- c(panel, addGene)
+    onCorrect <- c(onCorrect, cr)
     offCorrect <- c(offCorrect, ot)
-    dexTotal   <- c(dexTotal, dex)
+    dexTotal <- c(dexTotal, dex)
   }
   out <- data.frame(clust, panel, onCorrect, offCorrect, dexTotal)
   out <- out[1:dim(out)[1] - 1, ]
@@ -1197,15 +1210,15 @@ smartLayerAllocation <- function(layerIn,
   colnames(layerMat) <- layerNm
   for (i in 1:length(layerIn)) layerMat[i, layerIn[[i]]] <- 1
   oneCount <- rowSums(layerMat) == 1
-  wgtFrac  <- colSums(rbind(layerMat[oneCount, ], layerMat[oneCount, ])) / 2
-  wgtFrac  <- wgtFrac / max(wgtFrac)
+  wgtFrac <- colSums(rbind(layerMat[oneCount, ], layerMat[oneCount, ])) / 2
+  wgtFrac <- wgtFrac / max(wgtFrac)
   wgtFrac[is.na(wgtFrac)] <- 0.01
   wgtFrac[wgtFrac < spillFactor] <- 1e-06 * wgtFrac[wgtFrac < spillFactor]
   wgtFrac <- wgtFrac / sum(wgtFrac)
-  for (i in which(!oneCount)) 
+  for (i in which(!oneCount))
     layerMat[i, ] <- (layerMat[i, ] * wgtFrac) / sum(layerMat[i, ] * wgtFrac)
   layerMat[layerMat < weightCutoff] <- 0
-  for (i in 1:length(oneCount)) 
+  for (i in 1:length(oneCount))
     layerMat[i, ] <- layerMat[i, ] / sum(layerMat[i, ])
   out <- layerMat[, useLayer]
   out
@@ -1254,11 +1267,11 @@ layerFraction <- function(layerIn,
 #' @param rareLimit define any values less than this as 0.  The idea is to exclude rare cells
 #' @param layerNm names of all layers.  set to NULL to have this calculated
 #' @param scaleByLayer if TRUE, scales to the proportion of cells in each layer
-#' @param scaleByFn what function should be used for the layer scaling (default=max, ignored 
+#' @param scaleByFn what function should be used for the layer scaling (default=max, ignored
 #'   if scaleByLayer=FALSE)
-#' @param smartWeight if TRUE, multilayer dissections are weighted smartly by cluster, rather 
+#' @param smartWeight if TRUE, multilayer dissections are weighted smartly by cluster, rather
 #'   than evenly by cluster (FALSE)
-#' @param spillFactor fractional amount of cells in a layer below which it is assumed no cells 
+#' @param spillFactor fractional amount of cells in a layer below which it is assumed no cells
 #'   are from that layer in multilayer dissection
 #' @param weightCutoff anything less than this is set to 0 for convenience
 #'
@@ -1289,8 +1302,8 @@ possibleClustersByPriors <- function(cluster,
   sb <- subsetVector & isClust
   if (sum(sb) == 0) {
     return(out)
-  }  # Don't run on cases with no data
-  subLayer <- layerScale(layer[sb], layerNm = layerNm) / 
+  } # Don't run on cases with no data
+  subLayer <- layerScale(layer[sb], layerNm = layerNm) /
     layerScale(layer[isClust], layerNm = layerNm)
   subLayer <- subLayer / sum(subLayer)
   kpLay <- names(subLayer)[subLayer >= rareLimit]
@@ -1300,8 +1313,10 @@ possibleClustersByPriors <- function(cluster,
   if (smartWeight) smartClust <- cluster
 
   for (lay in kpLay) {
-    weight <- layerFraction(layer, lay, smartClust, spillFactor = spillFactor, 
-                            weightCutoff = weightCutoff, layerNm = layerNm)
+    weight <- layerFraction(layer, lay, smartClust,
+      spillFactor = spillFactor,
+      weightCutoff = weightCutoff, layerNm = layerNm
+    )
     kpCl <- unique(cluster[sb & (weight > 0)])
     for (cli in kpCl) out[cli, lay] <- sum(weight[sb & (cluster == cli)])
   }
@@ -1348,19 +1363,19 @@ getNodeHeight <- function(tree) {
 #'   are correctly assigned
 #'
 #' @export
-fractionCorrectPerNode <- function(dendIn, 
+fractionCorrectPerNode <- function(dendIn,
                                    clActual,
-                                   clPredict, 
-                                   minCount = 0.1, 
-                                   defaultSum = -1, 
+                                   clPredict,
+                                   minCount = 0.1,
+                                   defaultSum = -1,
                                    out = NULL) {
-  clActual  <- as.character(clActual)
+  clActual <- as.character(clActual)
   clPredict <- as.character(clPredict)
   if (length(dendIn) > 1) {
     for (i in 1:length(dendIn)) {
       allLabels <- labels(dendIn[[i]])
-      nodeName  <- attr(dendIn[[i]], "label")
-      isActual  <- is.element(clActual, allLabels)
+      nodeName <- attr(dendIn[[i]], "label")
+      isActual <- is.element(clActual, allLabels)
       isPredict <- is.element(clPredict, allLabels)
       fractionCorrrect <- signif(sum(isActual & isPredict) / sum(isPredict + 1e-11), 3) # CHECK THIS
       if (sum(isActual) < minCount) fractionCorrrect <- defaultSum
@@ -1562,7 +1577,7 @@ plotCorrectWithGenes <- function(frac,
                                  ylim = c(-10, 100),
                                  lwd = 5,
                                  ylab = "Percent of nuclei correctly mapping",
-                                 colLine = "grey", 
+                                 colLine = "grey",
                                  ...) {
   numGn <- 1:length(frac)
   plot(numGn, frac,
@@ -1594,7 +1609,7 @@ getBetaScore <- function(propExpr,
                          returnScore = TRUE,
                          spec.exp = 2) {
   calc_beta <- function(y, spec.exp = 2) {
-    d1   <- as.matrix(dist(y))
+    d1 <- as.matrix(dist(y))
     eps1 <- 1e-10
     # Marker score is combination of specificity and sparsity
     score1 <- sum(d1^spec.exp) / (sum(d1) + eps1)
