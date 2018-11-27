@@ -7,8 +7,8 @@
 possibleClustersByPriors(cluster, layer, subsetVector = rep(TRUE,
   length(cluster)), useClusters = sort(unique(cluster)),
   rareLimit = 0.005, layerNm = c("L1", "L2/3", "L4", "L5", "L6"),
-  scaleByLayer = TRUE, smartWeight = TRUE, spillFactor = 0.15,
-  weightCutoff = 0.02)
+  scaleByLayer = TRUE, scaleByFn = max, smartWeight = TRUE,
+  spillFactor = 0.15, weightCutoff = 0.02)
 }
 \arguments{
 \item{cluster}{vector of all clusters}
@@ -27,9 +27,14 @@ interest (e.g., Cre lines); default is all}
 
 \item{scaleByLayer}{if TRUE, scales to the proportion of cells in each layer}
 
-\item{smartWeight}{if TRUE, multilayer dissections are weighted smartly by cluster, rather than evenly by cluster (FALSE)}
+\item{scaleByFn}{what function should be used for the layer scaling (default=max, ignored 
+if scaleByLayer=FALSE)}
 
-\item{spillFactor}{fractional amount of cells in a layer below which it is assumed no cells are from that layer in multilayer dissection}
+\item{smartWeight}{if TRUE, multilayer dissections are weighted smartly by cluster, rather 
+than evenly by cluster (FALSE)}
+
+\item{spillFactor}{fractional amount of cells in a layer below which it is assumed no cells 
+are from that layer in multilayer dissection}
 
 \item{weightCutoff}{anything less than this is set to 0 for convenience}
 }

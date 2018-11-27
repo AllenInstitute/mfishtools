@@ -1254,8 +1254,12 @@ layerFraction <- function(layerIn,
 #' @param rareLimit define any values less than this as 0.  The idea is to exclude rare cells
 #' @param layerNm names of all layers.  set to NULL to have this calculated
 #' @param scaleByLayer if TRUE, scales to the proportion of cells in each layer
-#' @param smartWeight if TRUE, multilayer dissections are weighted smartly by cluster, rather than evenly by cluster (FALSE)
-#' @param spillFactor fractional amount of cells in a layer below which it is assumed no cells are from that layer in multilayer dissection
+#' @param scaleByFn what function should be used for the layer scaling (default=max, ignored 
+#'   if scaleByLayer=FALSE)
+#' @param smartWeight if TRUE, multilayer dissections are weighted smartly by cluster, rather 
+#'   than evenly by cluster (FALSE)
+#' @param spillFactor fractional amount of cells in a layer below which it is assumed no cells 
+#'   are from that layer in multilayer dissection
 #' @param weightCutoff anything less than this is set to 0 for convenience
 #'
 #' @return a vector of possible clusters for cells that meet a set of priors for each layer
@@ -1268,6 +1272,7 @@ possibleClustersByPriors <- function(cluster,
                                      rareLimit = 0.005,
                                      layerNm = c("L1", "L2/3", "L4", "L5", "L6"),
                                      scaleByLayer = TRUE,
+                                     scaleByFn = max,
                                      smartWeight = TRUE,
                                      spillFactor = 0.15,
                                      weightCutoff = 0.02) {
@@ -1301,7 +1306,7 @@ possibleClustersByPriors <- function(cluster,
     for (cli in kpCl) out[cli, lay] <- sum(weight[sb & (cluster == cli)])
   }
   if (scaleByLayer) {
-    for (lay in kpLay) out[, lay] <- out[, lay] / sum(out[, lay], na.rm = TRUE)
+    for (lay in kpLay) out[, lay] <- out[, lay] / scaleByFn(out[, lay], na.rm = TRUE)
     out[out < rareLimit] <- 0
   }
   out
