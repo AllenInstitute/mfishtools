@@ -151,7 +151,7 @@ filterPanelGenes <- function(summaryExpr,
                              minLength = 960,
                              fractionOnClusters = 0.5,
                              excludeGenes = NULL,
-                             excludeFamilies = c("LOC","LINC","FAM","ORF","KIAA","FLJ","DKFZ","RIK","RPS","RPL","\\-")) {}
+                             excludeFamilies = c("LOC","LINC","FAM","ORF","KIAA","FLJ","DKFZ","RIK","RPS","RPL","\\-")) {
   ## Variable check
   if(!is.element("matrix",class(summaryExpr))) {
     summaryExpr <- as.matrix(summaryExpr)
