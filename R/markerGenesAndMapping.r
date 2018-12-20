@@ -106,6 +106,139 @@ getConfusionMatrix <- function(realCluster,
 }
 
 
+
+
+#' Filter genes for spatial transcriptomics panel
+#'
+#' Returns a set of genes for inclusion in a spatial transcriptomics panel based on a series of 
+#'   hard-coded and user-defined constraints 
+#'
+#' @param summaryExpr Matrix of summarized expression levels for a given cluster.  Typically the median
+#'   or mean should be used.  Rows are genes and columns are samples.  ROW NAMES MUST BE GENE SYMBOLS!
+#' @param propExpr Proportion of cells expressed in each cluster for use with binary score calculation
+#'   (default = summaryExpr, which is not recommended)
+#' @param onClusters Vector indicating which clusters should be included in the gene panel (default
+#'   is all clusters. Can be logical or numeric, or a character string of cluster names)
+#' @param offClusters Vector indidicating from which clusters expression should be avoided
+#' @param geneLength Optional vector of gene lengths in same order as summaryExpr.  Default is NULL
+#' @param numBinaryGenes Number of genes to include in the final panel.  Genes are sorted by binary
+#'   score using `getBetaScore` and this number of genes are chosen (default = 500)
+#' @param minOn Minimum summary expression level in most highly expressed "on" cluster (default = 10)
+#' @param maxOn Maximum summary expression level in most highly expressed "on" cluster (default = 250) 
+#' @param maxOn Maximum summary expression level in most highly expressed "off" cluster (default = 50)
+#' @param minLength Minimum gene length for marker gene selection.  Ignored if geneLength is not 
+#'   provided (default = 960)
+#' @param fractionOnClusters What is the maximum fraction of clusters in which a gene can be expressed
+#'   (as defined by propExpr>0.5; default = 0.5).  This prevents nearly ubiquitous genes from selection
+#' @param excludeGenes Which genes should be excluded from the analysis (default is none)
+#' @param excludeFamilies Which gene classes or families should be excluded from the analysis?  More
+#'   specifically, any gene that contain these strings of characters anywhere in the symbol will be
+#'   excluded (default is "LOC","LINC","FAM","ORF","KIAA","FLJ","DKFZ","RIK","RPS","RPL","\\-"). 
+#' 
+#' @return A character vector of genes meeting all constraints
+#'
+#' @export
+filterPanelGenes <- function(summaryExpr,
+                             propExpr = summaryExpr,
+                             onClusters = 1:dim(summaryExpr)[2],
+                             offClusters = NULL,
+                             geneLengths = NULL,
+                             startingGenes = c("GAD1","SLC17A7"),
+                             numBinaryGenes = 500,                             
+                             minOn = 10,
+                             maxOn = 250,
+                             maxOff = 50,
+                             minLength = 960,
+                             fractionOnClusters = 0.5,
+                             excludeGenes = NULL,
+                             excludeGeneFamilies=c("LOC","LINC","FAM","ORF","KIAA","FLJ","DKFZ","RIK","RPS","RPL","\\-")) {
+  ## Variable check
+  if(!is.element("matrix",class(summaryExpr))) {
+    summaryExpr <- as.matrix(summaryExpr)
+  }
+  if(!is.numeric(summaryExpr[1,1])) {
+    stop("summaryExpr must be a matrix of numeric values.")
+  }
+  if(is.null(rownames(summaryExpr))) {
+    stop("Please provide summaryExpr with genes as row names.")
+  }
+  if(!is.numeric(fractionOnClusters)){
+    stop("fractionOnClusters needs to be numeric.")
+  }
+  fractionOnClusters = fractionOnClusters[1]
+  if(fractionOnClusters>1) fractionOnClusters = fractionOnClusters/100 # Assume if it is greater than 1 then a percentage was given
+  genes  <- rownames(summaryExpr)
+  genesU <- toupper(genes)
+  
+  ## Define excluded genes
+  excludeFamilies <- toupper(excludeFamilies)
+  excludeGenes <- is.element(genes,excludeGenes)
+  if(length(excludeFamilies)>0){
+    for(i in 1:length(excludeFamilies)){
+      excludeGenes <- excludeGenes|grepl(excludeFamilies[i],genesU)
+    }
+  }
+  
+  ## Determine max expression levels in on and off clusters
+  if(is.character(onClusters)){
+    onClusters <- is.element(colnames(summaryExpr),onClusters)
+  }
+  if(is.numeric(onClusters)){
+    onClusters <- is.element(1:dim(summaryExpr)[2],onClusters)
+  }
+  if(sum(onClusters)<2){
+    stop("Please provide at least two onClusters.  If cluster names were provided, check colnames(summaryExpr).")
+  }
+  if(is.character(offClusters)){
+    offClusters <- is.element(colnames(summaryExpr),offClusters)
+  }
+  if(is.numeric(offClusters)){
+    offClusters <- is.element(1:dim(summaryExpr)[2],offClusters)
+  }
+  
+  ## Now add the actual constraints from above
+  maxExprOn <- apply(summaryExpr[,onClusters],1,max)
+  if(sum(offClusters)>1){
+    maxExprOff <- apply(summaryExpr[,offClusters],1,max)
+  } else if(sum(offClusters)==1){
+    maxExprOff <- summaryExpr[,offClusters]
+  } else {
+    maxExprOff <- maxExprOn*Inf # Essentially this is saying there is no off constraint
+  }
+  
+  ## Set the gene lengths, if needed
+  if(!is.null(geneLengths)) if(length(geneLengths)!=length(offClusters)){
+    stop("geneLengths must be in the same order and of same length as rows of summaryExpr.")
+  }
+  if(!is.null(geneLengths)) if(!is.numeric(geneLengths)){
+    stop("geneLengths must be numeric.")
+  }
+  if(is.null(geneLengths)){
+    geneLengths <- maxExprOn*Inf # Essentially this is saying there is no off constraint
+  }
+  
+  ## Determine the acceptable genes
+  keepGenes <- (!excludeGenes)&(maxExprOn>minOn)&(maxExprOn<=maxOn)&(maxExprOff<=maxOff)&
+               (geneLengthminLength)&(rowMeans(propExpr>0.5)<=fractionOnClusters)
+  keepGenes[is.na(keepGenes)] <- FALSE                               
+  
+  ## Find the top binary genes (if needed) and return gene list
+  if(sum(keepGenes)<=numBinaryGenes){
+    warning("Fewer genes pass constraints than numBinaryGenes, so binary score was not calculated.")
+    return(sort(genes[keepGenes]))
+  }
+  
+  topBeta     <- getBetaScore(propExpr[keepGenes,onClusters])
+  runGenes    <- names(topBeta2)[topBeta2<=constraints$numTopBinaryGenes]
+  runGenes    <- sort(union(runGenes,constraints$startingGenes))
+  
+}
+
+
+
+
+
+
 #' Branch list
 #'
 #' Returns branches of a dendrogram in a specific format
