@@ -1,11 +1,10 @@
 ---
-title: "Marker panel generation for mouse inhibitory markers."
-output:
-  html_document:
-    toc: false
-    code_folding: show
-  md_document:
-    variant: markdown_github  
+title:  "Marker panel generation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Marker panel generation}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc} 
 ---
 
 This vignette demonstrates how to generate an optimal marker gene panel (of length N), and then predicts how well each of the FACs cells map into the types defined as a measure of panel quality.  
