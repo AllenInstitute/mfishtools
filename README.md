@@ -6,7 +6,11 @@ mfishtools includes many functions that are used for analysis of data for the CZ
 
 Install using:
 ```
+# Quickly, but without the vignettes:
 devtools::install_github("AllenInstitute/mfishtools")
+
+# More slowly, but with the vignettes:
+devtools::install_github("AllenInstitute/mfishtools", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 ## Library use cases
