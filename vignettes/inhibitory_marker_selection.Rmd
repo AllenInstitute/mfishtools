@@ -107,7 +107,7 @@ runGenes <- filterPanelGenes(
   minLength = 960,  # Minimum gene length (to allow probe design; ignored in this case)
   fractionOnClusters = 0.5,  # Max fraction of on clusters (described above)
   excludeGenes    = NULL,    # Genes to exclude.  Often sex chromosome or mitochondrial genes would be input here.
-  excludeFamilies = c("LOC","Fam","RIK","RPS","RPL","\\-","Gm","Rnf")) # Avoid LOC markers, in this case
+  excludeFamilies = c("LOC","Fam","RIK","RPS","RPL","\\-","Gm","Rnf","BC0")) # Avoid LOC markers, in this case
 ```
   
   
@@ -129,11 +129,12 @@ fishPanel <- buildMappingBasedMarkerPanel(
   mapDat        = normDat[runGenes,kpSamp],     # Data for optimization
   medianDat     = medianExpr[runGenes,kpClust], # Median expression levels of relevant genes in relevant clusters
   clustersF     = cl[kpSamp],                   # Vector of cluster assignments
-  panelSize     = 50,                           # Final panel size
+  panelSize     = 30,                           # Final panel size
   currentPanel  = startingGenePanel,            # Starting gene panel
-  subSamp       = 50,                           # Maximum number of cells per cluster to include in analysis
+  subSamp       = 15,                           # Maximum number of cells per cluster to include in analysis (20-50 is usually best)
   optimize      = "CorrelationDistance",        # CorrelationDistance maximizes the cluster distance as described
-  clusterDistance = clusterDistance             # Cluster distance matrix
+  clusterDistance = clusterDistance,            # Cluster distance matrix
+  percentSubset = 50                            # Only consider a certain percent of genes each iteration to speed up calculations (in most cases this is not recommeded)
 )       
 
 ```
@@ -144,7 +145,7 @@ This is the panel!
   
 First, let's plot the panel in the context of the clusters we care about.  This can be done using the `scrattch.vis` library.  
   
-```{r panel gene plot in subset, fig.width=7,fig.height=15}
+```{r panel gene plot in subset, fig.width=7,fig.height=10}
 plotGenes <- fishPanel
 plotData  <- cbind(sample_name = colnames(rpkm), as.data.frame(t(rpkm[plotGenes,])))
 clid_inh  <- 1:23  # Cluster IDs for inhibitory clusters
@@ -158,7 +159,7 @@ The first half of this panel looks like most of the genes have fairly distinct a
   
 How do they look across ALL cell types (realizing that we don't expect to see all these types in the tissue we care about)?  
   
-```{r panel gene plot across all types, fig.width=14,fig.height=15}
+```{r panel gene plot across all types, fig.width=14,fig.height=10}
 sample_fire_plot(data = plotData, anno = annotations, genes = plotGenes, grouping = "primary_type", 
                  log_scale=TRUE, max_width=15, label_height = 8)
 ```
@@ -173,18 +174,19 @@ assignedCluster <- suppressWarnings(getTopMatch(corTreeMapping(mapDat = normDat[
 print(paste0("Percent correctly mapped: ",signif(100*mean(as.character(assignedCluster$TopLeaf)==cl[kpSamp],na.rm=TRUE),3),"%"))
 ```
   
-Around ~80% of the cells are correctly mapped with this panel, which is reasonable.  How does the plot look for fewer genes?  
+Around ~72% of the cells are correctly mapped with this panel, which is reasonable, but less than ideal.  How does the plot look for fewer genes?  
   
 ```{r plot fraction correctly mapped,fig.width=9,fig.height=6}
-fractionCorrectWithGenes(fishPanel,normDat[,kpSamp],medianExpr[runGenes,kpClust],cl[kpSamp],main="All 15",return=FALSE)
+fractionCorrectWithGenes(fishPanel,normDat[,kpSamp],medianExpr[runGenes,kpClust],cl[kpSamp],
+                         main="Mapping quality for different numbers of included genes",return=FALSE)
 ```
   
-This plot suggests that even with 50 genes we are continuing to see improvement by adding new genes; however, by approximately a 20 gene panel the level of improvement decreases dramatically for each gene added.  
+This plot suggests that with 30 genes we are continuing to see improvement by adding new genes; however, by approximately a 20 gene panel the level of improvement decreases dramatically for each gene added.  **Later releases of this library will include additional strategies for optimizing the panel beyond these initial 20 or so genes.**  
   
 Finally, as an overview, we create a confusion matrix based on the top leaf assignments. This will let us address which pairs of clusters are the most confused. Are they adjacent/nearby on the tree?  Note that the colors are distorted to highlight confusion in the tree.  
   
 ```{r cluster confusion, fig.height=8,fig.width=8}
-membConfusionProp  <- suppressWarnings(getConfusionMatrix(cl[kpSamp],assignedCluster[,1],TRUE))
+membConfusionProp  <- getConfusionMatrix(cl[kpSamp],assignedCluster[,1],TRUE)
 clOrd <- (annotations$primary_type_label[match(clid_inh,annotations$primary_type_id)])  # Cluster order
 heatmap.2(pmin(membConfusionProp,0.25)[clOrd,clOrd],Rowv=FALSE,Colv=FALSE,trace="none",dendrogram="none",
           margins=c(16,16),main="Confusion Matrix")
