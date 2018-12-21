@@ -19,3 +19,7 @@ Imports:
     Rtsne (>= 0.13),
     ggplot2 (>= 2.2.1)
 RoxygenNote: 6.1.0
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
