@@ -638,12 +638,13 @@ plotHeatmap <- function(datIn,
   ord <- order(factor(group, levels = groups), -colSums(plotDat))
   plotDat <- plotDat[, ord]
   group <- group[ord]
-  tab <- table(droplevels(factor(group, levels = unique(group))))
-  split <- cumsum(tab)
-  if (is.null(colsep)) colsep <- split
-  loc <- round((split + c(0, split[1:(length(split) - 1)])) / 2)
-  colnames(plotDat)[loc] <- paste(unique(group), "|", colnames(plotDat)[loc])
-
+  
+  # Append the cluster name to the plot data
+  cn <- rep("", length(colnames(plotDat)))
+  for (g in groups)
+    cn[round(mean(which(group==g)))] = g
+  colnames(plotDat) <- paste(cn,colnames(plotDat))
+  
   # Make the plot!
   heatmap.2(plotDat,
     Rowv = Rowv, Colv = Colv, dendrogram = dendrogram,
