@@ -642,10 +642,10 @@ plotHeatmap <- function(datIn,
   # Append the cluster name to the plot data and find colseps
   cn <- rep("", length(colnames(plotDat)))
   colseps <- NULL
-  for (g in unique(group)){
-    wg <- which(group==g)
+  for (g in unique(as.character(group))){
+    wg <- which(as.character(group)==g)
     cn[round(mean(wg))] <- g
-	colseps <- c(colseps,min(wg))
+	colseps <- c(colseps,min(wg)-1)
   }
   colnames(plotDat) <- paste(cn,colnames(plotDat))
   
