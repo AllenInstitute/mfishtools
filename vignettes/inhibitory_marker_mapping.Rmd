@@ -2,7 +2,7 @@
 title: "Mapping mFISH data to reference data set"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Marker panel generation}
+  %\VignetteIndexEntry{Mapping mFISH data to RNA-seq reference}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc} 
 ---
