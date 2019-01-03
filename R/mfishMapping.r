@@ -611,17 +611,17 @@ plotHeatmap <- function(datIn,
                         trace = "none",
                         margins = c(6, 10),
                         rowsep = NULL,
-                        colsep = NULL,
+                        sepwidth=c(0.4,0.4),
                         key = FALSE, ...) {
   library(gplots)
-
+  
   if (useScaled) {
     plotDat <- datIn$scaleDat
   } else {
     plotDat <- datIn$mapDat
   }
   plotDat <- pmin(plotDat, capValue)
-
+  
   meta <- cbind(datIn$metadata, datIn$mappingResults)
   if (length(group) == 1) {
     if (is.element(group, colnames(meta))) {
@@ -632,24 +632,31 @@ plotHeatmap <- function(datIn,
       return(paste(group, "is not an available column name for division."))
     }
   }
-
+  
   # Update the cell order
   groups <- c(groups, setdiff(levels(group), groups))
   ord <- order(factor(group, levels = groups), -colSums(plotDat))
   plotDat <- plotDat[, ord]
   group <- group[ord]
-  tab <- table(droplevels(factor(group, levels = unique(group))))
-  split <- cumsum(tab)
-  if (is.null(colsep)) colsep <- split
-  loc <- round((split + c(0, split[1:(length(split) - 1)])) / 2)
-  colnames(plotDat)[loc] <- paste(unique(group), "|", colnames(plotDat)[loc])
-
+  
+  # Append the cluster name to the plot data and find colseps
+  cn <- rep("", length(colnames(plotDat)))
+  colseps <- NULL
+  for (g in unique(group)){
+    wg <- which(group==g)
+    cn[round(mean(wg))] <- g
+    colseps <- c(colseps,min(wg))
+  }
+  colnames(plotDat) <- paste(cn,colnames(plotDat))
+  
+  # Determine columns for 
+  
   # Make the plot!
   heatmap.2(plotDat,
-    Rowv = Rowv, Colv = Colv, dendrogram = dendrogram,
-    trace = trace, margins = margins, rowsep = rowsep,
-    colsep = colsep, key = key, col = colormap,
-    ...
+            Rowv = Rowv, Colv = Colv, dendrogram = dendrogram,
+            trace = trace, margins = margins, rowsep = rowsep,
+            colsep = colseps, key = key, col = colormap,
+            ...
   )
 }
 
