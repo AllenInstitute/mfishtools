@@ -9,8 +9,8 @@ filterPanelGenes(summaryExpr, propExpr = summaryExpr,
   geneLengths = NULL, startingGenes = c("GAD1", "SLC17A7"),
   numBinaryGenes = 500, minOn = 10, maxOn = 250, maxOff = 50,
   minLength = 960, fractionOnClusters = 0.5, excludeGenes = NULL,
-  excludeGeneFamilies = c("LOC", "LINC", "FAM", "ORF", "KIAA", "FLJ",
-  "DKFZ", "RIK", "RPS", "RPL", "\\\\-"))
+  excludeFamilies = c("LOC", "LINC", "FAM", "ORF", "KIAA", "FLJ", "DKFZ",
+  "RIK", "RPS", "RPL", "\\\\-"))
 }
 \arguments{
 \item{summaryExpr}{Matrix of summarized expression levels for a given cluster.  Typically the median
@@ -39,13 +39,13 @@ provided (default = 960)}
 
 \item{excludeGenes}{Which genes should be excluded from the analysis (default is none)}
 
-\item{geneLength}{Optional vector of gene lengths in same order as summaryExpr.  Default is NULL}
-
-\item{maxOn}{Maximum summary expression level in most highly expressed "off" cluster (default = 50)}
-
 \item{excludeFamilies}{Which gene classes or families should be excluded from the analysis?  More
 specifically, any gene that contain these strings of characters anywhere in the symbol will be
 excluded (default is "LOC","LINC","FAM","ORF","KIAA","FLJ","DKFZ","RIK","RPS","RPL","\\-").}
+
+\item{geneLength}{Optional vector of gene lengths in same order as summaryExpr.  Default is NULL}
+
+\item{maxOn}{Maximum summary expression level in most highly expressed "off" cluster (default = 50)}
 }
 \value{
 A character vector of genes meeting all constraints
