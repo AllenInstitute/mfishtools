@@ -15,10 +15,10 @@ devtools::install_github("AllenInstitute/mfishtools", build_opts = c("--no-resav
 
 ## Library use cases
 
-There are two primary use cases for this libary, both of which will soon have associated vignettes.
+There are two primary use cases for this libary:
 
 1. **Building a combinatorial marker gene panel for spatial transcriptomics.** [LINK TO VIGNETTE](http://htmlpreview.github.io/?https://github.com/AllenInstitute/mfishtools/blob/master/vignettes/inhibitory_marker_selection.html)  This allows the generation of computationally "optimal" marker gene panels based on single cell/nucleus RNA-Seq reference data.  A starting set of manually-selected marker genes is first selected, and then the remaining genes are chosen using a greedy algorithm.  Relevant statistics and plots are generated that show the predicted success for the panel.  
-2. **Mapping cells from spatial transcriptomics data sets to reference cell types.** This allows for cell type calling of cells in a spatial transcriptomics study, and also predicts the accuracy of the calls based on reference data.  *Note: it is currently unclear how reliable this method is at correctly predicting cell type calls.  Please review results carefully!*  Plots can also be generated to show the results.  
+2. **Mapping cells from spatial transcriptomics data sets to reference cell types.** [LINK TO VIGNETTE](http://htmlpreview.github.io/?https://github.com/AllenInstitute/mfishtools/blob/master/vignettes/inhibitory_marker_mapping.html)  This allows for cell type calling of cells in a spatial transcriptomics study, and also predicts the accuracy of the calls based on reference data.  *Note: it is currently unclear how reliable this method is at correctly predicting cell type calls.  Please review results carefully!*  Plots can also be generated to show the results.  
 
 Many functions are currently not included in these vignettes; please use the R help ("?") if additional information is needed, or e-mail me at jeremym@alleninstitute.org.
 
