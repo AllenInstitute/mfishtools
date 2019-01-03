@@ -611,7 +611,7 @@ plotHeatmap <- function(datIn,
                         trace = "none",
                         margins = c(6, 10),
                         rowsep = NULL,
-                        colsep = NULL,
+						sepwidth=c(0.4,0.4),
                         key = FALSE, ...) {
   library(gplots)
 
@@ -638,18 +638,22 @@ plotHeatmap <- function(datIn,
   ord <- order(factor(group, levels = groups), -colSums(plotDat))
   plotDat <- plotDat[, ord]
   group <- group[ord]
-  
-  # Append the cluster name to the plot data
+ 
+  # Append the cluster name to the plot data and find colseps
   cn <- rep("", length(colnames(plotDat)))
-  for (g in groups)
-    cn[round(mean(which(group==g)))] = g
+  colseps <- NULL
+  for (g in unique(group)){
+    wg <- which(group==g)
+    cn[round(mean(wg))] <- g
+	colseps <- c(colseps,min(wg))
+  }
   colnames(plotDat) <- paste(cn,colnames(plotDat))
   
   # Make the plot!
   heatmap.2(plotDat,
     Rowv = Rowv, Colv = Colv, dendrogram = dendrogram,
     trace = trace, margins = margins, rowsep = rowsep,
-    colsep = colsep, key = key, col = colormap,
+    colsep = colseps, key = key, col = colormap,
     ...
   )
 }
