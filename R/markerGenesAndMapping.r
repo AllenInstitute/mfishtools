@@ -1169,6 +1169,7 @@ plotNodes <- function(tree,
                       cols = "black",
                       pch = 19,
                       ...) {
+  library(dendextend)
   tree <- set(tree, "nodes_pch", pch)
   tree <- set(tree, "nodes_col", cols)
   tree <- set(tree, "labels_cex", 1)
