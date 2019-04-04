@@ -45,7 +45,7 @@ excluded (default is "LOC","LINC","FAM","ORF","KIAA","FLJ","DKFZ","RIK","RPS","R
 
 \item{geneLength}{Optional vector of gene lengths in same order as summaryExpr.  Default is NULL}
 
-\item{maxOn}{Maximum summary expression level in most highly expressed "off" cluster (default = 50)}
+\item{maxOff}{Maximum summary expression level in most highly expressed "off" cluster (default = 50)}
 }
 \value{
 A character vector of genes meeting all constraints
