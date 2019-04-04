@@ -125,7 +125,7 @@ getConfusionMatrix <- function(realCluster,
 #'   score using `getBetaScore` and this number of genes are chosen (default = 500)
 #' @param minOn Minimum summary expression level in most highly expressed "on" cluster (default = 10)
 #' @param maxOn Maximum summary expression level in most highly expressed "on" cluster (default = 250) 
-#' @param maxOn Maximum summary expression level in most highly expressed "off" cluster (default = 50)
+#' @param maxOff Maximum summary expression level in most highly expressed "off" cluster (default = 50)
 #' @param minLength Minimum gene length for marker gene selection.  Ignored if geneLength is not 
 #'   provided (default = 960)
 #' @param fractionOnClusters What is the maximum fraction of clusters in which a gene can be expressed
@@ -214,7 +214,7 @@ filterPanelGenes <- function(summaryExpr,
     stop("geneLengths must be numeric.")
   }
   if(is.null(geneLengths)){
-    geneLengths <- maxExprOn*Inf # Essentially this is saying there is no off constraint
+    geneLengths <- maxExprOn-Inf # Essentially this is saying there is no off constraint
   }
   
   ## Determine the acceptable genes
