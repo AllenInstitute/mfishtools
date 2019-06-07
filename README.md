@@ -13,6 +13,13 @@ devtools::install_github("AllenInstitute/mfishtools")
 devtools::install_github("AllenInstitute/mfishtools", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
+Note that a couple of libraries need to be installed prior to running the vignettes:
+```
+install.packages("devtools")
+devtools::install_github("AllenInstitute/scrattch.vis")
+devtools::install_github("AllenInstitute/tasic2016data")
+```
+
 ## Library use cases
 
 There are two primary use cases for this libary:
