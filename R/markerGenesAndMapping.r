@@ -214,7 +214,7 @@ filterPanelGenes <- function(summaryExpr,
     stop("geneLengths must be numeric.")
   }
   if(is.null(geneLengths)){
-    geneLengths <- maxExprOn-Inf # Essentially this is saying there is no off constraint
+    geneLengths <- maxExprOn+Inf # Essentially this is saying there is no off constraint
   }
   
   ## Determine the acceptable genes

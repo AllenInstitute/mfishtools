@@ -19,7 +19,8 @@ Imports:
     Rtsne (>= 0.13),
     ggplot2 (>= 2.2.1),
     scrattch.vis (>= 0.0),
-    tasic2016data (>= 0.0)
+    tasic2016data (>= 0.0),
+    dplyr (>= 0.0)
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,
