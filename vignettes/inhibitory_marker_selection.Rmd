@@ -92,7 +92,7 @@ We first want to define some gene filters prior to running gene selection.  Note
   
 ```{r filter genes for panel selection}
 startingGenePanel <-  c("Gad1","Slc32a1","Pvalb","Sst","Vip")
-
+runGenes <- NULL
 runGenes <- filterPanelGenes(
   summaryExpr = 2^medianExpr-1,  # medians (could also try means); We enter linear values to match the linear limits below
   propExpr    = propExpr,    # proportions

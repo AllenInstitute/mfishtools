@@ -31,6 +31,8 @@ score using `getBetaScore` and this number of genes are chosen (default = 500)}
 
 \item{maxOn}{Maximum summary expression level in most highly expressed "on" cluster (default = 250)}
 
+\item{maxOff}{Maximum summary expression level in most highly expressed "off" cluster (default = 50)}
+
 \item{minLength}{Minimum gene length for marker gene selection.  Ignored if geneLength is not 
 provided (default = 960)}
 
@@ -44,8 +46,6 @@ specifically, any gene that contain these strings of characters anywhere in the 
 excluded (default is "LOC","LINC","FAM","ORF","KIAA","FLJ","DKFZ","RIK","RPS","RPL","\\-").}
 
 \item{geneLength}{Optional vector of gene lengths in same order as summaryExpr.  Default is NULL}
-
-\item{maxOff}{Maximum summary expression level in most highly expressed "off" cluster (default = 50)}
 }
 \value{
 A character vector of genes meeting all constraints

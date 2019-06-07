@@ -7,8 +7,9 @@
 fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
   mappingFunction = cellToClusterMapping_byCor, transform = function(x)
   x, noiselevel = 0, scaleFunction = quantileTruncate,
-  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])),
-  integerWeights = NULL, binarize = FALSE, binMin = 0.5, ...)
+  omitGenes = NULL, metadata = data.frame(experiment = rep("all",
+  dim(mapDat)[2])), integerWeights = NULL, binarize = FALSE,
+  binMin = 0.5, ...)
 }
 \arguments{
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}
@@ -29,6 +30,8 @@ the first value is a mapped class.  Additional columns are okay and will be retu
 \item{scaleFunction}{which function to use for scaling mapDat to refSummaryDat (default is setting
 90th quantile of mapDat to max of refSummaryDat and truncating higher mapDat values)}
 
+\item{omitGenes}{genes to be included in the data frames but excluded from the mapping}
+
 \item{metadata}{a data frame of possible metadata (additional columns are okay and ignored):
 \describe{
   \item{area}{a vector of cell areas for normalization}
@@ -45,8 +48,6 @@ a weighted correlation, but only allows for integer weight values (for use with 
 \item{binMin}{minimum ON value for the binarized matrix (ignored if binarize=FALSE)}
 
 \item{...}{additional parameters for passthrough into other functions}
-
-\item{omitGenes}{genes to be included in the data frames but excluded from the mapping}
 }
 \value{
 a list with the following entrees:

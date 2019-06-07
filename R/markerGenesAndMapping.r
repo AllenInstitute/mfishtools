@@ -1579,7 +1579,9 @@ filterByClass <- function(classVector,
 #' Subsets a categorical vector to include up to a maximum number of values for each category.
 #'
 #' @param clusters vector of cluster labels (or any category) in factor or character format
-#' @param subSamp maximum number of values for each category to subsample
+#' @param subSamp maximum number of values for each category to subsample.  Can be single integer
+#'   for global subsampling, or a *named* vector corresponding to how many values to take from each
+#'   category in clusters.
 #' @param seed for reproducibility
 #'
 #' @return returns a vector of TRUE / FALSE with a maximum of subSamp TRUE calls per category
@@ -1588,12 +1590,19 @@ filterByClass <- function(classVector,
 subsampleCells <- function(clusters,
                            subSamp = 25,
                            seed = 5) {
+  if(length(subSamp)==1)
+    subSamp = rep(subSamp,length(unique(as.character(clusters))))
+  if(is.null(names(subSamp))) 
+    names(subSamp) <- unique(as.character(clusters))
   kpSamp <- rep(FALSE, length(clusters))
   for (cli in unique(as.character(clusters))) {
-    set.seed(seed)
-    seed <- seed + 1
-    kp <- which(clusters == cli)
-    kpSamp[kp[sample(1:length(kp), min(length(kp), subSamp))]] <- TRUE
+    val = subSamp[cli]
+    if(!is.na(val)){
+      set.seed(seed)
+      seed <- seed + 1
+      kp <- which(clusters == cli)
+      kpSamp[kp[sample(1:length(kp), min(length(kp), val))]] <- TRUE
+    }
   }
   kpSamp
 }

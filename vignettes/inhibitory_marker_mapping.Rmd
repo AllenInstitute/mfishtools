@@ -26,6 +26,7 @@ suppressPackageStartupMessages({
   library(mfishtools)    # This library!
   library(matrixStats)   # For rowMedians function, which is fast
   library(gplots)        # For some of the plots
+  library(ggplot2)       # For other plots
   library(tasic2016data) # For the data
 })
 options(stringsAsFactors = FALSE)  # IMPORTANT

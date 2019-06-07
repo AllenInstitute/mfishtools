@@ -9,7 +9,9 @@ subsampleCells(clusters, subSamp = 25, seed = 5)
 \arguments{
 \item{clusters}{vector of cluster labels (or any category) in factor or character format}
 
-\item{subSamp}{maximum number of values for each category to subsample}
+\item{subSamp}{maximum number of values for each category to subsample.  Can be single integer
+for global subsampling, or a *named* vector corresponding to how many values to take from each
+category in clusters.}
 
 \item{seed}{for reproducibility}
 }
