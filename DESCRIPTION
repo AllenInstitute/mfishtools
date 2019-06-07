@@ -20,7 +20,7 @@ Imports:
     ggplot2 (>= 2.2.1),
     scrattch.vis (>= 0.0),
     tasic2016data (>= 0.0),
-    dplyr (>= 0.0)
+    dplyr (>= 0.3.4)
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,
