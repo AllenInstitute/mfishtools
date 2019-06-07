@@ -18,6 +18,8 @@ Imports:
     matrixStats (>= 0.53.1),
     Rtsne (>= 0.13),
     ggplot2 (>= 2.2.1)
+    scrattch.vis
+    tasic2016data
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,
