@@ -17,8 +17,8 @@ Imports:
     pdist (>= 1.2),
     matrixStats (>= 0.53.1),
     Rtsne (>= 0.13),
-    ggplot2 (>= 2.2.1)
-    scrattch.vis (>= 0.0)
+    ggplot2 (>= 2.2.1),
+    scrattch.vis (>= 0.0),
     tasic2016data (>= 0.0)
 RoxygenNote: 6.1.1
 Suggests: 
