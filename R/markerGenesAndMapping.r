@@ -226,7 +226,7 @@ filterPanelGenes <- function(summaryExpr,
   message(paste(sum(keepGenes),"total genes pass constraints prior to binary score calculation."))
   if(sum(keepGenes)<=numBinaryGenes){
     warning("Fewer genes pass constraints than numBinaryGenes, so binary score was not calculated.")
-    return(sort(union(runGenes,startingGenes)))
+    return(sort(union(keepGenes,startingGenes)))
   }
   
   topBeta     <- getBetaScore(propExpr[keepGenes,onClusters],FALSE)
