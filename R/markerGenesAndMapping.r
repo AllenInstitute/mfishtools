@@ -219,14 +219,14 @@ filterPanelGenes <- function(summaryExpr,
   
   ## Determine the acceptable genes
   keepGenes <- (!excludeGenes)&(maxExprOn>minOn)&(maxExprOn<=maxOn)&(maxExprOff<=maxOff)&
-               (geneLengths>=minLength)&(rowMeans(propExpr>0.5)<=fractionOnClusters)
+               (geneLengths>=minLength)&(rowMeans(propExpr[, onClusters]>0.5)<=fractionOnClusters)
   keepGenes[is.na(keepGenes)] <- FALSE                               
   
   ## Find the top binary genes (if needed) and return gene list
   message(paste(sum(keepGenes),"total genes pass constraints prior to binary score calculation."))
   if(sum(keepGenes)<=numBinaryGenes){
     warning("Fewer genes pass constraints than numBinaryGenes, so binary score was not calculated.")
-    return(sort(union(keepGenes,startingGenes)))
+    return(sort(union(rownames(propExpr)[keepGenes], startingGenes)))
   }
   
   topBeta     <- getBetaScore(propExpr[keepGenes,onClusters],FALSE)
