@@ -406,6 +406,7 @@ buildMappingBasedMarkerPanel <- function(mapDat,
   if (optimize == "CorrelationDistance") {
     if (is.null(clusterDistance)) {
       corDist <- function(x) return(as.dist(1 - cor(x)))
+      if(is.null(clusterGenes)) clusterGenes = rownames(medianDat)
       clusterGenes <- intersect(clusterGenes, rownames(medianDat))
       clusterDistance <- as.matrix(corDist(medianDat[clusterGenes, ]))
     }
