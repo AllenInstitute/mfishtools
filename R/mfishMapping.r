@@ -533,7 +533,7 @@ plotDistributions <- function(datIn,
                               xlim = NULL, ylim = NULL,
                               main = "",
                               xlab = "", ylab = "",
-			      singlePlot = TRUE
+			      singlePlot = TRUE,
                               ...) {
   colormap <- match.fun(colormap)
   meta <- cbind(datIn$metadata, datIn$mappingResults)
