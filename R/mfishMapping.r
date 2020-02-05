@@ -675,6 +675,7 @@ plotHeatmap <- function(datIn,
 #' @param genesToMap which genes to include in the correlation mapping
 #' @param use additional parameter for cor (use='p' as default)
 #' @param method additional parameter for cor (method='p' as default)
+#' @param returnCor should the correlation matrix be appended to the return?
 #' @param ... not used
 #'
 #' @return data frame with the top match and associated correlation
@@ -687,6 +688,7 @@ cellToClusterMapping_byCor <- function(medianDat,
                                        genesToMap = rownames(mapDat),
                                        use = "p",
                                        method = "p",
+				       returnCor=FALSE,
                                        ...) {
   corVar <- corTreeMapping(
     medianDat = medianDat,
@@ -698,6 +700,8 @@ cellToClusterMapping_byCor <- function(medianDat,
 
   dex <- apply(corVar, 1, function(x) return(diff(sort(-x)[1:2])))
   corMatch$DifferenceBetweenTopTwoCorrelations <- dex
+  if(returnCor)
+    corMatch <- cbind(corMatch,corVar)
   corMatch
 }
 
