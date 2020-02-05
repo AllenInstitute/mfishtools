@@ -517,6 +517,7 @@ rotateXY <- function(datFish,
 #' @param xlim,ylim for plot, but will be calculated if not entered
 #' @param pch,cex for plot.  Can be single values or vectors
 #' @param main,xlab,ylab,... other parameters for plot (must be single values)
+#' @param singlePlot should everything be plot on a single page (default=TRUE)
 #'
 #' @return Only returns if there is an error
 #'
@@ -532,6 +533,7 @@ plotDistributions <- function(datIn,
                               xlim = NULL, ylim = NULL,
                               main = "",
                               xlab = "", ylab = "",
+			      singlePlot = TRUE
                               ...) {
   colormap <- match.fun(colormap)
   meta <- cbind(datIn$metadata, datIn$mappingResults)
@@ -559,9 +561,11 @@ plotDistributions <- function(datIn,
   if (is.null(ylim)) ylim <- range(-datIn$scaledY)
 
   # Make the plot!
-  ncolv <- min(length(groups), maxrow)
-  nrowv <- ceiling(length(groups) / maxrow)
-  par(mfrow = c(nrowv, ncolv))
+  if(singlePlot){
+    ncolv <- min(length(groups), maxrow)
+    nrowv <- ceiling(length(groups)/maxrow)
+    par(mfrow = c(nrowv, ncolv))
+  }
   for (gp in groups) {
     kp <- group == gp
     pch2 <- pch
