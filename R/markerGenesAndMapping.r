@@ -203,7 +203,7 @@ filterPanelGenes <- function(summaryExpr,
   } else if(sum(offClusters)==1){
     maxExprOff <- summaryExpr[,offClusters]
   } else {
-    maxExprOff <- maxExprOn*Inf # Essentially this is saying there is no off constraint
+    maxExprOff <- pmax(maxExprOn,0.0000001) * -Inf # Essentially this is saying there is no off constraint
   }
   
   ## Set the gene lengths, if needed
@@ -214,7 +214,7 @@ filterPanelGenes <- function(summaryExpr,
     stop("geneLengths must be numeric.")
   }
   if(is.null(geneLengths)){
-    geneLengths <- maxExprOn+Inf # Essentially this is saying there is no off constraint
+    geneLengths <- maxExprOn+Inf # Essentially this is saying there is no gene length constraint
   }
   
   ## Determine the acceptable genes
