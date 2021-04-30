@@ -517,6 +517,7 @@ rotateXY <- function(datFish,
 #' @param xlim,ylim for plot, but will be calculated if not entered
 #' @param pch,cex for plot.  Can be single values or vectors
 #' @param main,xlab,ylab,... other parameters for plot (must be single values)
+#' @param singlePlot should everything be plot on a single page (default=TRUE)
 #'
 #' @return Only returns if there is an error
 #'
@@ -532,6 +533,7 @@ plotDistributions <- function(datIn,
                               xlim = NULL, ylim = NULL,
                               main = "",
                               xlab = "", ylab = "",
+			      singlePlot = TRUE,
                               ...) {
   colormap <- match.fun(colormap)
   meta <- cbind(datIn$metadata, datIn$mappingResults)
@@ -559,9 +561,11 @@ plotDistributions <- function(datIn,
   if (is.null(ylim)) ylim <- range(-datIn$scaledY)
 
   # Make the plot!
-  ncolv <- min(length(groups), maxrow)
-  nrowv <- ceiling(length(groups) / maxrow)
-  par(mfrow = c(nrowv, ncolv))
+  if(singlePlot){
+    ncolv <- min(length(groups), maxrow)
+    nrowv <- ceiling(length(groups)/maxrow)
+    par(mfrow = c(nrowv, ncolv))
+  }
   for (gp in groups) {
     kp <- group == gp
     pch2 <- pch
@@ -671,6 +675,7 @@ plotHeatmap <- function(datIn,
 #' @param genesToMap which genes to include in the correlation mapping
 #' @param use additional parameter for cor (use='p' as default)
 #' @param method additional parameter for cor (method='p' as default)
+#' @param returnCor should the correlation matrix be appended to the return?
 #' @param ... not used
 #'
 #' @return data frame with the top match and associated correlation
@@ -683,6 +688,7 @@ cellToClusterMapping_byCor <- function(medianDat,
                                        genesToMap = rownames(mapDat),
                                        use = "p",
                                        method = "p",
+				       returnCor=FALSE,
                                        ...) {
   corVar <- corTreeMapping(
     medianDat = medianDat,
@@ -694,6 +700,8 @@ cellToClusterMapping_byCor <- function(medianDat,
 
   dex <- apply(corVar, 1, function(x) return(diff(sort(-x)[1:2])))
   corMatch$DifferenceBetweenTopTwoCorrelations <- dex
+  if(returnCor)
+    corMatch <- cbind(corMatch,corVar)
   corMatch
 }
 
