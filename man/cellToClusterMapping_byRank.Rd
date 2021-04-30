@@ -4,9 +4,16 @@
 \alias{cellToClusterMapping_byRank}
 \title{Cell-based cluster mapping}
 \usage{
-cellToClusterMapping_byRank(mapDat, refDat, clustersF,
-  genesToMap = rownames(mapDat), mergeFunction = rowMedians,
-  useRank = TRUE, use = "p", method = "p")
+cellToClusterMapping_byRank(
+  mapDat,
+  refDat,
+  clustersF,
+  genesToMap = rownames(mapDat),
+  mergeFunction = rowMedians,
+  useRank = TRUE,
+  use = "p",
+  method = "p"
+)
 }
 \arguments{
 \item{mapDat}{normalized data of the MAPPING data set.}

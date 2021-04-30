@@ -4,8 +4,13 @@
 \alias{smartLayerAllocation}
 \title{Layer weights per cell}
 \usage{
-smartLayerAllocation(layerIn, useLayer = "L1", spillFactor = 0.15,
-  weightCutoff = 0.02, layerNm = c("L1", "L2/3", "L4", "L5", "L6"))
+smartLayerAllocation(
+  layerIn,
+  useLayer = "L1",
+  spillFactor = 0.15,
+  weightCutoff = 0.02,
+  layerNm = c("L1", "L2/3", "L4", "L5", "L6")
+)
 }
 \arguments{
 \item{layerIn}{a list corresponding to all layers of dissection for a given sample}

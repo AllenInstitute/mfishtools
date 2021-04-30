@@ -4,9 +4,16 @@
 \alias{corTreeMapping}
 \title{Correlation-based cluster mapping}
 \usage{
-corTreeMapping(mapDat, medianDat, dend = NULL, refDat = NA,
-  clusters = NA, genesToMap = rownames(mapDat), use = "p",
-  method = "p")
+corTreeMapping(
+  mapDat,
+  medianDat,
+  dend = NULL,
+  refDat = NA,
+  clusters = NA,
+  genesToMap = rownames(mapDat),
+  use = "p",
+  method = "p"
+)
 }
 \arguments{
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}

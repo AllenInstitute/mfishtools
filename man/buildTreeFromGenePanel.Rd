@@ -4,11 +4,23 @@
 \alias{buildTreeFromGenePanel}
 \title{Build and plot dendrogram from gene panel}
 \usage{
-buildTreeFromGenePanel(dend = NA, refDat = NA, mapDat = refDat,
-  medianDat = NA, requiredGenes = 2, clusters = NA,
-  mappedAsReference = FALSE, genesToMap = rownames(mapDat),
-  plotdendro = TRUE, returndendro = TRUE, mar = c(12, 5, 5, 5),
-  main = NULL, ylab = NULL, use = "p", ...)
+buildTreeFromGenePanel(
+  dend = NA,
+  refDat = NA,
+  mapDat = refDat,
+  medianDat = NA,
+  requiredGenes = 2,
+  clusters = NA,
+  mappedAsReference = FALSE,
+  genesToMap = rownames(mapDat),
+  plotdendro = TRUE,
+  returndendro = TRUE,
+  mar = c(12, 5, 5, 5),
+  main = NULL,
+  ylab = NULL,
+  use = "p",
+  ...
+)
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}

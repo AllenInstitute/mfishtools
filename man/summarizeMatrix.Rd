@@ -4,8 +4,16 @@
 \alias{summarizeMatrix}
 \title{Summarize matrix}
 \usage{
-summarizeMatrix(mat, group, scale = "none", scaleQuantile = 1,
-  binarize = FALSE, binMin = 0.5, summaryFunction = median, ...)
+summarizeMatrix(
+  mat,
+  group,
+  scale = "none",
+  scaleQuantile = 1,
+  binarize = FALSE,
+  binMin = 0.5,
+  summaryFunction = median,
+  ...
+)
 }
 \arguments{
 \item{mat}{matrix where the columns (e.g., samples) are going to be grouped}

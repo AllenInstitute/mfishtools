@@ -4,8 +4,15 @@
 \alias{rfTreeMapping}
 \title{Tree-based mapping}
 \usage{
-rfTreeMapping(dend, refDat, clustersF, mapDat = refDat, p = 0.7,
-  low.th = 0.15, seed = 1)
+rfTreeMapping(
+  dend,
+  refDat,
+  clustersF,
+  mapDat = refDat,
+  p = 0.7,
+  low.th = 0.15,
+  seed = 1
+)
 }
 \arguments{
 \item{dend}{dendrogram for mapping}

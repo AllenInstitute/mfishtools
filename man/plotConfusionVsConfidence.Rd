@@ -4,10 +4,17 @@
 \alias{plotConfusionVsConfidence}
 \title{Confusion plot vs. confidence}
 \usage{
-plotConfusionVsConfidence(foundClusterAndScore, realCluster,
-  RI = (31:100)/100, main = "\% mapping (blue) / correct (orange)",
-  ylab = "Percent", xlab = "Fraction correctly mapped to leaf",
-  type = "l", xlim = range(RI), ...)
+plotConfusionVsConfidence(
+  foundClusterAndScore,
+  realCluster,
+  RI = (31:100)/100,
+  main = "\% mapping (blue) / correct (orange)",
+  ylab = "Percent",
+  xlab = "Fraction correctly mapped to leaf",
+  type = "l",
+  xlim = range(RI),
+  ...
+)
 }
 \arguments{
 \item{foundClusterAndScore}{matrix where first column is found cluster and second column is

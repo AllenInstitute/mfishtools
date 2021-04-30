@@ -3,7 +3,6 @@
 \docType{package}
 \name{mfishtools}
 \alias{mfishtools}
-\alias{mfishtools-package}
 \title{mfishtools: Building Gene Sets and Mapping mFISH Data.}
 \description{
 This repository includes code for gene selection for spatial transcriptomics methods and for

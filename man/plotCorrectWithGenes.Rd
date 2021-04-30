@@ -4,10 +4,17 @@
 \alias{plotCorrectWithGenes}
 \title{Plot fraction correct}
 \usage{
-plotCorrectWithGenes(frac, genes = names(frac),
-  xlab = "Number of genes in panel", main = "All clusters gene panel",
-  ylim = c(-10, 100), lwd = 5,
-  ylab = "Percent of nuclei correctly mapping", colLine = "grey", ...)
+plotCorrectWithGenes(
+  frac,
+  genes = names(frac),
+  xlab = "Number of genes in panel",
+  main = "All clusters gene panel",
+  ylim = c(-10, 100),
+  lwd = 5,
+  ylab = "Percent of nuclei correctly mapping",
+  colLine = "grey",
+  ...
+)
 }
 \arguments{
 \item{frac}{a numeric vector indicating the fraction of cells correctly mapped for a given gene panel}

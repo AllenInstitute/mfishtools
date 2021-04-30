@@ -4,9 +4,17 @@
 \alias{distTreeMapping}
 \title{(Euclidean) distance mapping}
 \usage{
-distTreeMapping(dend = NA, refDat = NA, mapDat = refDat,
-  medianDat = NA, clusters = NA, genesToMap = rownames(mapDat),
-  returnSimilarity = TRUE, use = "p", ...)
+distTreeMapping(
+  dend = NA,
+  refDat = NA,
+  mapDat = refDat,
+  medianDat = NA,
+  clusters = NA,
+  genesToMap = rownames(mapDat),
+  returnSimilarity = TRUE,
+  use = "p",
+  ...
+)
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}

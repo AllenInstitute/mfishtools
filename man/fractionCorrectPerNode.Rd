@@ -4,8 +4,14 @@
 \alias{fractionCorrectPerNode}
 \title{Fraction of correct calls per node}
 \usage{
-fractionCorrectPerNode(dendIn, clActual, clPredict, minCount = 0.1,
-  defaultSum = -1, out = NULL)
+fractionCorrectPerNode(
+  dendIn,
+  clActual,
+  clPredict,
+  minCount = 0.1,
+  defaultSum = -1,
+  out = NULL
+)
 }
 \arguments{
 \item{dendIn}{dendrogram for mapping.  Ignored if minimizeHeight=FALSE}

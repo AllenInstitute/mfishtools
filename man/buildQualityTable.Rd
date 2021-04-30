@@ -4,8 +4,16 @@
 \alias{buildQualityTable}
 \title{Correct mapping at different tree heights}
 \usage{
-buildQualityTable(orderedGenes, dend, mapDat, medianDat, clustersF,
-  minVal = 2, heights = c((0:100)/100), verbose = FALSE)
+buildQualityTable(
+  orderedGenes,
+  dend,
+  mapDat,
+  medianDat,
+  clustersF,
+  minVal = 2,
+  heights = c((0:100)/100),
+  verbose = FALSE
+)
 }
 \arguments{
 \item{orderedGenes}{an ordered list of input genes (e.g. from an iterative algorithm)}

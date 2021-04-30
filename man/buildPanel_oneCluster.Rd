@@ -4,9 +4,18 @@
 \alias{buildPanel_oneCluster}
 \title{Build panel for one cluster (beta)}
 \usage{
-buildPanel_oneCluster(mapDat, clustersF, medianDat = NA, propIn = NA,
-  clust = as.character(clustersF[1]), subSamp = NA, seed = 10,
-  maxSize = 20, dexCutoff = 0.001, topGeneCount = 100)
+buildPanel_oneCluster(
+  mapDat,
+  clustersF,
+  medianDat = NA,
+  propIn = NA,
+  clust = as.character(clustersF[1]),
+  subSamp = NA,
+  seed = 10,
+  maxSize = 20,
+  dexCutoff = 0.001,
+  topGeneCount = 100
+)
 }
 \arguments{
 \item{mapDat}{normalized data of the mapping (=reference) data set.}

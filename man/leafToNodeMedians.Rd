@@ -4,8 +4,7 @@
 \alias{leafToNodeMedians}
 \title{Return mean node expression}
 \usage{
-leafToNodeMedians(dend, medianDat, branches = getBranchList(dend),
-  fnIn = mean)
+leafToNodeMedians(dend, medianDat, branches = getBranchList(dend), fnIn = mean)
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}

@@ -4,8 +4,15 @@
 \alias{plotNodes}
 \title{Plot dendrogram}
 \usage{
-plotNodes(tree, value = rep(1, length(labels(tree))), cexScale = 2,
-  margins = c(10, 5, 2, 2), cols = "black", pch = 19, ...)
+plotNodes(
+  tree,
+  value = rep(1, length(labels(tree))),
+  cexScale = 2,
+  margins = c(10, 5, 2, 2),
+  cols = "black",
+  pch = 19,
+  ...
+)
 }
 \arguments{
 \item{tree}{a dendrogram object}

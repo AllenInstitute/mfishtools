@@ -4,11 +4,19 @@
 \alias{possibleClustersByPriors}
 \title{Filter possible cluster calls using priors}
 \usage{
-possibleClustersByPriors(cluster, layer, subsetVector = rep(TRUE,
-  length(cluster)), useClusters = sort(unique(cluster)),
-  rareLimit = 0.005, layerNm = c("L1", "L2/3", "L4", "L5", "L6"),
-  scaleByLayer = TRUE, scaleByFn = max, smartWeight = TRUE,
-  spillFactor = 0.15, weightCutoff = 0.02)
+possibleClustersByPriors(
+  cluster,
+  layer,
+  subsetVector = rep(TRUE, length(cluster)),
+  useClusters = sort(unique(cluster)),
+  rareLimit = 0.005,
+  layerNm = c("L1", "L2/3", "L4", "L5", "L6"),
+  scaleByLayer = TRUE,
+  scaleByFn = max,
+  smartWeight = TRUE,
+  spillFactor = 0.15,
+  weightCutoff = 0.02
+)
 }
 \arguments{
 \item{cluster}{vector of all clusters}

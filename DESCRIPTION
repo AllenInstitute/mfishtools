@@ -1,7 +1,7 @@
 Package: mfishtools
 Type: Package
 Title: Building Gene Sets and Mapping mFISH Data
-Version: 0.0.1
+Version: 0.0.2
 Author: Jeremy Miller <jeremym@alleninstitute.org>
 Maintainer: Jeremy Miller <jeremym@alleninstitute.org>
 Description: This repository includes code for gene selection for spatial transcriptomics methods and for mapping of spatial transcriptomics (or RNA-Seq data) onto a RNA-Seq reference. Specific topics include:
@@ -20,8 +20,9 @@ Imports:
     ggplot2 (>= 2.2.1),
     scrattch.vis (>= 0.0),
     tasic2016data (>= 0.0),
-    dplyr (>= 0.3.4)
-RoxygenNote: 6.1.1
+    dplyr (>= 0.3.4),
+    WGCNA (>= 1.0)
+RoxygenNote: 7.1.1
 Suggests: 
     knitr,
     rmarkdown

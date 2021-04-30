@@ -66,7 +66,7 @@ buildTreeFromGenePanel <- function(dend = NA,
   facsCl <- colnames(facsCor)[apply(facsCor, 1, which.max)]
 
   # Build a new tree based on mapping
-  sCore <- function(x, use, ...) return(as.dist(1 - cor(x, use = use, ...)))
+  sCore <- function(x, use, ...) return(as.dist(1 - WGCNA::cor(x, use = use, ...)))
   dend <- getDend(medianDat, sCore, use = use, ...)
 
   # Which leaves have which nodes?
@@ -126,7 +126,7 @@ buildTreeFromGenePanel <- function(dend = NA,
 #'
 #' @export
 getDend <- function(dat,
-                    distFun = function(x) return(as.dist(1 - cor(x))),
+                    distFun = function(x) return(as.dist(1 - WGCNA::cor(x))),
                     ...) {
   distCor <- distFun(dat, ...)
   distCor[is.na(distCor)] <- max(distCor, na.rm = TRUE) * 1.2

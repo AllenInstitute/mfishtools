@@ -4,11 +4,27 @@
 \alias{plotHeatmap}
 \title{Plot heatmap}
 \usage{
-plotHeatmap(datIn, group, groups = NULL, grouplab = "Grouping",
-  useScaled = FALSE, capValue = Inf, colormap = grey.colors(1000),
-  pch = 19, xlim = NULL, ylim = NULL, Rowv = FALSE, Colv = FALSE,
-  dendrogram = "none", trace = "none", margins = c(6, 10),
-  rowsep = NULL, sepwidth = c(0.4, 0.4), key = FALSE, ...)
+plotHeatmap(
+  datIn,
+  group,
+  groups = NULL,
+  grouplab = "Grouping",
+  useScaled = FALSE,
+  capValue = Inf,
+  colormap = grey.colors(1000),
+  pch = 19,
+  xlim = NULL,
+  ylim = NULL,
+  Rowv = FALSE,
+  Colv = FALSE,
+  dendrogram = "none",
+  trace = "none",
+  margins = c(6, 10),
+  rowsep = NULL,
+  sepwidth = c(0.4, 0.4),
+  key = FALSE,
+  ...
+)
 }
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}

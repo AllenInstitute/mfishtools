@@ -4,8 +4,16 @@
 \alias{resolve_cl}
 \title{Tree-based mapping (internal)}
 \usage{
-resolve_cl(cl.g, cl.med, markers, dat, map.dat, select.cells, p = 0.7,
-  low.th = 0.2)
+resolve_cl(
+  cl.g,
+  cl.med,
+  markers,
+  dat,
+  map.dat,
+  select.cells,
+  p = 0.7,
+  low.th = 0.2
+)
 }
 \arguments{
 \item{cl.g}{all clusters}

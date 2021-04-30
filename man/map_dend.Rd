@@ -4,8 +4,16 @@
 \alias{map_dend}
 \title{Tree-based mapping}
 \usage{
-map_dend(dend, cl, dat, map.dat, select.cells, p = 0.8, low.th = 0.2,
-  default.markers = NULL)
+map_dend(
+  dend,
+  cl,
+  dat,
+  map.dat,
+  select.cells,
+  p = 0.8,
+  low.th = 0.2,
+  default.markers = NULL
+)
 }
 \arguments{
 \item{dend}{dendrogram for mapping}

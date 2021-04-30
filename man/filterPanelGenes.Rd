@@ -4,13 +4,24 @@
 \alias{filterPanelGenes}
 \title{Filter genes for spatial transcriptomics panel}
 \usage{
-filterPanelGenes(summaryExpr, propExpr = summaryExpr,
-  onClusters = 1:dim(summaryExpr)[2], offClusters = NULL,
-  geneLengths = NULL, startingGenes = c("GAD1", "SLC17A7"),
-  numBinaryGenes = 500, minOn = 10, maxOn = 250, maxOff = 50,
-  minLength = 960, fractionOnClusters = 0.5, excludeGenes = NULL,
-  excludeFamilies = c("LOC", "LINC", "FAM", "ORF", "KIAA", "FLJ", "DKFZ",
-  "RIK", "RPS", "RPL", "\\\\-"))
+filterPanelGenes(
+  summaryExpr,
+  propExpr = summaryExpr,
+  onClusters = 1:dim(summaryExpr)[2],
+  offClusters = NULL,
+  geneLengths = NULL,
+  startingGenes = c("GAD1", "SLC17A7"),
+  numBinaryGenes = 500,
+  minOn = 10,
+  maxOn = 250,
+  maxOff = 50,
+  minLength = 960,
+  fractionOnClusters = 0.5,
+  onThreshold = 0.5,
+  excludeGenes = NULL,
+  excludeFamilies = c("LOC", "LINC", "FAM", "ORF", "KIAA", "FLJ", "DKFZ", "RIK", "RPS",
+    "RPL", "\\\\-")
+)
 }
 \arguments{
 \item{summaryExpr}{Matrix of summarized expression levels for a given cluster.  Typically the median
@@ -37,7 +48,10 @@ score using `getBetaScore` and this number of genes are chosen (default = 500)}
 provided (default = 960)}
 
 \item{fractionOnClusters}{What is the maximum fraction of clusters in which a gene can be expressed
-(as defined by propExpr>0.5; default = 0.5).  This prevents nearly ubiquitous genes from selection}
+(as defined by propExpr>onThreshold; default = 0.5).  This prevents nearly ubiquitous genes from selection}
+
+\item{onThreshold}{What fraction of cells need to have expression for a gene to be defined as expressed
+(default = 0.5)}
 
 \item{excludeGenes}{Which genes should be excluded from the analysis (default is none)}
 

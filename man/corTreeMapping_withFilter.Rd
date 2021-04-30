@@ -4,11 +4,20 @@
 \alias{corTreeMapping_withFilter}
 \title{Correlation between nodes and leafs (deprecated)}
 \usage{
-corTreeMapping_withFilter(dend = NA, refDat = NA, mapDat = refDat,
-  medianExpr = NA, propExpr = NA, filterMatrix = NA, clusters = NA,
-  numberOfGenes = 1200, outerLimitGenes = 7200,
+corTreeMapping_withFilter(
+  dend = NA,
+  refDat = NA,
+  mapDat = refDat,
+  medianExpr = NA,
+  propExpr = NA,
+  filterMatrix = NA,
+  clusters = NA,
+  numberOfGenes = 1200,
+  outerLimitGenes = 7200,
   rankGeneFunction = function(x) getBetaScore(x, returnScore = FALSE),
-  use = "p", ...)
+  use = "p",
+  ...
+)
 }
 \arguments{
 \item{dend}{dendrogram for mapping.  Ignored if medianDat is passed}

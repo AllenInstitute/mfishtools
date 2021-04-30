@@ -129,7 +129,9 @@ getConfusionMatrix <- function(realCluster,
 #' @param minLength Minimum gene length for marker gene selection.  Ignored if geneLength is not 
 #'   provided (default = 960)
 #' @param fractionOnClusters What is the maximum fraction of clusters in which a gene can be expressed
-#'   (as defined by propExpr>0.5; default = 0.5).  This prevents nearly ubiquitous genes from selection
+#'   (as defined by propExpr>onThreshold; default = 0.5).  This prevents nearly ubiquitous genes from selection
+#' @param onThreshold What fraction of cells need to have expression for a gene to be defined as expressed
+#'   (default = 0.5)
 #' @param excludeGenes Which genes should be excluded from the analysis (default is none)
 #' @param excludeFamilies Which gene classes or families should be excluded from the analysis?  More
 #'   specifically, any gene that contain these strings of characters anywhere in the symbol will be
@@ -150,6 +152,7 @@ filterPanelGenes <- function(summaryExpr,
                              maxOff = 50,
                              minLength = 960,
                              fractionOnClusters = 0.5,
+                             onThreshold = 0.5,
                              excludeGenes = NULL,
                              excludeFamilies = c("LOC","LINC","FAM","ORF","KIAA","FLJ","DKFZ","RIK","RPS","RPL","\\-")) {
   ## Variable check
@@ -203,7 +206,7 @@ filterPanelGenes <- function(summaryExpr,
   } else if(sum(offClusters)==1){
     maxExprOff <- summaryExpr[,offClusters]
   } else {
-    maxExprOff <- maxExprOn*Inf # Essentially this is saying there is no off constraint
+    maxExprOff <- pmax(maxExprOn, 1e-07) * -Inf # Essentially this is saying there is no off constraint
   }
   
   ## Set the gene lengths, if needed
@@ -218,15 +221,17 @@ filterPanelGenes <- function(summaryExpr,
   }
   
   ## Determine the acceptable genes
-  keepGenes <- (!excludeGenes)&(maxExprOn>minOn)&(maxExprOn<=maxOn)&(maxExprOff<=maxOff)&
-               (geneLengths>=minLength)&(rowMeans(propExpr>0.5)<=fractionOnClusters)
+  keepGenes <- (!excludeGenes) & (maxExprOn > minOn) & (maxExprOn <= maxOn) & 
+    (maxExprOff <= maxOff) & (geneLengths >= minLength) & 
+    (rowMeans(propExpr[, onClusters] > onThreshold) <= fractionOnClusters) &
+    (rowMeans(propExpr[, onClusters] > onThreshold) > 0)  # Genes expressed in more than 0 clusters!
   keepGenes[is.na(keepGenes)] <- FALSE                               
   
   ## Find the top binary genes (if needed) and return gene list
   message(paste(sum(keepGenes),"total genes pass constraints prior to binary score calculation."))
   if(sum(keepGenes)<=numBinaryGenes){
     warning("Fewer genes pass constraints than numBinaryGenes, so binary score was not calculated.")
-    return(sort(union(runGenes,startingGenes)))
+    return(sort(union(rownames(propExpr)[keepGenes], startingGenes)))
   }
   
   topBeta     <- getBetaScore(propExpr[keepGenes,onClusters],FALSE)
@@ -405,7 +410,7 @@ buildMappingBasedMarkerPanel <- function(mapDat,
   }
   if (optimize == "CorrelationDistance") {
     if (is.null(clusterDistance)) {
-      corDist <- function(x) return(as.dist(1 - cor(x)))
+      corDist <- function(x) return(as.dist(1 - WGCNA::cor(x)))
       clusterGenes <- intersect(clusterGenes, rownames(medianDat))
       clusterDistance <- as.matrix(corDist(medianDat[clusterGenes, ]))
     }
@@ -598,13 +603,13 @@ corTreeMapping_withFilter <- function(dend = NA,
     names(rankGn)[rankGn <= numberOfGenes],
     intersect(rownames(mapDat), rownames(medianDat))
   )
-  corrVar <- cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, ...)
+  corrVar <- WGCNA::cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, ...)
   for (v in vecs) {
     kpRow <- filterVec == v
     kpCol <- filterMatrix[which(filterVec == v)[1], ]
     if (sum(kpCol) > 1) {
       kpVar <- intersect(geneLists[[v]], intersect(rownames(mapDat), rownames(medianDat)))
-      corrVar[kpRow, kpCol] <- cor(mapDat[kpVar, kpRow], medianDat[kpVar, kpCol], use = use) # ,...)
+      corrVar[kpRow, kpCol] <- WGCNA::cor(mapDat[kpVar, kpRow], medianDat[kpVar, kpCol], use = use) # ,...)
     }
   }
   corrVar <- corrVar * filterMatrix[, colnames(corrVar)]
@@ -836,7 +841,7 @@ resolve_cl <- function(cl.g,
 
   ### Compute the correlation with the median cluster
   ### profile. add drop=F
-  cl.cor <- cor(map.dat[genes, select.cells, drop = F], cl.med[genes, tmp.cl, drop = F])
+  cl.cor <- WGCNA::cor(map.dat[genes, select.cells, drop = F], cl.med[genes, tmp.cl, drop = F])
   cl.cor[is.na(cl.cor)] <- 0
   ### Compute the best match in each branch.
   tmp.score <- do.call("cbind", sapply(cl.g, function(x) rowMaxs(cl.cor[,
@@ -997,7 +1002,7 @@ cellToClusterMapping_byRank <- function(mapDat,
                                         method = "p") {
   if (is.null(names(clustersF))) names(clustersF) <- colnames(refDat)
   kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(refDat)))
-  corrVar <- cor(mapDat[kpVar, ], refDat[kpVar, ], use = use, method = method)
+  corrVar <- WGCNA::cor(mapDat[kpVar, ], refDat[kpVar, ], use = use, method = method)
   corrVar[corrVar > 0.999999] <- NA # assume any perfect correlation is either an self-to-self mapping, or a mapping using exactly 1 non-zero gene
   if (useRank) rankVar <- t(apply(-corrVar, 1, rank, na.last = "keep"))
   if (!useRank) rankVar <- -corrVar
@@ -1056,7 +1061,7 @@ corTreeMapping <- function(mapDat,
     medianDat <- leafToNodeMedians(dend, medianDat)
   }
   kpVar <- intersect(genesToMap, intersect(rownames(mapDat), rownames(medianDat)))
-  corrVar <- cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, method = method)
+  corrVar <- WGCNA::cor(mapDat[kpVar, ], medianDat[kpVar, ], use = use, method = method)
   return(corrVar)
 }
 

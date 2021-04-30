@@ -4,8 +4,7 @@
 \alias{rotateXY}
 \title{Rotate coordinates}
 \usage{
-rotateXY(datFish, flatVector = NULL, flipVector = NULL,
-  subset = NULL)
+rotateXY(datFish, flatVector = NULL, flipVector = NULL, subset = NULL)
 }
 \arguments{
 \item{datFish}{a fishScaleAndMap output list}

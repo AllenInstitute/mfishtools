@@ -4,12 +4,25 @@
 \alias{buildMappingBasedMarkerPanel}
 \title{Greedy algorithm for building marker gene panel}
 \usage{
-buildMappingBasedMarkerPanel(mapDat, medianDat = NA, clustersF = NA,
-  panelSize = 50, subSamp = 20, maxFcGene = 1000, qMin = 0.75,
-  seed = 10, currentPanel = NULL, panelMin = 5, writeText = TRUE,
-  corMapping = TRUE, optimize = "FractionCorrect",
-  clusterDistance = NULL, clusterGenes = NULL, dend = NULL,
-  percentSubset = 100)
+buildMappingBasedMarkerPanel(
+  mapDat,
+  medianDat = NA,
+  clustersF = NA,
+  panelSize = 50,
+  subSamp = 20,
+  maxFcGene = 1000,
+  qMin = 0.75,
+  seed = 10,
+  currentPanel = NULL,
+  panelMin = 5,
+  writeText = TRUE,
+  corMapping = TRUE,
+  optimize = "FractionCorrect",
+  clusterDistance = NULL,
+  clusterGenes = NULL,
+  dend = NULL,
+  percentSubset = 100
+)
 }
 \arguments{
 \item{mapDat}{normalized data of the mapping (=reference) data set.}

@@ -4,10 +4,22 @@
 \alias{plotDistributions}
 \title{Plot distributions}
 \usage{
-plotDistributions(datIn, group, groups = NULL, colors = rep("black",
-  dim(datIn$mapDat)[2]), colormap = gray.colors, maxrow = 12,
-  pch = 19, cex = 1.5, xlim = NULL, ylim = NULL, main = "",
-  xlab = "", ylab = "", ...)
+plotDistributions(
+  datIn,
+  group,
+  groups = NULL,
+  colors = rep("black", dim(datIn$mapDat)[2]),
+  colormap = gray.colors,
+  maxrow = 12,
+  pch = 19,
+  cex = 1.5,
+  xlim = NULL,
+  ylim = NULL,
+  main = "",
+  xlab = "",
+  ylab = "",
+  ...
+)
 }
 \arguments{
 \item{datIn}{a fishScaleAndMap output list}

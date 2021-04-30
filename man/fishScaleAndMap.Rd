@@ -4,12 +4,21 @@
 \alias{fishScaleAndMap}
 \title{Scale mFISH data and map to RNA-seq reference}
 \usage{
-fishScaleAndMap(mapDat, refSummaryDat, genesToMap = NULL,
-  mappingFunction = cellToClusterMapping_byCor, transform = function(x)
-  x, noiselevel = 0, scaleFunction = quantileTruncate,
-  omitGenes = NULL, metadata = data.frame(experiment = rep("all",
-  dim(mapDat)[2])), integerWeights = NULL, binarize = FALSE,
-  binMin = 0.5, ...)
+fishScaleAndMap(
+  mapDat,
+  refSummaryDat,
+  genesToMap = NULL,
+  mappingFunction = cellToClusterMapping_byCor,
+  transform = function(x) x,
+  noiselevel = 0,
+  scaleFunction = quantileTruncate,
+  omitGenes = NULL,
+  metadata = data.frame(experiment = rep("all", dim(mapDat)[2])),
+  integerWeights = NULL,
+  binarize = FALSE,
+  binMin = 0.5,
+  ...
+)
 }
 \arguments{
 \item{mapDat}{normalized data of the MAPPING data set.  Default is to map the data onto itself.}

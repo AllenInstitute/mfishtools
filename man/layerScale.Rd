@@ -4,8 +4,7 @@
 \alias{layerScale}
 \title{Fraction of cells per layer}
 \usage{
-layerScale(layerIn, layerNm = c("L1", "L2/3", "L4", "L5", "L6"),
-  scale = TRUE)
+layerScale(layerIn, layerNm = c("L1", "L2/3", "L4", "L5", "L6"), scale = TRUE)
 }
 \arguments{
 \item{layerIn}{a list corresponding to all layers of dissection for a given sample}
