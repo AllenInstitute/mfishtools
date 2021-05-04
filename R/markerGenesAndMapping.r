@@ -1051,7 +1051,7 @@ corTreeMapping <- function(mapDat,
                            genesToMap = rownames(mapDat),
                            use = "p",
                            method = "p") {
-  if (is.na(medianDat[1])) {
+  if (is.na(medianDat)[1]) {
     names(clusters) <- colnames(refDat)
     medianDat <- do.call("cbind", tapply(
       names(clusters), clusters, function(x) rowMedians(refDat[, x])
@@ -1222,7 +1222,7 @@ buildPanel_oneCluster <- function(mapDat,
                                   topGeneCount = 100) {
 
   # SUBSAMPLE
-  if (!is.na(subSamp)) {
+  if (!is.na(subSamp)[1]) {
     kpSamp <- subsampleCells(clustersF, subSamp, seed)
     kpSamp[as.character(clustersF) == clust] <- TRUE
     mapDat <- mapDat[, kpSamp]
@@ -1241,13 +1241,13 @@ buildPanel_oneCluster <- function(mapDat,
   # EACH CLUSTERS, AND THE MEDIANS (SEND TO OTHER
   # FUNCTIONS AS MEDIAN)
   names(clustersF) <- colnames(mapDat)
-  if (is.na(propIn[1])) {
+  if (is.na(propIn)[1]) {
     propIn <- do.call("cbind", tapply(
       names(clustersF), clustersF, function(x) rowMeans(mapDat[, x] >= 1)
     ))
   }
   rownames(propIn) <- rownames(mapDat)
-  if (is.na(medianDat[1])) {
+  if (is.na(medianDat)[1]) {
     medianDat <- do.call("cbind", tapply(
       names(clustersF), clustersF, function(x) rowMedians(mapDat[, x])
     ))
@@ -1384,7 +1384,7 @@ layerFraction <- function(layerIn,
                           cluster = NA,
                           ...) {
   weight <- rep(0, length(layerIn))
-  if (is.na(cluster[1])) {
+  if (is.na(cluster)[1]) {
     for (l in 1:length(weight)) weight[l] <- sum(layerIn[[l]] == useLayer) / length(layerIn[[l]])
     return(weight)
   }
@@ -1603,7 +1603,7 @@ subsampleCells <- function(clusters,
   kpSamp <- rep(FALSE, length(clusters))
   for (cli in unique(as.character(clusters))) {
     val = subSamp[cli]
-    if(!is.na(val)){
+    if(!is.na(val)[1]){
       set.seed(seed)
       seed <- seed + 1
       kp <- which(clusters == cli)
