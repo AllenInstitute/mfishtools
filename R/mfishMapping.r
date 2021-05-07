@@ -459,7 +459,7 @@ rotateXY <- function(datFish,
 
   ## Caculate best angle
   v <- prcomp(cbind(datFish$scaledX, datFish$scaledY)[flatVector, ])$rotation
-  beta <- -v[2, 1] / v[1, 1]
+  beta <- as.numeric(atan(-v[2, 1]/v[1, 1]))
 
   ## Rotate coordinates (internal function)
   rotCor <- function(datFish,
@@ -485,7 +485,7 @@ rotateXY <- function(datFish,
 
   if (!is.null(flipVector)) {
     if (sum(datFish2$scaledY * flipVector) < sum((1 - datFish2$scaledY) * flipVector)) {
-      datFish2 <- rotCor(datFish, beta + pi)
+      datFish2 <- rotCor(datFish, beta)# + pi) # Pi should not be needed
     }
   }
   datFish <- datFish2
