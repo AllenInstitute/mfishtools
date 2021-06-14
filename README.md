@@ -20,6 +20,12 @@ devtools::install_github("AllenInstitute/scrattch.vis")
 devtools::install_github("AllenInstitute/tasic2016data")
 ```
 
+Note that some people may need to manually install the `GO.db` library:
+```
+install.packages("BiocManager")
+BiocManager::install("GO.db")
+```
+
 ## Library use cases
 
 There are two primary use cases for this libary:
