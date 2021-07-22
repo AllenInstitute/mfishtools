@@ -696,8 +696,10 @@ rfTreeMapping <- function(dend,
                           p = 0.7,
                           low.th = 0.15,
                           seed = 1) {
-  refDat <- as.matrix(refDat)
-  mapDat <- as.matrix(mapDat)
+  
+  genes  <- intersect(rownames(refDat),rownames(mapDat))
+  refDat <- as.matrix(refDat)[genes,] # need common genes and matrix format
+  mapDat <- as.matrix(mapDat)[genes,] # need common genes and matrix format
   pseq.cells <- colnames(mapDat)
   # isMarker   <- ifelse(is.na(adjustMarkers[1]), FALSE, TRUE) # Doesn't do anything
 
