@@ -1774,3 +1774,19 @@ getBetaScore <- function(propExpr,
   scoreRank <- rank(-betaScore)
   scoreRank
 }
+                                   
+                                 
+#' Calculate row medians
+#'
+#' This is a wrapper for matrixStats::rowMedians that doesn't crash if a vector is provided as input
+#'
+#' @param x a matrix or vector of values
+#'
+#' @return if the input is a matrix, return row medians.  If a vector, it returns the inputted vector
+#'
+#' @export
+rowMedians <- function(x,...) {
+  require(matrixStats)
+  if(is.matrix(x)) return(matrixStats::rowMedians(x,...))
+  x
+}
