@@ -4,7 +4,23 @@ R functions for gene selection and analysis of mFISH data
 
 mfishtools includes many functions that are used for analysis of data for the CZI SpaceTx project, and mostly relies on correlation-based analysis with filtering.  *This library is still in beta testing and may be buggy.  Community involvement is encouraged through both issues and pull requests.*  
 
-Install using:
+## Installation
+
+Install prerequisites:
+```
+install.packages("devtools")
+devtools::install_github("AllenInstitute/scrattch.vis")
+devtools::install_github("AllenInstitute/tasic2016data")
+```
+
+Note that some people may need to manually install the `GO.db` and `WGCNA` libraries as well:
+```
+install.packages("BiocManager")
+BiocManager::install("GO.db")
+BiocManager::install("WGCNA")
+```
+
+Install `mfishtools` using:
 ```
 # Quickly, but without the vignettes:
 devtools::install_github("AllenInstitute/mfishtools")
@@ -13,18 +29,6 @@ devtools::install_github("AllenInstitute/mfishtools")
 devtools::install_github("AllenInstitute/mfishtools", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
-Note that a couple of libraries need to be installed prior to running the vignettes:
-```
-install.packages("devtools")
-devtools::install_github("AllenInstitute/scrattch.vis")
-devtools::install_github("AllenInstitute/tasic2016data")
-```
-
-Note that some people may need to manually install the `GO.db` library:
-```
-install.packages("BiocManager")
-BiocManager::install("GO.db")
-```
 
 ## Library use cases
 
