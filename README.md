@@ -26,7 +26,8 @@ Install `mfishtools` using:
 devtools::install_github("AllenInstitute/mfishtools")
 
 # More slowly, but with the vignettes:
-devtools::install_github("AllenInstitute/mfishtools", build_opts = c("--no-resave-data", "--no-manual"))
+install.packages("remotes", repos='http://cran.us.r-project.org')
+remotes::install_github("AllenInstitute/mfishtools", build_vignettes = TRUE)
 ```
 
 
