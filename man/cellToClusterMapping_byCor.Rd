@@ -12,6 +12,7 @@ cellToClusterMapping_byCor(
   genesToMap = rownames(mapDat),
   use = "p",
   method = "p",
+  returnCor = FALSE,
   ...
 )
 }
@@ -29,6 +30,8 @@ cellToClusterMapping_byCor(
 \item{use}{additional parameter for cor (use='p' as default)}
 
 \item{method}{additional parameter for cor (method='p' as default)}
+
+\item{returnCor}{should the correlation matrix be appended to the return?}
 
 \item{...}{not used}
 }

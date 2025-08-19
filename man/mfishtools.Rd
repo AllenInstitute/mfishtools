@@ -2,6 +2,7 @@
 % Please edit documentation in R/markerGenesAndMapping.r
 \docType{package}
 \name{mfishtools}
+\alias{mfishtools-package}
 \alias{mfishtools}
 \title{mfishtools: Building Gene Sets and Mapping mFISH Data.}
 \description{

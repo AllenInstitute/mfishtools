@@ -18,6 +18,7 @@ plotDistributions(
   main = "",
   xlab = "",
   ylab = "",
+  singlePlot = TRUE,
   ...
 )
 }
@@ -41,6 +42,8 @@ or gene expression) or a metadata/mappingResults column name (default is all bla
 \item{xlim, ylim}{for plot, but will be calculated if not entered}
 
 \item{main, xlab, ylab, ...}{other parameters for plot (must be single values)}
+
+\item{singlePlot}{should everything be plot on a single page (default=TRUE)}
 }
 \value{
 Only returns if there is an error
