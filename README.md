@@ -1,3 +1,5 @@
+*(See a better-formatted version of this page at https://alleninstitute.github.io/mfishtools/)*
+
 # mfishtools
 
 R functions for gene selection and analysis of mFISH data
